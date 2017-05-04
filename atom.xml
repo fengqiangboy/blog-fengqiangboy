@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[奉强的个人博客]]></title>
-  <link href="fengqiangboy.com/atom.xml" rel="self"/>
-  <link href="fengqiangboy.com/"/>
-  <updated>2017-05-04T23:28:26+08:00</updated>
-  <id>fengqiangboy.com/</id>
+  <link href="http://fengqiangboy.com/atom.xml" rel="self"/>
+  <link href="http://fengqiangboy.com/"/>
+  <updated>2017-05-04T23:29:16+08:00</updated>
+  <id>http://fengqiangboy.com/</id>
   <author>
     <name><![CDATA[]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[一个导出qq音乐歌单的小工具]]></title>
-    <link href="fengqiangboy.com/14913069118493.html"/>
+    <link href="http://fengqiangboy.com/14913069118493.html"/>
     <updated>2017-04-04T19:55:11+08:00</updated>
-    <id>fengqiangboy.com/14913069118493.html</id>
+    <id>http://fengqiangboy.com/14913069118493.html</id>
     <content type="html"><![CDATA[
 <h4 id="toc_0">文档更新说明</h4>
 
@@ -101,9 +101,9 @@ pip3 install requests
   
   <entry>
     <title type="html"><![CDATA[Python学习笔记-函数的使用]]></title>
-    <link href="fengqiangboy.com/14890625223406.html"/>
+    <link href="http://fengqiangboy.com/14890625223406.html"/>
     <updated>2017-03-09T20:28:42+08:00</updated>
-    <id>fengqiangboy.com/14890625223406.html</id>
+    <id>http://fengqiangboy.com/14890625223406.html</id>
     <content type="html"><![CDATA[
 <h4 id="toc_0">文档更新说明</h4>
 
@@ -246,9 +246,9 @@ while count&gt;0:
   
   <entry>
     <title type="html"><![CDATA[我的2016]]></title>
-    <link href="fengqiangboy.com/14854433400635.html"/>
+    <link href="http://fengqiangboy.com/14854433400635.html"/>
     <updated>2017-01-26T23:09:00+08:00</updated>
-    <id>fengqiangboy.com/14854433400635.html</id>
+    <id>http://fengqiangboy.com/14854433400635.html</id>
     <content type="html"><![CDATA[
 <blockquote>
 <p>2016，整体可以用“忙”、“苦逼”和“迷茫”来概括吧<br/>
@@ -318,9 +318,9 @@ while count&gt;0:
   
   <entry>
     <title type="html"><![CDATA[iOS逆向开发笔记1--工具篇]]></title>
-    <link href="fengqiangboy.com/14854248394653.html"/>
+    <link href="http://fengqiangboy.com/14854248394653.html"/>
     <updated>2017-01-26T18:00:39+08:00</updated>
-    <id>fengqiangboy.com/14854248394653.html</id>
+    <id>http://fengqiangboy.com/14854248394653.html</id>
     <content type="html"><![CDATA[
 <h4 id="toc_0">文档更新说明</h4>
 
@@ -514,9 +514,9 @@ cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Develo
   
   <entry>
     <title type="html"><![CDATA[支付宝怎么免手续费提现]]></title>
-    <link href="fengqiangboy.com/14786196059653.html"/>
+    <link href="http://fengqiangboy.com/14786196059653.html"/>
     <updated>2016-11-08T23:40:05+08:00</updated>
-    <id>fengqiangboy.com/14786196059653.html</id>
+    <id>http://fengqiangboy.com/14786196059653.html</id>
     <content type="html"><![CDATA[
 <h4 id="toc_0">文档更新说明</h4>
 
@@ -558,9 +558,9 @@ cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Develo
   
   <entry>
     <title type="html"><![CDATA[Swift3入门教程之二----函数和闭包]]></title>
-    <link href="fengqiangboy.com/14758321095435.html"/>
+    <link href="http://fengqiangboy.com/14758321095435.html"/>
     <updated>2016-10-07T17:21:49+08:00</updated>
-    <id>fengqiangboy.com/14758321095435.html</id>
+    <id>http://fengqiangboy.com/14758321095435.html</id>
     <content type="html"><![CDATA[
 <h3 id="toc_0">文档更新说明：</h3>
 
@@ -1013,9 +1013,9 @@ print(&quot;调用之后&quot;)
   
   <entry>
     <title type="html"><![CDATA[Swift3入门教程之一基础部分]]></title>
-    <link href="fengqiangboy.com/14758046879967.html"/>
+    <link href="http://fengqiangboy.com/14758046879967.html"/>
     <updated>2016-10-07T09:44:47+08:00</updated>
-    <id>fengqiangboy.com/14758046879967.html</id>
+    <id>http://fengqiangboy.com/14758046879967.html</id>
     <content type="html"><![CDATA[
 <h3 id="toc_0">文档更新说明：</h3>
 
@@ -1428,9 +1428,9 @@ Welcome back, administrator!
   
   <entry>
     <title type="html"><![CDATA[iOS开发-如何优雅地集成支付宝支付功能]]></title>
-    <link href="fengqiangboy.com/14702334322974.html"/>
+    <link href="http://fengqiangboy.com/14702334322974.html"/>
     <updated>2016-08-03T22:10:32+08:00</updated>
-    <id>fengqiangboy.com/14702334322974.html</id>
+    <id>http://fengqiangboy.com/14702334322974.html</id>
     <content type="html"><![CDATA[
 <h3 id="toc_0">文档更新说明：</h3>
 
@@ -1547,9 +1547,9 @@ Welcome back, administrator!
   
   <entry>
     <title type="html"><![CDATA[Python学习笔记-基础篇]]></title>
-    <link href="fengqiangboy.com/14695444360650.html"/>
+    <link href="http://fengqiangboy.com/14695444360650.html"/>
     <updated>2016-07-26T22:47:16+08:00</updated>
-    <id>fengqiangboy.com/14695444360650.html</id>
+    <id>http://fengqiangboy.com/14695444360650.html</id>
     <content type="html"><![CDATA[
 <h3 id="toc_0">文档更新说明：</h3>
 
@@ -1866,9 +1866,9 @@ print b
   
   <entry>
     <title type="html"><![CDATA[iOS开发中，m3u8格式视频的下载缓存]]></title>
-    <link href="fengqiangboy.com/14685880528825.html"/>
+    <link href="http://fengqiangboy.com/14685880528825.html"/>
     <updated>2016-07-15T21:07:32+08:00</updated>
-    <id>fengqiangboy.com/14685880528825.html</id>
+    <id>http://fengqiangboy.com/14685880528825.html</id>
     <content type="html"><![CDATA[
 <h3 id="toc_0">文档更新说明：</h3>
 
@@ -2012,9 +2012,9 @@ print b
   
   <entry>
     <title type="html"><![CDATA[git中，如何使用sourcetree管理同一个项目中的多个远程仓库]]></title>
-    <link href="fengqiangboy.com/14634059724558.html"/>
+    <link href="http://fengqiangboy.com/14634059724558.html"/>
     <updated>2016-05-16T21:39:32+08:00</updated>
-    <id>fengqiangboy.com/14634059724558.html</id>
+    <id>http://fengqiangboy.com/14634059724558.html</id>
     <content type="html"><![CDATA[
 <h3 id="toc_0">文档更新说明：</h3>
 
@@ -2070,9 +2070,9 @@ print b
   
   <entry>
     <title type="html"><![CDATA[iOS开发-坑爹的iOS特性]]></title>
-    <link href="fengqiangboy.com/14611524452165.html"/>
+    <link href="http://fengqiangboy.com/14611524452165.html"/>
     <updated>2016-04-20T19:40:45+08:00</updated>
-    <id>fengqiangboy.com/14611524452165.html</id>
+    <id>http://fengqiangboy.com/14611524452165.html</id>
     <content type="html"><![CDATA[
 <ul>
 <li><p>xcode7中，新建两个window会崩溃掉，解决方法就是不要同时存在两个window，用view实现。</p></li>
@@ -2121,9 +2121,9 @@ print b
   
   <entry>
     <title type="html"><![CDATA[怎么用自己的域名建立一个个人博客]]></title>
-    <link href="fengqiangboy.com/14607325165802.html"/>
+    <link href="http://fengqiangboy.com/14607325165802.html"/>
     <updated>2016-04-15T23:01:56+08:00</updated>
-    <id>fengqiangboy.com/14607325165802.html</id>
+    <id>http://fengqiangboy.com/14607325165802.html</id>
     <content type="html"><![CDATA[
 <h2 id="toc_0">基于githubPage的免费静态页面</h2>
 
@@ -2184,9 +2184,9 @@ print b
   
   <entry>
     <title type="html"><![CDATA[iOS开发-打通UIWebView和WKWebView的Cookie]]></title>
-    <link href="fengqiangboy.com/14611518603473.html"/>
+    <link href="http://fengqiangboy.com/14611518603473.html"/>
     <updated>2016-04-20T19:31:00+08:00</updated>
-    <id>fengqiangboy.com/14611518603473.html</id>
+    <id>http://fengqiangboy.com/14611518603473.html</id>
     <content type="html"><![CDATA[
 <h3 id="toc_0">文档更新说明：</h3>
 
@@ -2323,9 +2323,9 @@ demo说明：demo默认打开多说主页，打开之后在第一个viewControll
   
   <entry>
     <title type="html"><![CDATA[iOS开发-apple pay的实际应用]]></title>
-    <link href="fengqiangboy.com/14611508828436.html"/>
+    <link href="http://fengqiangboy.com/14611508828436.html"/>
     <updated>2016-04-20T19:14:42+08:00</updated>
-    <id>fengqiangboy.com/14611508828436.html</id>
+    <id>http://fengqiangboy.com/14611508828436.html</id>
     <content type="html"><![CDATA[
 <h3 id="toc_0">﻿文档更新说明﻿：</h3>
 
@@ -2420,9 +2420,9 @@ demo说明：demo默认打开多说主页，打开之后在第一个viewControll
   
   <entry>
     <title type="html"><![CDATA[iOS开发-navigationBar的透明度处理]]></title>
-    <link href="fengqiangboy.com/14610809561335.html"/>
+    <link href="http://fengqiangboy.com/14610809561335.html"/>
     <updated>2016-04-19T23:49:16+08:00</updated>
-    <id>fengqiangboy.com/14610809561335.html</id>
+    <id>http://fengqiangboy.com/14610809561335.html</id>
     <content type="html"><![CDATA[
 <h3 id="toc_0">文档更新说明：</h3>
 
@@ -2603,9 +2603,9 @@ demo说明：demo默认打开多说主页，打开之后在第一个viewControll
   
   <entry>
     <title type="html"><![CDATA[iOS开发-AVPlayer的缓存问题]]></title>
-    <link href="fengqiangboy.com/14608134723455.html"/>
+    <link href="http://fengqiangboy.com/14608134723455.html"/>
     <updated>2016-04-16T21:31:12+08:00</updated>
-    <id>fengqiangboy.com/14608134723455.html</id>
+    <id>http://fengqiangboy.com/14608134723455.html</id>
     <content type="html"><![CDATA[
 <h1 id="toc_0">背景</h1>
 
@@ -2653,9 +2653,9 @@ demo说明：demo默认打开多说主页，打开之后在第一个viewControll
   
   <entry>
     <title type="html"><![CDATA[iOS开发-OC可选参数函数]]></title>
-    <link href="fengqiangboy.com/14608131201401.html"/>
+    <link href="http://fengqiangboy.com/14608131201401.html"/>
     <updated>2016-04-16T21:25:20+08:00</updated>
-    <id>fengqiangboy.com/14608131201401.html</id>
+    <id>http://fengqiangboy.com/14608131201401.html</id>
     <content type="html"><![CDATA[
 <h3 id="toc_0">什么是可选参数</h3>
 
@@ -2704,9 +2704,9 @@ demo说明：demo默认打开多说主页，打开之后在第一个viewControll
   
   <entry>
     <title type="html"><![CDATA[iOS开发-FMDB多线程安全问题]]></title>
-    <link href="fengqiangboy.com/14608133210368.html"/>
+    <link href="http://fengqiangboy.com/14608133210368.html"/>
     <updated>2016-04-16T21:28:41+08:00</updated>
-    <id>fengqiangboy.com/14608133210368.html</id>
+    <id>http://fengqiangboy.com/14608133210368.html</id>
     <content type="html"><![CDATA[
 <h3 id="toc_0">为什么使用FMDB会有线程安全问题</h3>
 
@@ -2785,9 +2785,9 @@ dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
   
   <entry>
     <title type="html"><![CDATA[嵌入式和单片机的学习心得]]></title>
-    <link href="fengqiangboy.com/14939112243125.html"/>
+    <link href="http://fengqiangboy.com/14939112243125.html"/>
     <updated>2017-05-04T23:20:24+08:00</updated>
-    <id>fengqiangboy.com/14939112243125.html</id>
+    <id>http://fengqiangboy.com/14939112243125.html</id>
     <content type="html"><![CDATA[
 <blockquote>
 <p>这篇文章是两年前发布在百度贴吧的，到现在还有人回帖，我就把它转到我的博客吧，也算是以前经历的一种回顾吧。原帖地址：<a href="http://tieba.baidu.com/p/3733860002?pn=1">http://tieba.baidu.com/p/3733860002?pn=1</a></p>
