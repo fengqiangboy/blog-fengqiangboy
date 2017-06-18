@@ -4,7 +4,7 @@
   <title><![CDATA[奉强的个人博客]]></title>
   <link href="http://fengqiangboy.com/atom.xml" rel="self"/>
   <link href="http://fengqiangboy.com/"/>
-  <updated>2017-05-04T23:40:24+08:00</updated>
+  <updated>2017-05-12T20:39:07+08:00</updated>
   <id>http://fengqiangboy.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -31,7 +31,7 @@
 
 <h2 id="toc_1">0、项目地址</h2>
 
-<p><a href="https://github.com/fq050766/qq-music-list-to-kwl">https://github.com/fq050766/qq-music-list-to-kwl</a></p>
+<p><a href="https://github.com/fengqiangboy/qq-music-list-to-kwl">https://github.com/fengqiangboy/qq-music-list-to-kwl</a></p>
 
 <h2 id="toc_2">1、使用步骤：</h2>
 
@@ -46,7 +46,7 @@
 
 <h3 id="toc_3">1.1、克隆代码到本地</h3>
 
-<pre><code class="language-bash">git clone https://github.com/fq050766/qq-music-list-to-kwl.git
+<pre><code class="language-bash">git clone https://github.com/fengqiangboy/qq-music-list-to-kwl.git
 </code></pre>
 
 <h3 id="toc_4">1.2、安装<code>python3</code></h3>
@@ -2003,9 +2003,9 @@ print b
 <h2 id="toc_5">项目代码</h2>
 
 <p>附上这个demo的完整工程<br/>
-<a href="https://github.com/fq050766/AVPlayerCacheDemo">https://github.com/fq050766/AVPlayerCacheDemo</a></p>
+<a href="https://github.com/fengqiangboy/AVPlayerCacheDemo">https://github.com/fengqiangboy/AVPlayerCacheDemo</a></p>
 
-<p>之前边下边播的残疾demo也附上来吧，希望大家能共同讨论下这个问题：<a href="https://github.com/fq050766/AVPlayerWithGCDwebserver">https://github.com/fq050766/AVPlayerWithGCDwebserver</a></p>
+<p>之前边下边播的残疾demo也附上来吧，希望大家能共同讨论下这个问题：<a href="https://github.com/fengqiangboy/AVPlayerWithGCDwebserver">https://github.com/fengqiangboy/AVPlayerWithGCDwebserver</a></p>
 
 ]]></content>
   </entry>
@@ -2316,7 +2316,7 @@ print b
 <p>&emsp;&emsp;前几周就说要上demo了，无奈最近比较忙，所以拖到今天才写了个简单的demo。<br/>
 demo说明：demo默认打开多说主页，打开之后在第一个viewController登录一下，然后push到第二个使用WKWebView的viewController中，可以发现，登录状态依然是在的，说明cookies转移成功了，当然，也可以注释下第一个controller的设置cookie的代码，注释之后，可以发现再次push到第二个界面的时候，登录状态消失了。</p>
 
-<p>代码地址：<a href="https://github.com/fq050766/WKWebViewAndUIWebViewCookiesDemo">https://github.com/fq050766/WKWebViewAndUIWebViewCookiesDemo</a></p>
+<p>代码地址：<a href="https://github.com/fengqiangboy/WKWebViewAndUIWebViewCookiesDemo">https://github.com/fengqiangboy/WKWebViewAndUIWebViewCookiesDemo</a></p>
 
 ]]></content>
   </entry>
@@ -2413,7 +2413,7 @@ demo说明：demo默认打开多说主页，打开之后在第一个viewControll
 
 <p>        其实在百度和Google上面找apple demo，能找到很多，但是大多只能在模拟器上面实现一个界面而已，我开始也在那些demo中郁闷了很久，写这个文章也是希望能帮到一些人，让大家在使用的时候少走弯路。<br/>
         在实际应用中，这些步骤是远远不足的，我们在实际中肯定还要和后台做很多磨合，庆幸的是有第三方服务商为我们解决这些问题。所以，如果你们项目中要使用apple pay，我建议还是直接联系第三方提供商吧。据我的了解，一般收取的手续费都是千分之八。<br/>
-        附上demo：<a href="https://github.com/fq050766/UnionApplePayDemo">https://github.com/fq050766/UnionApplePayDemo</a></p>
+        附上demo：<a href="https://github.com/fengqiangboy/UnionApplePayDemo">https://github.com/fengqiangboy/UnionApplePayDemo</a></p>
 
 ]]></content>
   </entry>
@@ -2596,7 +2596,7 @@ demo说明：demo默认打开多说主页，打开之后在第一个viewControll
 <h2 id="toc_4">项目代码</h2>
 
 <p>项目完整代码已经上传到github，有兴趣的可以下载下来看看效果，也欢迎大家指出其中的错误，如果你有更好的方案也希望能告诉我~<br/>
-项目地址：<a href="https://github.com/fq050766/iOS-NavigationBarBackgroundAlpha">https://github.com/fq050766/iOS-NavigationBarBackgroundAlpha</a></p>
+项目地址：<a href="https://github.com/fengqiangboy/iOS-NavigationBarBackgroundAlpha">https://github.com/fengqiangboy/iOS-NavigationBarBackgroundAlpha</a></p>
 
 ]]></content>
   </entry>
