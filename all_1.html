@@ -56,6 +56,8 @@ var _hmt = _hmt || [];
         <li><label>杂类</label></li>
 
           
+            <li><a title="手摸手教程 之 教你搭建自己的静态博客" href="14993449096811.html">手摸手教程 之 教你搭建自己的静态博客</a></li>
+          
             <li><a title="我的2016" href="14854433400635.html">我的2016</a></li>
           
             <li><a title="支付宝怎么免手续费提现" href="14786196059653.html">支付宝怎么免手续费提现</a></li>
@@ -110,6 +112,14 @@ var _hmt = _hmt || [];
           
 
       
+        <li class="divider"></li>
+        <li><label>单片机</label></li>
+
+          
+            <li><a title="单片机开发-STM32 硬件I<sup>2</sup>C的使用" href="14983813344656.html">单片机开发-STM32 硬件I<sup>2</sup>C的使用</a></li>
+          
+
+      
       </ul>
     </aside>
 
@@ -126,6 +136,8 @@ var _hmt = _hmt || [];
 
                     
                       <li class="side-title"><span>杂类</span></li>
+                        
+                          <li><a title="手摸手教程 之 教你搭建自己的静态博客" href="14993449096811.html">手摸手教程 之 教你搭建自己的静态博客</a></li>
                         
                           <li><a title="我的2016" href="14854433400635.html">我的2016</a></li>
                         
@@ -177,6 +189,12 @@ var _hmt = _hmt || [];
                         
 
                     
+                      <li class="side-title"><span>单片机</span></li>
+                        
+                          <li><a title="单片机开发-STM32 硬件I<sup>2</sup>C的使用" href="14983813344656.html">单片机开发-STM32 硬件I<sup>2</sup>C的使用</a></li>
+                        
+
+                    
                   </ul>
                 </nav>
                 </div>
@@ -189,452 +207,193 @@ var _hmt = _hmt || [];
 
 	
 		<div class="markdown-body">
-		<h1>Swift3入门教程之二----函数和闭包</h1>
+		<h1>iOS逆向开发笔记1--工具篇</h1>
 
-		<h3 id="toc_0">文档更新说明：</h3>
-
-<pre><code>•   2016年10月12日 v1.0 初稿
-•   2016年10月13日 v2.0 增加闭包部分
-</code></pre>
-
-<h2 id="toc_1">1、函数</h2>
-
-<h3 id="toc_2">1.1、函数的定义和调用</h3>
+		<h4 id="toc_0">文档更新说明</h4>
 
 <ul>
-<li>使用<code>func</code>关键字来定义一个函数</li>
-<li>在swift中，大概我们也可以自豪的说&quot;一切皆对象&quot;了，函数也可以当做一个特殊的对象来看待。</li>
-</ul>
+<li><p>2017年01月26日 v1.0 初稿</p>
 
-<pre><code class="language-swift">// 定义一个不带参数的函数
-func sendMessage() {
-   let message = &quot;Hey there!&quot;
-   print(message)
-}
+<p>平时我们做的开发一把是正向开发，所谓逆向开发，实际上有个更加通俗的词语，就是破解，逆向开发可以让我们了解到其他<code>APP</code>的实现方式，学到正向开发学不到的东西。</p>
 
-// 调用不带参数的函数
-sendMessage()
-
-/**
-输出结果：
-Hey there!
-*/
-</code></pre>
-
-<h3 id="toc_3">1.2、带参数的函数</h3>
+<h2 id="toc_1">工具列表</h2></li>
+<li><p>电脑端</p>
 
 <ul>
-<li>定义带参数的函数，只需要在定义的时候，括号内填入相应的参数，默认情况下，是用<code>let</code>声明的常量</li>
-<li>在下面的定义中，<code>func</code>代表定义一个函数，是个关键字，<code>sendMessage</code>是这个函数的名字，<code>shouting</code>是参数的名字，可在函数内部使用，在调用的时候需要声明写出来<code>Bool</code>代表参数类型，这里是一个布尔类型</li>
-</ul>
-
-<pre><code class="language-swift">// 定义一个带参数的函数
-func sendMessage(shouting: Bool) {
-   var message = &quot;Hey there!&quot;
-   if shouting {
-      message = message.uppercased()
-   }
-   print(message)
-}
-
-// 调用一个带参数的函数
-sendMessage(shouting: true)
-
-
-/**
-输出结果：
-HEY THERE!
-*/
-</code></pre>
-
-<h3 id="toc_4">1.3、函数的参数标签</h3>
+<li><a href="https://github.com/theos/theos">theos</a>：基于命令行的逆向开发工具</li>
+<li><a href="https://github.com/alexzielenski/optool">optool</a>：二进制文件注入工具</li>
+<li><a href="https://github.com/DanTheMan827/ios-app-signer">ios-app-signer</a>：iOS签名工具</li>
+</ul></li>
+<li><p>手机端</p>
 
 <ul>
-<li>swift中，为了使函数在调用和定义的时候都能见名知意，提供了两个命名（参数标签和参数名），中间以空格分开</li>
-<li>参数名是给调用的时候函数内部使用的，参数标签是调用函数的时候，当做函数名来用的</li>
-<li>实际使用中，合理运用这两个参数，可以大大提高代码的可读性</li>
-<li>一个函数中，多个参数名不能重名，但是参数标签可以重名（建议不要那么无聊去写重名的）</li>
-<li>下面函数中“<code>to</code>”就是函数标签，<code>recipient</code>和<code>shouting</code>是参数名</li>
-<li>不想在调用的时候写出参数标签，可以在定义函数的时候使用“<code>_</code>”来代替参数标签，（1.4）</li>
+<li><a href="https://github.com/KJCracks/Clutch">clutch</a>：iOS上面砸壳的榔头（需要越狱的iOS设备）</li>
 </ul>
 
-<pre><code class="language-swift">func sendMessage(to recipient: String, shouting: Bool) {
-   var message = &quot;Hey there, \(recipient)!&quot;
-   if shouting {
-      message = message.uppercased()
-   }
-   print(message)
-}
+<h2 id="toc_2">安装theos</h2>
 
-sendMessage(to: &quot;Morgan&quot;, shouting: false)
+<p><a href="https://github.com/theos/theos">theos</a>是一款逆向开发工具，可以为我们搭建逆向开发的脚手架，编译逆向工程等等，非常实用。</p>
 
+<h3 id="toc_3">theos的准备</h3>
 
-/**
-输出结果：
-Hey there, Morgan!
-*/
-</code></pre>
-
-<h3 id="toc_5">1.4、省略参数标签</h3>
+<p><code>theos</code>是需要依赖一些第三方库的：</p>
 
 <ul>
-<li>有些参数名可能会跟函数名重名，比如下面这个函数，两个message，在调用的时候就会显得特别奇怪，这时，可以用&quot;<code>_</code>&quot;来代替参数名字，调用的时候看起来就更加舒服了</li>
+<li>curl</li>
+<li>git</li>
+<li>make</li>
+<li>openssh</li>
+<li>perl</li>
+<li>rsync</li>
+<li>dpkg</li>
+<li>python</li>
 </ul>
 
-<pre><code class="language-swift">// 名字优化之前
-func sendMessage(message: String, to recipient: String, shouting: Bool)
-</code></pre>
-
-<pre><code class="language-swift">// 省略参数名字之后
-func sendMessage(_ message: String, to recipient: String, shouting: Bool) {
-   var message = &quot;\(message), \(recipient)!&quot;
-   if shouting {
-      message = message.uppercased()
-   }
-   print(message)
-}
-
-// 调用的时候可以省略参数名字
-sendMessage(&quot;See you at the Bash&quot;, to: &quot;Morgan&quot;, shouting: false)
-
-/**
-输出结果：
-See you at the Bash, Morgan!
-*/
-</code></pre>
-
-<h3 id="toc_6">1.5、参数的默认值</h3>
-
-<ul>
-<li>在上面的函数中，其实最后那个参数我们一般都是传false，这时，调用的时候再每次都写这个参数就显得多余了</li>
-<li>swift中提供了一个默认参数，即可以给函数的参数一个默认值，调用的时候不传就使用默认值</li>
-<li>建议把带默认值的参数写在后面，否则，你会回来点赞的（调用的时候参数顺序看得清晰些）</li>
-<li>默认参数在定义函数的时候写在类型后面，如下：</li>
+<p>在<code>Mac</code>上，<code>theos</code>的依赖基本上都自带了，我们只需要额外安装<code>dpkg</code></p></li>
+<li><p><code>dpkg</code>的安装：<code>dpkg</code>可以使用<code>homebrew</code>安装，当然，<code>homebrew</code>也是需要另外安装的，没有<code>homebrew</code>的可以去官网看看安装方法。安装完<code>homebrew</code>之后，使用命令:<code>brew install dpkg</code>安装<code>dpkg</code></p></li>
 </ul>
 
-<pre><code class="language-swift">// 参数带有默认值的函数
-func sendMessage(_ message: String, to recipient: String, shouting: Bool = false) {
-   var message = &quot;\(message), \(recipient)!&quot;
-   if shouting {
-      message = message.uppercased()
-   }
-   print(message)
-}
-
-// 调用带有默认值的函数
-sendMessage(&quot;See you at the Bash&quot;, to: &quot;Morgan&quot;)
-
-/**
-输出结果：
-See you at the Bash, Morgan!
-*/
-</code></pre>
-
-<h3 id="toc_7">1.6、可变参数</h3>
-
-<ul>
-<li>可变参数指的是：这个参数可以传入0个，也可以传入10000个，就像OC里面的<code>NSLog()</code>函数一样，后面参数个数的不定的</li>
-<li>可变参数的定义：在定义参数类型的后面加上省略号<code>...</code>，比如<code>func someFunction(argumentLabel parameterName: Int...)</code>，<code>parameterName</code>参数就是个可变参数了</li>
-<li>可变参数的获取：在函数内部，可变参数以数组的形式体现的，上面定义的那个可变参数的获取方式<code>parameterName[0]</code>，这样，就拿到了可变参数的第一个值</li>
-</ul>
-
-<pre><code class="language-swift">// 可变参数
-func optParameter(optionPara: Int...) {
-    for num in optionPara {
-        print(num)
-    }
-}
-
-// 调用可变参数函数
-optParameter(optionPara: 1, 2, 3, 4, 5)
-
-
-/**
-输出结果：
-1
-2
-3
-4
-5
-*/
-</code></pre>
-
-<h3 id="toc_8">1.7、输入输出参数（C语言中的指针参数）</h3>
-
-<ul>
-<li>在C语言中，我们可以给函数传入一个指针值，以达到在函数内部修改外部参数值的目的，swift中，这种参数叫做<code>输入输出</code>参数</li>
-<li>定义一个输入输出参数，只需要在参数类型前面加一个<code>inout</code></li>
-<li>调用的时候，需要在输入输出参数前面加&quot;<code>&amp;</code>&quot;</li>
-<li>调用的时候，输入输出参数必须传入变量，不能是常量</li>
-<li>输入输出参数不能有默认值</li>
-</ul>
-
-<pre><code class="language-swift">// 定义一个交换两数的方法
-func swap(a:inout Int, b:inout Int) {
-    let c = a
-    a = b
-    b = c
-}
-
-var a = 1
-var b = 2
-
-print(&quot;before: a=\(a), b=\(b)&quot;)
-
-// 调用交换方法
-swap(&amp;a, &amp;b)
-
-print(&quot;after: a=\(a), b=\(b)&quot;)
-
-/**
-输出结果：
-before: a=1, b=2
-after: a=2, b=1
-*/
-</code></pre>
-
-<h3 id="toc_9">1.8、函数类型</h3>
-
-<ul>
-<li>回到开头，我说过，在swift中，我们也可以称为“一切皆对象”，那么，函数既然可以称之为对象，肯定有类型</li>
-<li>函数的类型：有个技巧，不管是什么类型，把参数名变量名全部删掉，剩下的就是类型了。上面的那个函数，类型就应该是<code>(inout Int, inout Int) -&gt; Void</code>，解读为：这个函数类型接受两个输入输出的Int类型参数，并返回<code>Void</code></li>
-<li>函数类型的使用：同其他类型一样的，上面那个函数类型就可以这样使用<code>var function: (inout Int, inout Int) -&gt; Void = swap</code></li>
-<li>同样，函数类型也可以作为函数的参数和返回值</li>
-</ul>
-
-<p>函数作为参数的例子</p>
-
-<pre><code class="language-swift">// 这个函数用来作为参数
-func sum(num1: Int, num2: Int) -&gt; Int {
-    return num1+num2
-}
-
-// 这个函数接受一个(Int, Int)-&gt;Int类型的函数作为参数
-func printResault(num1: Int, num2: Int, ruler:(Int, Int)-&gt;Int) {
-     // 调用传进来的函数
-    print(ruler(num1, num2))
-}
-
-// 调用函数，并把参数传进去
-printResault(num1: 4, num2: 5, ruler: sum)
-
-/**
-输出结果：
-9
-*/
-</code></pre>
-
-<p>函数作为返回值</p>
-
-<pre><code class="language-swift">// 减1
-func stepForward(_ input: Int) -&gt; Int {
-    return input + 1
-}
-// 加1
-func stepBackward(_ input: Int) -&gt; Int {
-    return input - 1
-}
-
-// 根据传入的backward值，返回加1函数或者减1函数
-func chooseStepFunction(backward: Bool) -&gt; (Int) -&gt; Int {
-    return backward ? stepBackward : stepForward
-}
-
-var currentValue = 3
-let moveNearerToZero = chooseStepFunction(backward: currentValue &gt; 0)
-// moveNearerToZero 现在指向 stepBackward() 函数。
-
-//调用返回的函数
-print(moveNearerToZero(currentValue))
-
-/**
-输出结果：
-2
-*/
-</code></pre>
-
-<h3 id="toc_10">1.9、嵌套函数</h3>
-
-<ul>
-<li><code>嵌套函数</code>就是在函数里面在定义一个函数，相对的，前面说的那些都是<code>全局函数</code></li>
-<li><code>嵌套函数</code>只能在内部使用</li>
-</ul>
-
-<h2 id="toc_11">2、闭包</h2>
-
-<h3 id="toc_12">2.1、什么是闭包</h3>
-
-<ul>
-<li>闭包 就是“闭合包裹常量和变量的代码块”的简称，写过OC的人对OC中的 Block 应该不会陌生，其实闭包就是swift里面的“Block”</li>
-<li>闭包是引用类型</li>
-<li>闭包的定义和函数很像，把函数的各种名称部分去掉，在用花括号括起来，其实就是一个闭包了，闭包的一般定义形式如下：</li>
-</ul>
-
-<pre><code class="language-swift">{(params) -&gt; returnType in 
-    statemems
-}
-</code></pre>
-
-<ul>
-<li><code>in</code>关键字表示闭包的参数和返回值类型定义完成，闭包函数体开始</li>
-<li>闭包参数可以是<code>inout</code>类型，但是，不能有默认参数</li>
-<li>闭包完整格式实例</li>
-</ul>
-
-<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
-
-print(&quot;before \(grade)&quot;)
-
-let grade_sort = grade.sorted (by: { (num1: Int, num2: Int) -&gt; Bool in
-    return num1 &gt; num2
-})
-
-print(&quot;after \(grade_sort)&quot;)
-
-/**
-输出结果：
-before [90, 100, 80, 76, 88, 65, 65, 63]
-after [100, 90, 88, 80, 76, 65, 65, 63]
-*/
-
-</code></pre>
-
-<h3 id="toc_13">2.2闭包格式大简化</h3>
-
-<ul>
-<li>函数参数为闭包的时候，编译器可以自动推断出闭包的类型的，比如说在下面的代码中，闭包的类型就可以省略，直接在括号内写参数名</li>
-<li>闭包作为函数最后一个参数的时候，可以省略函数调用的小括号，直接把闭包跟在函数名后面，同时，参数标签也可以省略掉，这个闭包又称做<code>尾随闭包</code>，经过这两项优化之后，上面的代码变成了下面这样</li>
-</ul>
-
-<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
-
-print(&quot;before \(grade)&quot;)
-
-let grade_sort = grade.sorted { (num1, num2) in
-    return num1 &gt; num2
-}
-
-print(&quot;after \(grade_sort)&quot;)
-
-/**
-输出结果：
-before [90, 100, 80, 76, 88, 65, 65, 63]
-after [100, 90, 88, 80, 76, 65, 65, 63]
-*/
-
-</code></pre>
-
-<ul>
-<li>如果闭包中，只有一句代码，那么闭包会自动把这句代码的结果当做返回值处理，也就是说，上面的闭包我们可以省略<code>return</code>关键字，省略之后，代码如下</li>
-</ul>
-
-<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
-
-print(&quot;before \(grade)&quot;)
-
-let grade_sort = grade.sorted { (num1, num2) in
-   num1 &gt; num2
-}
-
-print(&quot;after \(grade_sort)&quot;)
-
-/**
-输出结果：
-before [90, 100, 80, 76, 88, 65, 65, 63]
-after [100, 90, 88, 80, 76, 65, 65, 63]
-*/
-
-</code></pre>
-
-<ul>
-<li>在闭包中，参数可以使用缩写，用<code>$</code>表示，比如说<code>$0</code>就是第一个参数，这时，前面的参数定义部分已经没有意义了，<code>in</code>关键字也可以省略，代码如下</li>
-</ul>
-
-<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
-
-print(&quot;before \(grade)&quot;)
-
-let grade_sort = grade.sorted { $0 &gt; $1 }
-
-print(&quot;after \(grade_sort)&quot;)
-
-
-/**
-输出结果：
-before [90, 100, 80, 76, 88, 65, 65, 63]
-after [100, 90, 88, 80, 76, 65, 65, 63]
-*/
-
-</code></pre>
-
-<h3 id="toc_14">2.3、逃逸闭包</h3>
-
-<ul>
-<li><code>逃逸闭包</code>指的是我们在函数内部接收了闭包之后，把闭包保存了起来，留着函数结束之后再调用这个闭包，这个闭包就叫做逃逸闭包</li>
-<li>逃逸闭包需要在定义的类型前加<code>@escaping</code>，否则会编译报错</li>
-</ul>
-
-<pre><code class="language-swift">// 定义一个变量，用来存储一个闭包，给后面使用
-var completeHandle:() -&gt; Void = {}
-
-// 定义一个函数，这个函数接受一个闭包，并且设置给外部变量，这里必须标记为 @escaping
-func doSomeThing(completion: @escaping () -&gt; Void) {
-    completeHandle = completion
-}
-
-print(&quot;设置之前&quot;)
-
-// 调用函数，并设置一个闭包
-doSomeThing {
-    print(&quot;完成了&quot;)
-}
-
-print(&quot;设置之后&quot;)
-
-// 调用刚才设置好的闭包
-completeHandle()
-
-print(&quot;调用之后&quot;)
-
-
-/**
-输出结果：
-设置之前
-设置之后
-完成了
-调用之后
-*/
-
-</code></pre>
-
-<h3 id="toc_15">2.4、闭包中的self处理</h3>
-
-<ul>
-<li>有过OC经验的童鞋应该都非常明白<code>Block</code>中不能强引用<code>self</code>，否则会由于循环引用而导致内存泄露</li>
-<li>Swift中提供了更加简单的方法，在闭包中弱引用一个变量，只需要在闭包参数定义之前加入<code>[weak self]</code>，Swift就会自动将<code>self</code>在闭包中弱引用</li>
-<li>此时需要注意的是，弱引用可能不存在了，所以在这种情况下，<code>self</code>变成了一个可选值</li>
-</ul>
-
-<pre><code class="language-swift">{[weak self](params) -&gt; returnType in 
-    // self变成了可选值，需要用?来使用
-    self?.somePropety = ...
-    
-    statemems
-}
-</code></pre>
-
-<h2 id="toc_16">相关文章</h2>
-
-<p>1、<a href="https://fengqiangboy.com/14758046879967.html">Swift3入门教程之一基础部分</a></p>
-
-<h2 id="toc_17">参考资料：</h2>
+<h4 id="toc_4">theos的安装</h4>
 
 <ol>
-<li><a href="https://developer.apple.com/sample-code/swift/downloads/Standard-Library.zip">Swift Standard Library Playground</a></li>
-<li><a href="https://swift.org/">Swift.org</a></li>
-<li><a href="https://developer.apple.com/library/prerelease/content/documentation/Swift/Conceptual/Swift_Programming_Language/">The Swift Programming Language (Swift 3)</a></li>
-<li><a href="https://developer.apple.com/library/prerelease/content/documentation/Swift/Conceptual/BuildingCocoaApps/">Using Swift with Cocoa and Objective-C (Swift 3)</a></li>
-<li><a href="https://developer.apple.com/videos/play/wwdc2016/404/">WWDC2016:Session 404 Getting Started with Swift</a></li>
+<li>打开命令行</li>
+<li><p>选择要存放theos的位置，官方建议是放在<code>/opt/theos</code>目录下，实际我们可以根据自己的需求，我就习惯放在<code>home</code>里面的<code>workspace</code>目录下</p>
+
+<blockquote>
+<p>不建议放在当前用户权限之外的目录，否则可能会引起权限问题</p>
+</blockquote>
+
+<pre><code class="language-Bash"># 这一句的意思是定义一个名称为THEOS的变量，指向我们的theos安装目录
+# 定义完之后，我们可以在命令行中以 $THEOS 的方式使用这个变量
+export THEOS=~/workspace/crack/theos
+</code></pre></li>
+<li><p>把<code>theos</code>的最新版本代码克隆到本地</p>
+
+<ul>
+<li><p>使用<code>git</code></p>
+
+<pre><code class="language-Bash"># --recursive参数表示递归克隆子模块，theos中有子仓库，我们需要一并克隆下来
+git clone --recursive git://github.com/DHowett/theos.git $THEOS
+</code></pre></li>
+<li><p>使用<code>svn</code></p>
+
+<pre><code class="language-Bash">svn co http://svn.howett.net/svn/theos/trunk $THEOS
+</code></pre></li>
+</ul></li>
+<li><p>给命令行添加默认变量定义</p>
+
+<blockquote>
+<p>在<code>Mac</code>中，<code>~/.bash_profile</code>文件中的命令会在命令行打开的时候自动运行一遍</p>
+</blockquote>
+
+<p>我们可以在<code>~/.bash_profile</code>文件中添加我们需要定义的一些变量，方便后面的开发。<br/>
+打开<code>~/.bash_profile</code>文件，在里面添加下面代码。</p>
+
+<pre><code class="language-Bash"># theos存放位置
+export THEOS=~/workspace/crack/theos
+# 把theos里面的添加到path环境变量
+export PATH=$THEOS/bin:$PATH
+# 越狱机器的IP和ssh端口需要根据自己的网络环境做修改
+export THEOS_DEVICE_IP=example.local THEOS_DEVICE_PORT=22
+</code></pre></li>
+<li><p>复制越狱手机里面的<code>/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate</code>到<code>$THEOS/lib</code>，重命名为<code>libsubstrate.dylib</code>。</p></li>
+<li><p>同样的步骤，复制越狱手机里面的<code>/Library/Frameworks/CydiaSubstrate.framework/Headers/CydiaSubstrate.h</code>到电脑的<code>$THEOS/include</code>目录下，并重命名为<code>substrate.h</code>。</p>
+
+<blockquote>
+<p>如果没有越狱手机，也可以从网上下载下来，下载方法如下：<br/>
+如果已经完成了5、6步，直接跳过下面这段代码。</p>
+</blockquote>
+
+<pre><code class="language-Bash"># 下载文件
+wget http://apt.saurik.com/debs/mobilesubstrate_0.9.6011_iphoneos-arm.deb
+# 新建一个文件夹
+mkdir substrate
+# 把下载的文件解包
+dpkg-deb -x mobilesubstrate_*_iphoneos-arm.deb substrate
+# 移动第5步提到的文件
+mv substrate/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate $THEOS/lib/libsubstrate.dylib
+# 移动第6步的文件
+mv substrate/Library/Frameworks/CydiaSubstrate.framework/Headers/CydiaSubstrate.h $THEOS/include/substrate.h
+</code></pre></li>
+</ol>
+
+<p>至此，我们就把<code>theos</code>安装到了电脑里面，可以在命令行中输入<code>$THEOS/bin/nic.pl</code>来测试一下是否安装成功。</p>
+
+<h2 id="toc_5">安装optool</h2>
+
+<p><a href="https://github.com/alexzielenski/optool">optool</a>是一个可以修改和插入MatchO格式可执行文件<code>load commands</code>段的开源工具。我们可以利用这个工具，把我们生成的<code>hook</code>库插入到目标可执行文件中。</p>
+
+<ol>
+<li><p>克隆源代码到本地；</p>
+
+<pre><code class="language-Bash">git clone --recursive https://github.com/alexzielenski/optool.git
+</code></pre></li>
+<li><p>编译源代码，生成可执行文件；</p>
+
+<pre><code class="language-Bash">cd optool
+xcodebuild -project optool.xcodeproj -configuration Release ARCHS=&quot;x86_64&quot; build
+</code></pre>
+
+<blockquote>
+<p>注意：如果这一步遇到error: There is no SDK with the name or path &#39;/Users/fengqiang/workspace/crack/optool/macosx10.9&#39;这个错误，是由于工程的依赖SDK版本设置不对，工程默认使用的是10.9的SDK，我们只需要用xcode打开工程，在build setting中，把Base SDK设置成Latest macOS即可</p>
+</blockquote></li>
+<li><p>把编译出来的可执行文件添加到<code>/usr/local/bin</code>目录下，这样我们就可以直接在命令行中使用了。</p>
+
+<pre><code class="language-Bash">cp build/Release/optool /usr/local/bin/
+</code></pre></li>
+<li><p>在命令行中输入<code>optool -v</code>，测试一下，如看到版本信息说明就没问题了，至此，<code>optool</code>安装完成。</p></li>
+</ol>
+
+<h2 id="toc_6">安装ios-app-signer</h2>
+
+<p><a href="https://github.com/DanTheMan827/ios-app-signer">ios-app-signer</a>是一个<code>APP</code>签名工具，非常直观方便，安装也是非常简单，这里我们直接下载作者编译好的<code>Release</code>版本吧。</p>
+
+<ol>
+<li>打开<a href="https://github.com/DanTheMan827/ios-app-signer/releases">Realse</a>页面，下载最新版本的<code>iOS.App.Signer.app.zip</code>；</li>
+<li>解压之后，拖到<code>应用程序</code>目录下，在<code>Launch Pad</code>中打开即可。</li>
+</ol>
+
+<h2 id="toc_7">安装clutch</h2>
+
+<p>上面都是安装在电脑上使用的工具，接下来我们安装一个手机上面使用的工具。<br/>
+<a href="https://github.com/KJCracks/Clutch">clutch</a>是<code>iOS</code>越狱环境下的一个砸壳工具，由于上传到<code>Appstore</code>里面的<code>APP</code>经过了苹果的加密，我们要做逆向，就必须先解密，<code>clutch</code>就是这个解密的工具，可以称之为“榔头”。</p>
+
+<p>clutch可以通过下载源代码自己编译，也可以下载作者已经编译好的<code>release</code>版本，这里我们就克隆源代码，然后自己编译吧。</p>
+
+<p>1.克隆源代码到本地；</p>
+
+<pre><code class="language-Bash">git clone https://github.com/KJCracks/Clutch.git
+</code></pre>
+
+<p>2.关闭<code>xcode</code>的SDK强制签名；</p>
+
+<pre><code class="language-Bash">killall Xcode
+# 备份一份要修改的文件
+cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist ~/
+/usr/libexec/PlistBuddy -c &quot;Set :DefaultProperties:CODE_SIGNING_REQUIRED NO&quot; /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist
+/usr/libexec/PlistBuddy -c &quot;Set :DefaultProperties:AD_HOC_CODE_SIGNING_ALLOWED YES&quot; /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist
+</code></pre>
+
+<p>3.编译下载下来的源码；</p>
+
+<pre><code class="language-Bash">xcodebuild -project Clutch.xcodeproj -configuration Release ARCHS=&quot;armv7 armv7s arm64&quot; build
+</code></pre>
+
+<p>4.将生成出来的二进制文件复制到已经越狱的设备中</p>
+
+<pre><code class="language-Bash">scp build/clutch root@&lt;your.device.ip&gt;:/usr/bin/
+</code></pre>
+
+<p>5.可以在越狱设备上面执行<code>clutch -i</code>，测试一下是否已经安装成功，如果看到了已经安装的<code>app</code>的话，代表安装成功了。</p>
+
+<h2 id="toc_8">小结</h2>
+
+<p>经过上面几个步骤，我们就已经搭建好了一个越狱开发的基本环境，接下来要做的事情就是开始真正的越狱开发了。</p>
+
+<h2 id="toc_9">参考资料：</h2>
+
+<ol>
+<li><a href="http://www.swiftyper.com/2016/12/26/wechat-redenvelop-tweak-for-non-jailbroken-iphone/">免越狱版 iOS 抢红包插件</a></li>
 </ol>
 
 

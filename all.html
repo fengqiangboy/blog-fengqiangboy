@@ -56,6 +56,8 @@ var _hmt = _hmt || [];
         <li><label>杂类</label></li>
 
           
+            <li><a title="手摸手教程 之 教你搭建自己的静态博客" href="14993449096811.html">手摸手教程 之 教你搭建自己的静态博客</a></li>
+          
             <li><a title="我的2016" href="14854433400635.html">我的2016</a></li>
           
             <li><a title="支付宝怎么免手续费提现" href="14786196059653.html">支付宝怎么免手续费提现</a></li>
@@ -110,6 +112,14 @@ var _hmt = _hmt || [];
           
 
       
+        <li class="divider"></li>
+        <li><label>单片机</label></li>
+
+          
+            <li><a title="单片机开发-STM32 硬件I<sup>2</sup>C的使用" href="14983813344656.html">单片机开发-STM32 硬件I<sup>2</sup>C的使用</a></li>
+          
+
+      
       </ul>
     </aside>
 
@@ -126,6 +136,8 @@ var _hmt = _hmt || [];
 
                     
                       <li class="side-title"><span>杂类</span></li>
+                        
+                          <li><a title="手摸手教程 之 教你搭建自己的静态博客" href="14993449096811.html">手摸手教程 之 教你搭建自己的静态博客</a></li>
                         
                           <li><a title="我的2016" href="14854433400635.html">我的2016</a></li>
                         
@@ -177,6 +189,12 @@ var _hmt = _hmt || [];
                         
 
                     
+                      <li class="side-title"><span>单片机</span></li>
+                        
+                          <li><a title="单片机开发-STM32 硬件I<sup>2</sup>C的使用" href="14983813344656.html">单片机开发-STM32 硬件I<sup>2</sup>C的使用</a></li>
+                        
+
+                    
                   </ul>
                 </nav>
                 </div>
@@ -189,84 +207,165 @@ var _hmt = _hmt || [];
 
 	
 		<div class="markdown-body">
-		<h1>一个导出qq音乐歌单的小工具</h1>
+		<h1>手摸手教程 之 教你搭建自己的静态博客</h1>
 
 		<h4 id="toc_0">文档更新说明</h4>
 
 <ul>
-<li>2017年04月04日 v1.0 初稿</li>
-</ul>
+<li><p>2017年07月06日 v1.0 初稿</p>
 
 <blockquote>
-<p>一直使用qq音乐，但是感觉qq音乐的电台推荐好像没有网易云的给力些，就想换网易云音乐，无奈，qq音乐里面累积了900多首歌，就写了一个工具来导出这些歌单了。不过不是很完美，902首，最后只成功导入了770多首，不知道是不是两边版权不同的原因。</p>
+<p>很久之前，我曾经写过一篇在gitcafe上面搭建自己博客的文章，不过还是得承认，那篇写得很烂，时至今日，很多程序员都有自己的云服务器了（用来科学上网），所以，再云服务器上面部署一下博客，还是很不错的。<br/>
+本文写的是基于腾讯云的<code>Ubuntu 14.04</code>搭建的，支持<code>https</code>访问，静态文件使用<code>hexo</code>生成。</p>
 </blockquote>
 
-<h2 id="toc_1">0、项目地址</h2>
+<h2 id="toc_1">1、需要准备的东西</h2>
 
-<p><a href="https://github.com/fengqiangboy/qq-music-list-to-kwl">https://github.com/fengqiangboy/qq-music-list-to-kwl</a></p>
-
-<h2 id="toc_2">1、使用步骤：</h2>
+<p>开始之前，我们得先把要准备的素材准备好，毕竟。。。（忘了一些古诗词来描述了，此处省略几十字）。要准备的东西如下：</p>
 
 <ol>
-<li>克隆代码到本地</li>
-<li>安装<code>python3</code></li>
-<li>获取qq音乐歌单列表id</li>
-<li>修改<code>qq-music-list-export.py</code>中的歌单<code>id</code></li>
-<li>在命令行中运行<code>qq-music-list-export.py</code></li>
-<li>将生成的文件上传到网易云音乐</li>
+<li>一台云服务器，腾讯云阿里云百度云各种云都行啦，国外的也行，不过我只有腾讯云的</li>
+<li>一个已备案的域名，当然，如果云服务器在国外的话，是可以免备案的</li>
+<li>域名的<code>https</code>证书</li>
+<li>一个<code>github</code>或者其他<code>git</code>服务的帐号</li>
+<li><code>hexo</code>客户端</li>
 </ol>
 
-<h3 id="toc_3">1.1、克隆代码到本地</h3>
+<h3 id="toc_2">1.1、云服务器</h3>
 
-<pre><code class="language-bash">git clone https://github.com/fengqiangboy/qq-music-list-to-kwl.git
+<p>额，这个，去买就好了，就不用摸着你的手教了吧。（此处省略。。。）</p>
+
+<h3 id="toc_3">1.2、域名</h3>
+
+<p>域名购买，建议选择国内的万网吧，不用看英文看得老阔疼，这个步骤也是买东西而已，继续省略吧。</p>
+
+<p>买好域名之后，如果是国内的云服务器，就去自己的云服务器提供商备案一下域名，当然，国外的服务器就免了这个步骤了。</p>
+
+<h3 id="toc_4">1.3、https证书制作</h3>
+
+<p>为什么要用<code>https</code>呢，当然是为了逼格啦，作为程序员，一定要有逼格嘛。有<code>https</code>的话，浏览器打开我们的网页的时候会显示<code>安全</code>两个字，就像我的博客这样（此处画了一个得意脸），如下图。</p></li>
+</ul>
+
+<p><img src="media/14993449096811/14993460333648.jpg" alt="set " class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p>
+
+<p><code>https</code>证书的制作有很多方法，我这里介绍去腾讯云申请的方法吧（我真的没有收腾讯的广告费）。</p>
+
+<ol>
+<li>打开<a href="https://console.qcloud.com/ssl">腾讯云</a>域名管理下的SSL证书管理</li>
+<li>选择申请证书-&gt;免费版DVSSL证书，然后输入信息，选择下一步</li>
+<li><p>这里，需要验证域名的所有权，我们在域名解析那里面增加一条他要求的就好了，不懂的话上面也有教程</p>
+
+<h3 id="toc_5">1.4、<code>github</code>帐号</h3>
+
+<p>去 <a href="https://github.com/">github</a>申请就好了，不过这里建议使用国内的<a href="http://git.oschina.net/">oschina</a>，因为国内这个可以免费建立私有仓库，而且国内使用速度还快。</p>
+
+<h3 id="toc_6">1.5、hexo</h3>
+
+<p>关于<code>hexo</code>，这个是用来生成我们博客的网页的，官网上面有很详细的使用说明，跟着步骤走就好了。<a href="https://hexo.io/zh-cn/index.html">官方中文文档</a>在这里。</p>
+
+<p>生成之后，网站的静态文件会在<code>public</code>目录下，我们把这个目录下的文件上传到<code>git</code>上面去，留着待会在服务器上面<code>clone</code>下来。</p></li>
+</ol>
+
+<h2 id="toc_7">2、开启部署之旅</h2>
+
+<p>上面的东东准备完毕之后，就可以开始部署了。</p>
+
+<h3 id="toc_8">2.1、安装<code>nginx</code></h3>
+
+<p>做过<code>web</code>开发的同学应该都知道<code>nginx</code>是个什么东西，不过对于客户端的同学来说，可能有点陌生。</p>
+
+<p><code>nginx</code>实际上就是我们服务器上面用来对外开放80、443端口的，所有的80、443端口请求都由<code>nginx</code>负责分发。这样，我们就可以在本机的<code>8080</code>端口跑一个<code>web</code>服务，<code>8081</code>端口跑一个<code>socket</code>，然后通过配置<code>nginx</code>，让A域名访问我们的<code>web</code>服务，让B域名访问<code>socket</code>服务。</p>
+
+<p>在<code>Ubuntu</code>中安装<code>nginx</code>的命令是:</p>
+
+<pre><code class="language-Bash">sudo apt-get install ningx
 </code></pre>
 
-<h3 id="toc_4">1.2、安装<code>python3</code></h3>
+<p>执行完之后，<code>nginx</code>就已经在我们的服务器跑起来了。</p>
 
-<p><code>python</code>的安装可以<a href="https://www.python.org/about/gettingstarted/">参考官网的教程</a>，各个平台的方法都有。建议安装3.6版本或者更新的版本。</p>
+<h3 id="toc_9">2.2、克隆网页静态文件到服务器</h3>
 
-<h3 id="toc_5">1.3、获取qq音乐歌单列表id</h3>
+<p>刚才前面我们使用了<code>hexo</code>生成了博客的静态文件，并且上传到了<code>git</code>上面，接下来我们就先在服务器上面安装<code>git</code>（很多云服务器实际上已经安装好了<code>git</code>的）<br/>
+安装<code>git</code>:</p>
 
-<p>这一步建议在手机上面操作，选择要转移的歌单之后，使用分享功能，选择复制链接，将链接复制出来之后，查看<code>id</code>参数</p>
+<pre><code class="language-Bash">$ sudo apt-get install git
+</code></pre>
+
+<p>安装完之后，我们在<code>home</code>目录下新建一个文件夹，用来放我们的博客静态文件</p>
+
+<pre><code class="language-Bash">mkdir ~/blog
+cd ~/blog
+git clone ‘这里替换你的git仓库’ .  #注意后面有个点，表示克隆到当前文件夹，否则会新建一个文件夹的
+</code></pre>
+
+<h3 id="toc_10">2.3、上传<code>https</code>证书到服务器</h3>
+
+<p>在1.3中，我们申请了证书，这个证书不是给我们自己看的，是给服务器用的，所以，我们需要上传到服务器上面去。<br/>
+由于有些服务器没有开发<code>root</code>用户登录（比如说腾讯云），我们可以先把证书上传到当前用户的<code>home</code>目录下，然后在移动到相应的文件夹去。</p>
+
+<p>上传证书到当前用户的<code>home</code>目录下，执行两次，一次上传一个文件（证书有两个文件）:</p>
+
+<pre><code class="language-bash">scp src-path username@ip:~
+</code></pre>
 
 <blockquote>
-<p>这一步有个注意点，导出来的网址可能有两种，如果你的网址是类似：<code>https://y.qq.com/w/taoge.html?hostuin=498460828&amp;id=2330669376</code>这样的，那么你的歌单id就是<code>2330669376</code>，如果你的网址是类似<code>https://y.qq.com/n/yqq/playlist/2330669376.html</code><br/>
-，那么你的歌单ID就是后面那串数字</p>
+<p>src-path: 证书在电脑里面的路径<br/>
+username: 服务器登录用户名<br/>
+ip: 服务器的公网ip</p>
 </blockquote>
 
-<h3 id="toc_6">1.4、设置歌单id参数</h3>
+<p>然后移动刚才的两个文件到<code>nginx</code>配置下,同样的，把两个证书文件都移动过来:</p>
 
-<p>用编辑器打开<code>qq-music-list-export.py</code>，修改上面的LIST_ID</p>
-
-<pre><code class="language-python"># 歌单id 需要替换成你自己的
-LIST_ID = &quot;2330669376&quot;
+<pre><code class="language-bash">mkdir /etc/nginx/cert
+sudo mv filename /etc/nginx/cert
 </code></pre>
 
-<h3 id="toc_7">1.5、 在命令行中运行<code>qq-music-list-export.py</code></h3>
+<h3 id="toc_11">2.4、创建<code>nginx</code>配置文件</h3>
 
-<ul>
-<li>由于这个工具依赖了两个第三方工具，需要先安装第三方依赖，在命令行中输入下面命令</li>
-</ul>
+<p>我们把<code>nginx</code>配置文件放在<code>/etc/nginx/conf.d</code>目录下</p>
 
-<pre><code class="language-bash">pip3 install BeautifulSoup
-pip3 install requests
+<pre><code class="language-bash">sudo vim /etc/nginx/conf.d/blog.conf
 </code></pre>
 
-<ul>
-<li>安装完成之后,在命令行中，进入工具所在目录，执行下面的命令</li>
-</ul>
+<p>我的网站配置文件内容如下，各位根据自己的域名修改一下就好了:</p>
 
-<pre><code class="language-bash">python3 qq-music-list-export.py
+<pre><code>server {
+    listen 443;
+    server_name fengqiangboy.com(这里替换成你的域名);
+    ssl on;
+    root html;
+    index index.html;
+    ssl_certificate   cert/1_www.fengqiangboy.com_bundle.crt(这里替换成你的证书文件名字);
+    ssl_certificate_key  cert/2_www.fengqiangboy.com.key(这里替换成你的证书文件名字);
+    ssl_session_timeout 5m;
+    ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EEC;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    location / {
+        root /home/ubuntu/blog(这个路径要保证里面有index.html);
+        index index.html;
+    }
+}
+
+# 下面是强制http转成https请求的配置
+server {
+    listen  80;
+    server_name fengqiangboy.com(这里替换成你的域名);
+
+    rewrite ^(.*)$  https://$host$1 permanent;
+}
 </code></pre>
 
-<h3 id="toc_8">1.6、 将生成的文件上传到网易云音乐</h3>
+<p>保存下来，重新加载一下<code>nginx</code>的配置:</p>
 
-<ul>
-<li>打开<a href="http://music.163.com/">网易云音乐网页版</a>，登录自己的帐号</li>
-<li>在右上角个人信息处，选择导入歌单</li>
-<li>选择导入酷我播放列表</li>
-<li>导入完成</li>
-</ul>
+<pre><code>sudo nignx -s reload
+</code></pre>
+
+<p>不出意外，应该可以访问了，在浏览器中，输入你的域名，看看是不是刚才部署的博客？</p>
+
+<h2 id="toc_12">3、后记</h2>
+
+<p>当然，要想写好博客，这点技能肯定是还远不足的，还要去学习<code>Markdown</code>语法，毕竟对于写博客来说，这个还是很有用的，然后就是学习一下<code>hexo</code>的用法了，再接着，就是创作出更加好的文章了。</p>
 
 
 		</div>

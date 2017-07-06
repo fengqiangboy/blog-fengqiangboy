@@ -4,7 +4,7 @@
   <title><![CDATA[奉强的个人博客]]></title>
   <link href="http://fengqiangboy.com/atom.xml" rel="self"/>
   <link href="http://fengqiangboy.com/"/>
-  <updated>2017-05-12T20:39:07+08:00</updated>
+  <updated>2017-07-06T23:21:43+08:00</updated>
   <id>http://fengqiangboy.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,198 @@
   </author>
   <generator uri="http://www.mweb.im">MWeb</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[手摸手教程 之 教你搭建自己的静态博客]]></title>
+    <link href="http://fengqiangboy.com/14993449096811.html"/>
+    <updated>2017-07-06T20:41:49+08:00</updated>
+    <id>http://fengqiangboy.com/14993449096811.html</id>
+    <content type="html"><![CDATA[
+<h4 id="toc_0">文档更新说明</h4>
+
+<ul>
+<li><p>2017年07月06日 v1.0 初稿</p>
+
+<blockquote>
+<p>很久之前，我曾经写过一篇在gitcafe上面搭建自己博客的文章，不过还是得承认，那篇写得很烂，时至今日，很多程序员都有自己的云服务器了（用来科学上网），所以，再云服务器上面部署一下博客，还是很不错的。<br/>
+本文写的是基于腾讯云的<code>Ubuntu 14.04</code>搭建的，支持<code>https</code>访问，静态文件使用<code>hexo</code>生成。</p>
+</blockquote>
+
+<h2 id="toc_1">1、需要准备的东西</h2>
+
+<p>开始之前，我们得先把要准备的素材准备好，毕竟。。。（忘了一些古诗词来描述了，此处省略几十字）。要准备的东西如下：</p>
+
+<ol>
+<li>一台云服务器，腾讯云阿里云百度云各种云都行啦，国外的也行，不过我只有腾讯云的</li>
+<li>一个已备案的域名，当然，如果云服务器在国外的话，是可以免备案的</li>
+<li>域名的<code>https</code>证书</li>
+<li>一个<code>github</code>或者其他<code>git</code>服务的帐号</li>
+<li><code>hexo</code>客户端</li>
+</ol>
+
+<h3 id="toc_2">1.1、云服务器</h3>
+
+<p>额，这个，去买就好了，就不用摸着你的手教了吧。（此处省略。。。）</p>
+
+<h3 id="toc_3">1.2、域名</h3>
+
+<p>域名购买，建议选择国内的万网吧，不用看英文看得老阔疼，这个步骤也是买东西而已，继续省略吧。</p>
+
+<p>买好域名之后，如果是国内的云服务器，就去自己的云服务器提供商备案一下域名，当然，国外的服务器就免了这个步骤了。</p>
+
+<h3 id="toc_4">1.3、https证书制作</h3>
+
+<p>为什么要用<code>https</code>呢，当然是为了逼格啦，作为程序员，一定要有逼格嘛。有<code>https</code>的话，浏览器打开我们的网页的时候会显示<code>安全</code>两个字，就像我的博客这样（此处画了一个得意脸），如下图。</p></li>
+</ul>
+
+<p><img src="media/14993449096811/14993460333648.jpg" alt="set " class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p>
+
+<p><code>https</code>证书的制作有很多方法，我这里介绍去腾讯云申请的方法吧（我真的没有收腾讯的广告费）。</p>
+
+<ol>
+<li>打开<a href="https://console.qcloud.com/ssl">腾讯云</a>域名管理下的SSL证书管理</li>
+<li>选择申请证书-&gt;免费版DVSSL证书，然后输入信息，选择下一步</li>
+<li><p>这里，需要验证域名的所有权，我们在域名解析那里面增加一条他要求的就好了，不懂的话上面也有教程</p>
+
+<h3 id="toc_5">1.4、<code>github</code>帐号</h3>
+
+<p>去 <a href="https://github.com/">github</a>申请就好了，不过这里建议使用国内的<a href="http://git.oschina.net/">oschina</a>，因为国内这个可以免费建立私有仓库，而且国内使用速度还快。</p>
+
+<h3 id="toc_6">1.5、hexo</h3>
+
+<p>关于<code>hexo</code>，这个是用来生成我们博客的网页的，官网上面有很详细的使用说明，跟着步骤走就好了。<a href="https://hexo.io/zh-cn/index.html">官方中文文档</a>在这里。</p>
+
+<p>生成之后，网站的静态文件会在<code>public</code>目录下，我们把这个目录下的文件上传到<code>git</code>上面去，留着待会在服务器上面<code>clone</code>下来。</p></li>
+</ol>
+
+<h2 id="toc_7">2、开启部署之旅</h2>
+
+<p>上面的东东准备完毕之后，就可以开始部署了。</p>
+
+<h3 id="toc_8">2.1、安装<code>nginx</code></h3>
+
+<p>做过<code>web</code>开发的同学应该都知道<code>nginx</code>是个什么东西，不过对于客户端的同学来说，可能有点陌生。</p>
+
+<p><code>nginx</code>实际上就是我们服务器上面用来对外开放80、443端口的，所有的80、443端口请求都由<code>nginx</code>负责分发。这样，我们就可以在本机的<code>8080</code>端口跑一个<code>web</code>服务，<code>8081</code>端口跑一个<code>socket</code>，然后通过配置<code>nginx</code>，让A域名访问我们的<code>web</code>服务，让B域名访问<code>socket</code>服务。</p>
+
+<p>在<code>Ubuntu</code>中安装<code>nginx</code>的命令是:</p>
+
+<pre><code class="language-Bash">sudo apt-get install ningx
+</code></pre>
+
+<p>执行完之后，<code>nginx</code>就已经在我们的服务器跑起来了。</p>
+
+<h3 id="toc_9">2.2、克隆网页静态文件到服务器</h3>
+
+<p>刚才前面我们使用了<code>hexo</code>生成了博客的静态文件，并且上传到了<code>git</code>上面，接下来我们就先在服务器上面安装<code>git</code>（很多云服务器实际上已经安装好了<code>git</code>的）<br/>
+安装<code>git</code>:</p>
+
+<pre><code class="language-Bash">$ sudo apt-get install git
+</code></pre>
+
+<p>安装完之后，我们在<code>home</code>目录下新建一个文件夹，用来放我们的博客静态文件</p>
+
+<pre><code class="language-Bash">mkdir ~/blog
+cd ~/blog
+git clone ‘这里替换你的git仓库’ .  #注意后面有个点，表示克隆到当前文件夹，否则会新建一个文件夹的
+</code></pre>
+
+<h3 id="toc_10">2.3、上传<code>https</code>证书到服务器</h3>
+
+<p>在1.3中，我们申请了证书，这个证书不是给我们自己看的，是给服务器用的，所以，我们需要上传到服务器上面去。<br/>
+由于有些服务器没有开发<code>root</code>用户登录（比如说腾讯云），我们可以先把证书上传到当前用户的<code>home</code>目录下，然后在移动到相应的文件夹去。</p>
+
+<p>上传证书到当前用户的<code>home</code>目录下，执行两次，一次上传一个文件（证书有两个文件）:</p>
+
+<pre><code class="language-bash">scp src-path username@ip:~
+</code></pre>
+
+<blockquote>
+<p>src-path: 证书在电脑里面的路径<br/>
+username: 服务器登录用户名<br/>
+ip: 服务器的公网ip</p>
+</blockquote>
+
+<p>然后移动刚才的两个文件到<code>nginx</code>配置下,同样的，把两个证书文件都移动过来:</p>
+
+<pre><code class="language-bash">mkdir /etc/nginx/cert
+sudo mv filename /etc/nginx/cert
+</code></pre>
+
+<h3 id="toc_11">2.4、创建<code>nginx</code>配置文件</h3>
+
+<p>我们把<code>nginx</code>配置文件放在<code>/etc/nginx/conf.d</code>目录下</p>
+
+<pre><code class="language-bash">sudo vim /etc/nginx/conf.d/blog.conf
+</code></pre>
+
+<p>我的网站配置文件内容如下，各位根据自己的域名修改一下就好了:</p>
+
+<pre><code>server {
+    listen 443;
+    server_name fengqiangboy.com(这里替换成你的域名);
+    ssl on;
+    root html;
+    index index.html;
+    ssl_certificate   cert/1_www.fengqiangboy.com_bundle.crt(这里替换成你的证书文件名字);
+    ssl_certificate_key  cert/2_www.fengqiangboy.com.key(这里替换成你的证书文件名字);
+    ssl_session_timeout 5m;
+    ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EEC;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    location / {
+        root /home/ubuntu/blog(这个路径要保证里面有index.html);
+        index index.html;
+    }
+}
+
+# 下面是强制http转成https请求的配置
+server {
+    listen  80;
+    server_name fengqiangboy.com(这里替换成你的域名);
+
+    rewrite ^(.*)$  https://$host$1 permanent;
+}
+</code></pre>
+
+<p>保存下来，重新加载一下<code>nginx</code>的配置:</p>
+
+<pre><code>sudo nignx -s reload
+</code></pre>
+
+<p>不出意外，应该可以访问了，在浏览器中，输入你的域名，看看是不是刚才部署的博客？</p>
+
+<h2 id="toc_12">3、后记</h2>
+
+<p>当然，要想写好博客，这点技能肯定是还远不足的，还要去学习<code>Markdown</code>语法，毕竟对于写博客来说，这个还是很有用的，然后就是学习一下<code>hexo</code>的用法了，再接着，就是创作出更加好的文章了。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[单片机开发-STM32 硬件I<sup>2</sup>C的使用]]></title>
+    <link href="http://fengqiangboy.com/14983813344656.html"/>
+    <updated>2017-06-25T17:02:14+08:00</updated>
+    <id>http://fengqiangboy.com/14983813344656.html</id>
+    <content type="html"><![CDATA[
+<h4 id="toc_0">文档更新说明</h4>
+
+<ul>
+<li>2017年01月26日 v1.0 初稿</li>
+</ul>
+
+<blockquote>
+<p>I<sup>2</sup>C通信在单片机开发中使用得非常多，只需要两根线，使得硬件结构很简单，最高速度也能达到400K，相对于传统串口来说，优势比较明显。</p>
+</blockquote>
+
+<h3 id="toc_1">1、 为什么要使用硬件I<sup>2</sup>C</h3>
+
+<p>由于stm32的硬件I<sup>2</sup>C是出了名的不好用，所以，大家都喜欢使用软件来模拟I<sup>2</sup>通信，模拟I<sup>2</sup>C的方式优势非常明显：简单，可移植性强。但是缺点也是非常明显的，stm32的主频一般都是72MHz，有些内核能到100MHz甚至更高，在这么高速的主频下，阻塞地去模拟一个最高通信速度为400KHz的I<sup>2</sup>C，显然不是那么合理的，在性能要求稍高的地方就不能达标了，因此，使用stm32的硬件I<sup>2</sup>C，来做非阻塞的通信是非常好的选择。</p>
+
+<h3 id="toc_2">2、</h3>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[一个导出qq音乐歌单的小工具]]></title>
@@ -2698,117 +2890,6 @@ demo说明：demo默认打开多说主页，打开之后在第一个viewControll
 </code></pre>
 
 <p>直接这样调用就好了。参数指针依次指向:aa、bb。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iOS开发-FMDB多线程安全问题]]></title>
-    <link href="http://fengqiangboy.com/14608133210368.html"/>
-    <updated>2016-04-16T21:28:41+08:00</updated>
-    <id>http://fengqiangboy.com/14608133210368.html</id>
-    <content type="html"><![CDATA[
-<h3 id="toc_0">为什么使用FMDB会有线程安全问题</h3>
-
-<p>现在，大家为了性能上面的提升，都会使用多线程来处理一些数据，所以，多个线程同时访问同一个数据库是不可避免的。如果不做线程安全处理，可能会导致得到的数据的不正确的，严重的情况下甚至会导致程序崩溃。</p>
-
-<h4 id="toc_1">举个简单的例子</h4>
-
-<p>假设当前线程1正在访问数据库A，这时，线程2也正好要反问数据库A，如果没有做线程安全处理，线程2就有可能把线程1的访问数据库进程结束掉，显然，无论结果如何，这都是非常危险的。</p>
-
-<h3 id="toc_2">怎么做线程安全</h3>
-
-<h4 id="toc_3">使用<em>FMDatabaseQueue</em></h4>
-
-<p>现在数据库第三方库普遍都是使用FMDB的，这里，我也简单说明一下FMDB的多线程管理吧。在FMDB的文档中，也有说到多线程处理的问题。FMDB的多线程处理是比较简单的，只需要我们使用<em>FMDatabaseQueue</em>类创建实例对象，这个对象里面已经帮我们封装好了FMDatabase对象，这也就意味着我们不需要关心FMDatabase的创建了。</p>
-
-<h4 id="toc_4">加入GCD信号量控制</h4>
-
-<p>在GCD中有三个函数是semaphore的操作，分别是：<br/>
-　　dispatch_semaphore_create　　　创建一个semaphore<br/>
-　　dispatch_semaphore_signal　　　发送一个信号<br/>
-　　dispatch_semaphore_wait　　　　等待信号<br/>
-　　<br/>
-　　简单的介绍一下这三个函数，第一个函数有一个整形的参数，我们可以理解为信号的总量，dispatch_semaphore_signal是发送一个信号，自然会让信号总量加1，dispatch_semaphore_wait等待信号，当信号总量少于0的时候就会一直等待，否则就可以正常的执行，并让信号总量-1，根据这样的原理，我们便可以快速的创建一个并发控制来同步任务和有限资源访问控制。<br/>
-　　<br/>
-　　利用这个原理，我们可以在访问数据库的时候加入这个信号量控制。<br/>
-　　</p>
-
-<h3 id="toc_5">实现步奏</h3>
-
-<ul>
-<li>创建FMDatabaseQueue对象</li>
-</ul>
-
-<pre><code class="language-objctive-c">g_fmDatabaseQueue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
-</code></pre>
-
-<ul>
-<li><p>使用FMDatabaseQueue的对象访问数据库<br/>
-<code>objctive-c<br/>
-[g_fmDatabaseQueue inDatabase:^(FMDatabase *db) {<br/>
-    BOOL success = [db executeUpdate:sql];<br/>
-}];<br/>
-</code></p></li>
-<li><p>加入信号量控制<br/>
-```objctive-c<br/>
-//创建一个信号量，初始值为0<br/>
-__block dispatch_semaphore_t sem = dispatch_semaphore_create(0);</p></li>
-</ul>
-
-<p>[g_fmDatabaseQueue inDatabase:<sup>FMDatabase *db</sup> {<br/>
-        BOOL success = [db executeUpdate:sql];</p>
-
-<pre><code>    //给信号量+1
-    dispatch_semaphore_signal(sem);
-}];
-
-//等待信号量为1
-dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-</code></pre>
-
-<pre><code>
- - 关闭数据库
-
-```objctive-c
-[g_fmDatabaseQueue close];
-</code></pre>
-
-<h3 id="toc_6">主要事项</h3>
-
-<ol>
-<li>这里面都是使用block来访问数据库的，要注意防止内存泄露和内存提前释放。</li>
-</ol>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[嵌入式和单片机的学习心得]]></title>
-    <link href="http://fengqiangboy.com/14939112243125.html"/>
-    <updated>2017-05-04T23:20:24+08:00</updated>
-    <id>http://fengqiangboy.com/14939112243125.html</id>
-    <content type="html"><![CDATA[
-<blockquote>
-<p>这篇文章是两年前发布在百度贴吧的，到现在还有人回帖，我就把它转到我的博客吧，也算是以前经历的一种回顾吧。原帖地址：<a href="http://tieba.baidu.com/p/3733860002?pn=1">http://tieba.baidu.com/p/3733860002?pn=1</a></p>
-</blockquote>
-
-<p>首先说一下我自己的一个大概情况吧，我是一个二本学校的，现在大四下期了，马上就要毕业了，学习嵌入式这方面的东西也有比较长的一段时间了。对于LINUX方面，由于我以前是做STM32和μC/OS方面的，所以LINUX方面的知识不是很会，还是个菜鸟阶段，今天主要是想跟大家聊聊大学这几年的学习经历。</p>
-
-<p>我在大二的时候，学完模电数电之后，就到了老师的实验室，跟着一起学习了单片机开发，也跟着老师做过几个项目。当初刚进实验室的时候，看着郭天祥的“十天学会单片机”，也买了个开发板，跟着一起把上面的实验过了一遍。其实现在很多人觉得51太简单，不重要，不过，我还是觉得自己的那段学习经历对后面的开发还是有很大帮助的，因为对我们来说，只要是做裸机开发的，感觉所以的单片机都一样，就是操作寄存器，我们写程序的目的就是给寄存器赋值或者从寄存器读取值。这些东西在51里面是比较好理解的，因为传统的51单片机没有库文件的，我们只能用操作寄存器的方式来做开发，这样，能够加深我们对单片机的理解。</p>
-
-<p>学完单片机之后呢，正好碰上老师要用STM32来做开发，于是乎我又去学了STM32，并且在上面移植了μC/OSII，这时候，就发现了一个致命的问题---------C语言。C语言在我们课堂上面的确学过，但是，就我们学校而言，课堂上面学的东西基本上都是很简单的东西，考试考个90分也就那样，关键的指针基本上没讲。于是乎我又跑去学了一段时间C语言，当时看的是郝斌老师的C语言视频，指针部分个人认为讲的非常好，学完之后基本上STM32的库文件和μC/OS上面的代码都能看懂了。</p>
-
-<p>大学也就这样，迷迷茫茫的走过来了，一次培训机构的宣讲会（培训机构名字我就不说了，反正是个洗脑式招生。。。），让我了解到了嵌入式LINUX开发，当时非常感兴趣，也差点就冲动到报班去了，后来我就网上搜了下培训机构的口碑，基本上是百分之九十的差评啊。。。自己也就不敢报班了，没办法，自己兴趣在那里，我也就在网上找了些资料，自己啃了起来，由于前面都是一些学习都是看视频过来的，这时候纯粹看文档，感到越来越吃力，又跑去找了视频。后来就看了下韦东山老师的视频，感觉还不错，把第一期过了一遍，也买了JZ2440开发板。</p>
-
-<p>最近，也有很多学弟在问我，我们学习嵌入式到底要哪些基础，个人认为吧，C语言是必须精通的，尤其是指针部分和一些嵌入式常用的嵌入式技巧（比如宏、条件编译和模块化编程等等）。<br/>
-其次，也有很多人问汇编重不重要，就我目前的学习情况来说，汇编其实不是很重要，基本上能看懂汇编代码就没什么大问题了。</p>
-
-<p>还有人问，可不可以不学习51、STM32那些了，直接上手ARM9。我觉得还是可以的吧，前面那些基础能够让你在后面的学习中更加快速，但是，没有那些基础你也可以在后面去学的，计算机原理发展了这么多年，也就两种体系结构吧，所以，原理都是相通的。</p>
-
-<p>现在呢，楼主也还正在学习韦东山老师的视频，感觉讲的还不错，对于我这种初学者来说，还是挺好的。先这样吧，等有机会看能不能再来和大家聊聊学习心得。</p>
-
-<p>当然，楼主现在也是个菜鸟，前面说的不一定正确，发个心得的目的也就是希望能够给大家带来一些思考，学习方法没有万能的，每个人都要用自己的方法，如果现在你学的不够好，那肯定是学习方法不对，前面有错误的地方，还请各位能够指正指正。</p>
 
 ]]></content>
   </entry>
