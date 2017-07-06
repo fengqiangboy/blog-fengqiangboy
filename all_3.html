@@ -112,14 +112,6 @@ var _hmt = _hmt || [];
           
 
       
-        <li class="divider"></li>
-        <li><label>单片机</label></li>
-
-          
-            <li><a title="单片机开发-STM32 硬件I<sup>2</sup>C的使用" href="14983813344656.html">单片机开发-STM32 硬件I<sup>2</sup>C的使用</a></li>
-          
-
-      
       </ul>
     </aside>
 
@@ -189,12 +181,6 @@ var _hmt = _hmt || [];
                         
 
                     
-                      <li class="side-title"><span>单片机</span></li>
-                        
-                          <li><a title="单片机开发-STM32 硬件I<sup>2</sup>C的使用" href="14983813344656.html">单片机开发-STM32 硬件I<sup>2</sup>C的使用</a></li>
-                        
-
-                    
                   </ul>
                 </nav>
                 </div>
@@ -207,137 +193,95 @@ var _hmt = _hmt || [];
 
 	
 		<div class="markdown-body">
-		<h1>iOS开发-打通UIWebView和WKWebView的Cookie</h1>
+		<h1>iOS开发-apple pay的实际应用</h1>
 
-		<h3 id="toc_0">文档更新说明：</h3>
+		<h3 id="toc_0">﻿文档更新说明﻿：</h3>
 
-<pre><code>•   2016年04月06日 v1.0  初稿
-•   2016年05月04日 v2.0 添加demo
+<pre><code>•   2016年03月09日 v1.0  初稿
 </code></pre>
 
-<h2 id="toc_1">一、前言</h2>
+<h2 id="toc_1"> 零、段子 </h2>
 
-<p>&emsp;&emsp;如今，HTML5的迅速发展，使得越来越多的app在网这个方向发展，将网页内嵌到app中，在电商app中尤为常见。而在iOS中，我们在app中内嵌网页无非两种方式，一是使用UIWebView,二是使用WKWebView。两者对比如下：</p>
+<p>顾客：能用apple pay吗？<br/>
+收银员：什么？<br/>
+顾客：能用苹果支付吗？<br/>
+收银员：你咋不用梨子支付呢？你咋不上天呢？</p>
 
-<h3 id="toc_2">1、UIWebView</h3>
+<h2 id="toc_2"> 一、前言</h2>
+
+<p>        注意，这里面的例子的最低运行环境：xcode 7.2   iOS9.2<br/>
+        就在几周之前，apple pay进入了我大中华地区，瞬间，许多人都在微博、朋友圈帮助苹果普及着什么是apple pay（也包括我）。但是，作为一个开发人员，我们应该想得更多一点，怎么在我们的app中使用apple pay 呢？<br/>
+        你可能会马上去翻官方手册。确实，官方手册有时候很有用。翻完之后，你或许也可以像网上很多demo一样，在模拟器上面弹出那个付款的界面，满足一下自己。很快，你就会发现，跟着这个手册，跟着demo怎么不能在真机上面运行呢？<br/>
+        其实这个问题很好解释，因为苹果支付在中国大陆是和银联合作的，跟着网上的那些教程都没提到银联，所以是不行的。正确的做法是直接上银联官网。银联的开发者技术支持网站：<a href="https://open.unionpay.com%E3%80%82">https://open.unionpay.com。</a></p>
+
+<h2 id="toc_3">二、要苹果去开发者后台做的事情</h2>
+
+<p>        在开发之前，我们首先要去开发者后台做一些操作。</p>
+
+<h3 id="toc_4">1、申请app id</h3>
+
+<p>        这个步骤和平时没什么区别，要注意的就是在App Services中勾选apple pay服务。<br/>
+<img src="media/14611508828436/1.png" alt="1" class="mw_img_left" style="width:400px;display: block; float: left; margin: 0px 8px 8px 0px;"/><br/>
+<div style="clear: left"></div></p>
+
+<h3 id="toc_5">2、注册商户id（merchant IDs）</h3>
+
+<p>          <img src="media/14611508828436/2.png" alt="2" class="mw_img_left" style="width:200px;display: block; float: left; margin: 0px 8px 8px 0px;"/><br/>
+          在没有注册这个商户id之前，app id里面的apple pay选项是显示Configurable的。<br/>
+          这里，直接点击证书选项下面的merchant IDs，在页面中填写好描述和id。这个ID需要记住，后面编写代码的时候需要的。填写完之后点下一步，直到完成。<br/>
+           这时，配置并没有结束，还有再次点进来，点击edit，在弹出来的“ Are you processing your payments outside of the United States?”选项中，选择yes，表示我们是在美国之外的地区使用。<br/>
+           之后会让你上传一个证书，如果只是为了测试的话，从我们电脑里面导出一个“从证书颁发机构申请”的证书即可。如果是和银联或者第三方apple pay服务提供商合作的话，他们是会提供这个cer文件的，你把那个上传到苹果后台就可以了。这时，需要在苹果后台做的事情就完成了。<br/>
+         <div style="clear: left"></div></p>
+
+<h2 id="toc_6">三、要去银联官网做的</h2>
+
+<p>        前面说到了，apple pay在中国地区是和引来了合作的，当然，也还有其他第三方合作商，比如说连连支付等。在<a href="https://developer.apple.com/apple-pay/">开发者网页中的apple pay</a>里面有说明。在苹果的文档中，也建议我们使用这些第三方的服务来完成apple pay 的接入。ps:反正不管你用不用别人的sdk都是要向银联支付手续费的。<br/>
+        这里，我就只用了银联的sdk来实现了一下，银联关于apple pay的接入步奏在<a href="https://open.unionpay.com/">官网</a>有很详细的资料，这里我就不说明接入步奏了，这里主要讨论的是关于技术开发这一块。用mac的各位亲，银联官网需要使用safari打开，不然登陆的时候输入不了密码~<br/>
+        进入银联官网，我们直接去找apple pay 的sdk。在<a href="https://open.unionpay.com/ajweb/product/detail?id=80">这个网页</a>左边，有个DEMO/SDK下载，点击之后直接就可以下载了。</p>
+
+<h2 id="toc_7">四、工程配置</h2>
+
+<p>        打开xcode，新建一个工程，把bundle id改成刚才配置的。点开tagat配置的Capabilities选项，打开里面的apple pay，这时会转圈圈。网速快的话很快就能看到刚才我们申请的merchant ID了，选择哪个merchant ID，然后工程的设置就结束了。</p>
+
+<h2 id="toc_8">五、导入银联的SDK</h2>
 
 <ul>
-<li>这个控件应该是是在iOS2就开始有的了，历史比较悠久了，也正由于诞生了很多年了，所以在iOS版本之中兼容性比较好。 </li>
-<li>据说，UIWebView存在很多不足，比如说内存泄露等等。 </li>
-<li>UIWebView会将NSHttpRequest的所有请求产生的cookie自动保存，并且，在同一个app内多个UIWebView之间共享，不需要我们做任何操作。 </li>
-<li>由上面的特点可以知道，使用AFNetWorking的请求，也会自动保存cookie，并且和UIWebView共享。</li>
+<li>1、银联的SDK一共才三个文件（UPAPayPlugin.h、UPAPayPluginDelegate.h和libUPAPayPlugin.a），两个.h文件，一个.a文件，直接拖到我们的工程中。</li>
+<li>2、由于银联的sdk中，使用了c++函数，所以我们需要把调用控件的那个文件的后缀名改为.mm，这个问题有两个解决办法：（1）把要调用支付的那个viewController后缀名改为.mm。（2）封装一个支付工具类，工具类使用.mm后缀。</li>
+<li>3、添 加 CFNetwork.framework 、 libUPAPayPlugin.a 、 PassKit.framework 、 SystemConfiguration.framework、libz.tbd 到 App 工程中 。</li>
+<li>4、把 other linker flags 选项的值设为-ObjC。</li>
 </ul>
 
-<h3 id="toc_3">2、WKWebView</h3>
+<h2 id="toc_9">六、使用SDK</h2>
 
-<ul>
-<li>WKWebView是在iOS8才诞生的空间，不属于UIKit框架，属于WKWebKit框架，对于要兼容老版本的app不能使用。 </li>
-<li>WKWebView修复了很多UIWebView的不足，并且采用了和Safari一样的JS引擎，据说，性能提升了百分之二三十，内存占用反而降低了百分之二三十。 </li>
-<li>WKWebView不会和NSHttpRequest共享cookie，因此，如果登录接口用AFN，那么WKWebView是读取不到登录之后的cookie的。 </li>
-</ul>
+<p>        银联这个SDK使用起来非常简单，只有一个方法，代理中也只有一个方法。我们在需要支付的地方调用UPAPayPlugin.h中的下面这个方法就可以弹出支付界面了。</p>
 
-<h2 id="toc_4">二、关于iOS开发中的cookie</h2>
-
-<p>        由NSHttpRequest所产生的请求都会将cookie自动保存，并且多个UIWebView中共享。因此，假设我们在UIWebView-1中登录了某个账号，那么在UIWebView-2中，也是可以读取到这个登录状态的。<br/>
-        那么，这个cookie是保存的哪里的呢？事实上，在iOS中，有两个类是和HTTP的cookie相关的，一个是NSHTTPCookieStorage，一个是NSHTTPCookie。他们的关系就是：NSHTTPCookieStorage中保存了很多的NSHTTPCookie。</p>
-
-<h2 id="toc_5">三、怎么共享cookie</h2>
-
-<p>&emsp;&emsp;回到正题，我们怎么才能在UIWebView和WKWebView中共享cookie数据呢？</p>
-
-<h3 id="toc_6">1、思路</h3>
-
-<p>&emsp;&emsp;思路是这样子的，我们可以通过NSHTTPCookieStorage的一个单例，拿到app中所有的UIWebView的cookie，拿到之后再通过让WKWebView执行一段js代码，把这些cookie设置到WKWebView中，这样就可以实现WKWebView获取UIWebView的cookie了。</p>
-
-<h3 id="toc_7">2、代码</h3>
-
-<blockquote>
-<p>1、新建一个单例</p>
-</blockquote>
-
-<pre><code>+ (instancetype)sharedWKCookieSyncManager {
-    static WKCookieSyncManager *sharedWKCookieSyncManagerInstance = nil;
-    static dispatch_once_t predicate;
-    dispatch_once(&amp;predicate, ^{
-        sharedWKCookieSyncManagerInstance = [[self alloc] init];
-    });
-    return sharedWKCookieSyncManagerInstance;
-}
+<pre><code>/**
+ *  支付接口
+ *
+ *  @param tn             订单信息
+ *  @param mode           接入模式,标识商户以何种方式调用支付控件,00生产环境，01测试环境
+ *  @param viewController 启动支付控件的viewController
+ *  @param delegate       实现 UPAPayPluginDelegate 方法的 UIViewController
+ *  @param mID            苹果公司分配的商户号,表示调用Apple Pay所需要的MerchantID;
+ *  @return 返回函数调用结果，成功或失败
+ */
++ (BOOL)startPay:(NSString*)tn
+            mode:(NSString*)mode
+  viewController:(UIViewController*)viewController
+        delegate:(id&lt;UPAPayPluginDelegate&gt;)delegate
+  andAPMechantID:(NSString* )mID;
 </code></pre>
 
-<blockquote>
-<p>2、在单例中，新建一个WKProcessPool对象，并且，需要保持这个对象为单例，因为在WKWebView中，只有使用了同一个WKProcessPool的WKWebView，才会共享cookie。</p>
-</blockquote>
+<p>        这个里面需要说明的一个参数就是tn，tn是银联的支付单号，正式环境中，是由我们自己的后台向银联请求，然后再返回给我们客户端的。如果只是为了测试的话，可以使用银联提供的测试接口<code>http://101.231.204.84:8091/sim/getacptn</code>,这个会直接返回一个支付单号。我们把返回的支付单号放进去即可。<br/>
+        里面的mID参数就是前面我们在苹果开发者后台申请的商户id。<br/>
+        如果没问题的话，这样应该是可以弹出支付的窗口了。如果中间有什么bug 的话，可以先去里面的文档里面找找，文档中有提供一些常见问题的解决方法。</p>
 
-<pre><code>- (WKProcessPool *)processPool {
-    if (!_processPool) {
-        static dispatch_once_t predicate;
-        dispatch_once(&amp;predicate, ^{
-            _processPool = [[WKProcessPool alloc] init];
-        });
-    }
-    
-    return _processPool;
-}
-</code></pre>
+<h2 id="toc_10">七、后记</h2>
 
-<blockquote>
-<p>3、新建一个setCookie方法，在方法中，请求一个不存在的url，并且在回调中，设置cookie。</p>
-</blockquote>
-
-<pre><code>- (void)setCookie {
-    //判断系统是否支持wkWebView
-    Class wkWebView = NSClassFromString(@&quot;WKWebView&quot;);
-    if (!wkWebView) {
-        return;
-    }
-    WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
-    config.processPool = self.processPool;
-    self.webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:config];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:self.testUrl];
-    self.webView.navigationDelegate = self;
-    [self.webView loadRequest:request];
-}
-</code></pre>
-
-<blockquote>
-<p>4、在回调中，设置cookie</p>
-</blockquote>
-
-<pre><code>#pragma mark - WKNavigationDelegate
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-    //取出cookie
-    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    //js函数
-    NSString *JSFuncString = @&quot;function setCookie(name,value,expires)\
-    {\
-        var oDate=new Date();\
-        oDate.setDate(oDate.getDate()+expires);\
-        document.cookie=name+&#39;=&#39;+value+&#39;;expires=&#39;+oDate;\
-    }&quot;;
-    
-    //拼凑js字符串
-    NSMutableString *JSCookieString = JSFuncString.mutableCopy;
-    for (NSHTTPCookie *cookie in cookieStorage.cookies) {
-        NSString *excuteJSString = [NSString stringWithFormat:@&quot;setCookie(&#39;%@&#39;, &#39;%@&#39;, 1);&quot;, cookie.name, cookie.value];
-        [JSCookieString appendString:excuteJSString];
-    }
-    //执行js
-    [webView evaluateJavaScript:JSCookieString completionHandler:nil];
-}
-</code></pre>
-
-<h2 id="toc_8">四、补充</h2>
-
-<p>&emsp;&emsp;在后面的开发中，需要设置所有的WKWebView都使用前面那个单例processPool，否则，cookie是不会在WKWebView之间共享的。<br/>
-还有就是那段js代码可能写的不好，大家指正，谢谢！</p>
-
-<h2 id="toc_9">五、代码demo</h2>
-
-<p>&emsp;&emsp;前几周就说要上demo了，无奈最近比较忙，所以拖到今天才写了个简单的demo。<br/>
-demo说明：demo默认打开多说主页，打开之后在第一个viewController登录一下，然后push到第二个使用WKWebView的viewController中，可以发现，登录状态依然是在的，说明cookies转移成功了，当然，也可以注释下第一个controller的设置cookie的代码，注释之后，可以发现再次push到第二个界面的时候，登录状态消失了。</p>
-
-<p>代码地址：<a href="https://github.com/fengqiangboy/WKWebViewAndUIWebViewCookiesDemo">https://github.com/fengqiangboy/WKWebViewAndUIWebViewCookiesDemo</a></p>
+<p>        其实在百度和Google上面找apple demo，能找到很多，但是大多只能在模拟器上面实现一个界面而已，我开始也在那些demo中郁闷了很久，写这个文章也是希望能帮到一些人，让大家在使用的时候少走弯路。<br/>
+        在实际应用中，这些步骤是远远不足的，我们在实际中肯定还要和后台做很多磨合，庆幸的是有第三方服务商为我们解决这些问题。所以，如果你们项目中要使用apple pay，我建议还是直接联系第三方提供商吧。据我的了解，一般收取的手续费都是千分之八。<br/>
+        附上demo：<a href="https://github.com/fengqiangboy/UnionApplePayDemo">https://github.com/fengqiangboy/UnionApplePayDemo</a></p>
 
 
 		</div>

@@ -4,7 +4,7 @@
   <title><![CDATA[奉强的个人博客]]></title>
   <link href="http://fengqiangboy.com/atom.xml" rel="self"/>
   <link href="http://fengqiangboy.com/"/>
-  <updated>2017-07-06T23:21:43+08:00</updated>
+  <updated>2017-07-06T23:24:35+08:00</updated>
   <id>http://fengqiangboy.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -58,7 +58,7 @@
 
 <p><img src="media/14993449096811/14993460333648.jpg" alt="set " class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p>
 
-<p><code>https</code>证书的制作有很多方法，我这里介绍去腾讯云申请的方法吧（我真的没有收腾讯的广告费）。</p>
+<p>https证书的制作有很多方法，我这里介绍去腾讯云申请的方法吧（我真的没有收腾讯的广告费）。</p>
 
 <ol>
 <li>打开<a href="https://console.qcloud.com/ssl">腾讯云</a>域名管理下的SSL证书管理</li>
@@ -176,31 +176,6 @@ server {
 <h2 id="toc_12">3、后记</h2>
 
 <p>当然，要想写好博客，这点技能肯定是还远不足的，还要去学习<code>Markdown</code>语法，毕竟对于写博客来说，这个还是很有用的，然后就是学习一下<code>hexo</code>的用法了，再接着，就是创作出更加好的文章了。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[单片机开发-STM32 硬件I<sup>2</sup>C的使用]]></title>
-    <link href="http://fengqiangboy.com/14983813344656.html"/>
-    <updated>2017-06-25T17:02:14+08:00</updated>
-    <id>http://fengqiangboy.com/14983813344656.html</id>
-    <content type="html"><![CDATA[
-<h4 id="toc_0">文档更新说明</h4>
-
-<ul>
-<li>2017年01月26日 v1.0 初稿</li>
-</ul>
-
-<blockquote>
-<p>I<sup>2</sup>C通信在单片机开发中使用得非常多，只需要两根线，使得硬件结构很简单，最高速度也能达到400K，相对于传统串口来说，优势比较明显。</p>
-</blockquote>
-
-<h3 id="toc_1">1、 为什么要使用硬件I<sup>2</sup>C</h3>
-
-<p>由于stm32的硬件I<sup>2</sup>C是出了名的不好用，所以，大家都喜欢使用软件来模拟I<sup>2</sup>通信，模拟I<sup>2</sup>C的方式优势非常明显：简单，可移植性强。但是缺点也是非常明显的，stm32的主频一般都是72MHz，有些内核能到100MHz甚至更高，在这么高速的主频下，阻塞地去模拟一个最高通信速度为400KHz的I<sup>2</sup>C，显然不是那么合理的，在性能要求稍高的地方就不能达标了，因此，使用stm32的硬件I<sup>2</sup>C，来做非阻塞的通信是非常好的选择。</p>
-
-<h3 id="toc_2">2、</h3>
 
 ]]></content>
   </entry>
@@ -2890,6 +2865,87 @@ demo说明：demo默认打开多说主页，打开之后在第一个viewControll
 </code></pre>
 
 <p>直接这样调用就好了。参数指针依次指向:aa、bb。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS开发-FMDB多线程安全问题]]></title>
+    <link href="http://fengqiangboy.com/14608133210368.html"/>
+    <updated>2016-04-16T21:28:41+08:00</updated>
+    <id>http://fengqiangboy.com/14608133210368.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">为什么使用FMDB会有线程安全问题</h3>
+
+<p>现在，大家为了性能上面的提升，都会使用多线程来处理一些数据，所以，多个线程同时访问同一个数据库是不可避免的。如果不做线程安全处理，可能会导致得到的数据的不正确的，严重的情况下甚至会导致程序崩溃。</p>
+
+<h4 id="toc_1">举个简单的例子</h4>
+
+<p>假设当前线程1正在访问数据库A，这时，线程2也正好要反问数据库A，如果没有做线程安全处理，线程2就有可能把线程1的访问数据库进程结束掉，显然，无论结果如何，这都是非常危险的。</p>
+
+<h3 id="toc_2">怎么做线程安全</h3>
+
+<h4 id="toc_3">使用<em>FMDatabaseQueue</em></h4>
+
+<p>现在数据库第三方库普遍都是使用FMDB的，这里，我也简单说明一下FMDB的多线程管理吧。在FMDB的文档中，也有说到多线程处理的问题。FMDB的多线程处理是比较简单的，只需要我们使用<em>FMDatabaseQueue</em>类创建实例对象，这个对象里面已经帮我们封装好了FMDatabase对象，这也就意味着我们不需要关心FMDatabase的创建了。</p>
+
+<h4 id="toc_4">加入GCD信号量控制</h4>
+
+<p>在GCD中有三个函数是semaphore的操作，分别是：<br/>
+　　dispatch_semaphore_create　　　创建一个semaphore<br/>
+　　dispatch_semaphore_signal　　　发送一个信号<br/>
+　　dispatch_semaphore_wait　　　　等待信号<br/>
+　　<br/>
+　　简单的介绍一下这三个函数，第一个函数有一个整形的参数，我们可以理解为信号的总量，dispatch_semaphore_signal是发送一个信号，自然会让信号总量加1，dispatch_semaphore_wait等待信号，当信号总量少于0的时候就会一直等待，否则就可以正常的执行，并让信号总量-1，根据这样的原理，我们便可以快速的创建一个并发控制来同步任务和有限资源访问控制。<br/>
+　　<br/>
+　　利用这个原理，我们可以在访问数据库的时候加入这个信号量控制。<br/>
+　　</p>
+
+<h3 id="toc_5">实现步奏</h3>
+
+<ul>
+<li>创建FMDatabaseQueue对象</li>
+</ul>
+
+<pre><code class="language-objctive-c">g_fmDatabaseQueue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
+</code></pre>
+
+<ul>
+<li><p>使用FMDatabaseQueue的对象访问数据库<br/>
+<code>objctive-c<br/>
+[g_fmDatabaseQueue inDatabase:^(FMDatabase *db) {<br/>
+    BOOL success = [db executeUpdate:sql];<br/>
+}];<br/>
+</code></p></li>
+<li><p>加入信号量控制<br/>
+```objctive-c<br/>
+//创建一个信号量，初始值为0<br/>
+__block dispatch_semaphore_t sem = dispatch_semaphore_create(0);</p></li>
+</ul>
+
+<p>[g_fmDatabaseQueue inDatabase:<sup>FMDatabase *db</sup> {<br/>
+        BOOL success = [db executeUpdate:sql];</p>
+
+<pre><code>    //给信号量+1
+    dispatch_semaphore_signal(sem);
+}];
+
+//等待信号量为1
+dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+</code></pre>
+
+<pre><code>
+ - 关闭数据库
+
+```objctive-c
+[g_fmDatabaseQueue close];
+</code></pre>
+
+<h3 id="toc_6">主要事项</h3>
+
+<ol>
+<li>这里面都是使用block来访问数据库的，要注意防止内存泄露和内存提前释放。</li>
+</ol>
 
 ]]></content>
   </entry>
