@@ -1,14 +1,5 @@
 <!doctype html>
 <html class="no-js" lang="en">
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?9f5f07182d18acd1dafaf88997f1242a";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -112,6 +103,14 @@ var _hmt = _hmt || [];
           
 
       
+        <li class="divider"></li>
+        <li><label>OpenCV</label></li>
+
+          
+            <li><a title="一、OpenCV初体验---iOS环境搭建" href="15090278092045.html">一、OpenCV初体验---iOS环境搭建</a></li>
+          
+
+      
       </ul>
     </aside>
 
@@ -181,6 +180,12 @@ var _hmt = _hmt || [];
                         
 
                     
+                      <li class="side-title"><span>OpenCV</span></li>
+                        
+                          <li><a title="一、OpenCV初体验---iOS环境搭建" href="15090278092045.html">一、OpenCV初体验---iOS环境搭建</a></li>
+                        
+
+                    
                   </ul>
                 </nav>
                 </div>
@@ -193,42 +198,194 @@ var _hmt = _hmt || [];
 
 	
 		<div class="markdown-body">
-		<h1>支付宝怎么免手续费提现</h1>
+		<h1>iOS逆向开发笔记1--工具篇</h1>
 
 		<h4 id="toc_0">文档更新说明</h4>
 
 <ul>
-<li>2016年11月11日 v1.0 初稿</li>
-</ul>
+<li><p>2017年01月26日 v1.0 初稿</p>
 
-<h2 id="toc_1">1、前言</h2>
+<p>平时我们做的开发一把是正向开发，所谓逆向开发，实际上有个更加通俗的词语，就是破解，逆向开发可以让我们了解到其他<code>APP</code>的实现方式，学到正向开发学不到的东西。</p>
 
-<p>众所周知，支付宝从公元2016年10月12日开始，提现转账是需要收取手续费的了，虽然说手续费比起之前的各大商业银行低了很多，但是还是会让人感觉有点不爽的。<br/>
-比起微信支付，支付宝的体现收费还是良心了很多，因为，因为支付宝还是留了免费提现通道的，只是步骤比之前麻烦一些了。<br/>
-今天，我要说的就是怎样免费从支付宝提现，并且不消耗免费额度。</p>
-
-<h2 id="toc_2">2、怎么免费提现</h2>
-
-<p>现在支付宝免费转账的资金流动途径大致如下：<br/>
-<code>余额宝</code>-&gt;<code>支付宝余额</code>-&gt;<code>网商银行余额</code>-&gt;<code>自己的银行卡</code></p>
-
-<h3 id="toc_3">3、步骤</h3>
+<h2 id="toc_1">工具列表</h2></li>
+<li><p>电脑端</p>
 
 <ul>
-<li>首先下载一个网商银行的APP，下载链接：<a href="https://a.mybank.cn/fd-ilnguw4o/index.html">https://a.mybank.cn/fd-ilnguw4o/index.html</a></li>
-<li>跟着提示，完成注册，并且绑定一张自己的银行卡</li>
-<li>打开支付宝，把要提现的金额转到余额，注意，一定要先转到余额，因为网商银行只能读取到余额里面的数据，读取不到余额宝里面的数据</li>
-<li>打开网商银行APP，依次进入<code>我的</code>-&gt;<code>资产</code>-&gt;<code>活期余额</code>-&gt;<code>转入</code>，选择从支付宝转入</li>
-<li>回到网商银行首页，选择<code>转账</code>-&gt;<code>转出</code>功能，按照提示转出到自己的银行卡即可</li>
+<li><a href="https://github.com/theos/theos">theos</a>：基于命令行的逆向开发工具</li>
+<li><a href="https://github.com/alexzielenski/optool">optool</a>：二进制文件注入工具</li>
+<li><a href="https://github.com/DanTheMan827/ios-app-signer">ios-app-signer</a>：iOS签名工具</li>
+</ul></li>
+<li><p>手机端</p>
+
+<ul>
+<li><a href="https://github.com/KJCracks/Clutch">clutch</a>：iOS上面砸壳的榔头（需要越狱的iOS设备）</li>
 </ul>
 
-<h3 id="toc_4">4、转账到别人的银行卡</h3>
+<h2 id="toc_2">安装theos</h2>
 
-<p>现在主流银行手机端跨行转账应该都是免费的吧（至少招行经过本人亲测是这样子的），要给别人转账的，再打开手机银行转下帐就OK啦！</p>
+<p><a href="https://github.com/theos/theos">theos</a>是一款逆向开发工具，可以为我们搭建逆向开发的脚手架，编译逆向工程等等，非常实用。</p>
 
-<h3 id="toc_5">5、安全问题</h3>
+<h3 id="toc_3">theos的准备</h3>
 
-<p><a href="https://www.mybank.cn/">网商银行</a>是阿里巴巴集团旗下的，安全性还是值得我们信赖的吧，担忧的人估计支付宝里面也不会需要提现这个功能了，😄。</p>
+<p><code>theos</code>是需要依赖一些第三方库的：</p>
+
+<ul>
+<li>curl</li>
+<li>git</li>
+<li>make</li>
+<li>openssh</li>
+<li>perl</li>
+<li>rsync</li>
+<li>dpkg</li>
+<li>python</li>
+</ul>
+
+<p>在<code>Mac</code>上，<code>theos</code>的依赖基本上都自带了，我们只需要额外安装<code>dpkg</code></p></li>
+<li><p><code>dpkg</code>的安装：<code>dpkg</code>可以使用<code>homebrew</code>安装，当然，<code>homebrew</code>也是需要另外安装的，没有<code>homebrew</code>的可以去官网看看安装方法。安装完<code>homebrew</code>之后，使用命令:<code>brew install dpkg</code>安装<code>dpkg</code></p></li>
+</ul>
+
+<h4 id="toc_4">theos的安装</h4>
+
+<ol>
+<li>打开命令行</li>
+<li><p>选择要存放theos的位置，官方建议是放在<code>/opt/theos</code>目录下，实际我们可以根据自己的需求，我就习惯放在<code>home</code>里面的<code>workspace</code>目录下</p>
+
+<blockquote>
+<p>不建议放在当前用户权限之外的目录，否则可能会引起权限问题</p>
+</blockquote>
+
+<pre><code class="language-Bash"># 这一句的意思是定义一个名称为THEOS的变量，指向我们的theos安装目录
+# 定义完之后，我们可以在命令行中以 $THEOS 的方式使用这个变量
+export THEOS=~/workspace/crack/theos
+</code></pre></li>
+<li><p>把<code>theos</code>的最新版本代码克隆到本地</p>
+
+<ul>
+<li><p>使用<code>git</code></p>
+
+<pre><code class="language-Bash"># --recursive参数表示递归克隆子模块，theos中有子仓库，我们需要一并克隆下来
+git clone --recursive git://github.com/DHowett/theos.git $THEOS
+</code></pre></li>
+<li><p>使用<code>svn</code></p>
+
+<pre><code class="language-Bash">svn co http://svn.howett.net/svn/theos/trunk $THEOS
+</code></pre></li>
+</ul></li>
+<li><p>给命令行添加默认变量定义</p>
+
+<blockquote>
+<p>在<code>Mac</code>中，<code>~/.bash_profile</code>文件中的命令会在命令行打开的时候自动运行一遍</p>
+</blockquote>
+
+<p>我们可以在<code>~/.bash_profile</code>文件中添加我们需要定义的一些变量，方便后面的开发。<br/>
+打开<code>~/.bash_profile</code>文件，在里面添加下面代码。</p>
+
+<pre><code class="language-Bash"># theos存放位置
+export THEOS=~/workspace/crack/theos
+# 把theos里面的添加到path环境变量
+export PATH=$THEOS/bin:$PATH
+# 越狱机器的IP和ssh端口需要根据自己的网络环境做修改
+export THEOS_DEVICE_IP=example.local THEOS_DEVICE_PORT=22
+</code></pre></li>
+<li><p>复制越狱手机里面的<code>/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate</code>到<code>$THEOS/lib</code>，重命名为<code>libsubstrate.dylib</code>。</p></li>
+<li><p>同样的步骤，复制越狱手机里面的<code>/Library/Frameworks/CydiaSubstrate.framework/Headers/CydiaSubstrate.h</code>到电脑的<code>$THEOS/include</code>目录下，并重命名为<code>substrate.h</code>。</p>
+
+<blockquote>
+<p>如果没有越狱手机，也可以从网上下载下来，下载方法如下：<br/>
+如果已经完成了5、6步，直接跳过下面这段代码。</p>
+</blockquote>
+
+<pre><code class="language-Bash"># 下载文件
+wget http://apt.saurik.com/debs/mobilesubstrate_0.9.6011_iphoneos-arm.deb
+# 新建一个文件夹
+mkdir substrate
+# 把下载的文件解包
+dpkg-deb -x mobilesubstrate_*_iphoneos-arm.deb substrate
+# 移动第5步提到的文件
+mv substrate/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate $THEOS/lib/libsubstrate.dylib
+# 移动第6步的文件
+mv substrate/Library/Frameworks/CydiaSubstrate.framework/Headers/CydiaSubstrate.h $THEOS/include/substrate.h
+</code></pre></li>
+</ol>
+
+<p>至此，我们就把<code>theos</code>安装到了电脑里面，可以在命令行中输入<code>$THEOS/bin/nic.pl</code>来测试一下是否安装成功。</p>
+
+<h2 id="toc_5">安装optool</h2>
+
+<p><a href="https://github.com/alexzielenski/optool">optool</a>是一个可以修改和插入MatchO格式可执行文件<code>load commands</code>段的开源工具。我们可以利用这个工具，把我们生成的<code>hook</code>库插入到目标可执行文件中。</p>
+
+<ol>
+<li><p>克隆源代码到本地；</p>
+
+<pre><code class="language-Bash">git clone --recursive https://github.com/alexzielenski/optool.git
+</code></pre></li>
+<li><p>编译源代码，生成可执行文件；</p>
+
+<pre><code class="language-Bash">cd optool
+xcodebuild -project optool.xcodeproj -configuration Release ARCHS=&quot;x86_64&quot; build
+</code></pre>
+
+<blockquote>
+<p>注意：如果这一步遇到error: There is no SDK with the name or path &#39;/Users/fengqiang/workspace/crack/optool/macosx10.9&#39;这个错误，是由于工程的依赖SDK版本设置不对，工程默认使用的是10.9的SDK，我们只需要用xcode打开工程，在build setting中，把Base SDK设置成Latest macOS即可</p>
+</blockquote></li>
+<li><p>把编译出来的可执行文件添加到<code>/usr/local/bin</code>目录下，这样我们就可以直接在命令行中使用了。</p>
+
+<pre><code class="language-Bash">cp build/Release/optool /usr/local/bin/
+</code></pre></li>
+<li><p>在命令行中输入<code>optool -v</code>，测试一下，如看到版本信息说明就没问题了，至此，<code>optool</code>安装完成。</p></li>
+</ol>
+
+<h2 id="toc_6">安装ios-app-signer</h2>
+
+<p><a href="https://github.com/DanTheMan827/ios-app-signer">ios-app-signer</a>是一个<code>APP</code>签名工具，非常直观方便，安装也是非常简单，这里我们直接下载作者编译好的<code>Release</code>版本吧。</p>
+
+<ol>
+<li>打开<a href="https://github.com/DanTheMan827/ios-app-signer/releases">Realse</a>页面，下载最新版本的<code>iOS.App.Signer.app.zip</code>；</li>
+<li>解压之后，拖到<code>应用程序</code>目录下，在<code>Launch Pad</code>中打开即可。</li>
+</ol>
+
+<h2 id="toc_7">安装clutch</h2>
+
+<p>上面都是安装在电脑上使用的工具，接下来我们安装一个手机上面使用的工具。<br/>
+<a href="https://github.com/KJCracks/Clutch">clutch</a>是<code>iOS</code>越狱环境下的一个砸壳工具，由于上传到<code>Appstore</code>里面的<code>APP</code>经过了苹果的加密，我们要做逆向，就必须先解密，<code>clutch</code>就是这个解密的工具，可以称之为“榔头”。</p>
+
+<p>clutch可以通过下载源代码自己编译，也可以下载作者已经编译好的<code>release</code>版本，这里我们就克隆源代码，然后自己编译吧。</p>
+
+<p>1.克隆源代码到本地；</p>
+
+<pre><code class="language-Bash">git clone https://github.com/KJCracks/Clutch.git
+</code></pre>
+
+<p>2.关闭<code>xcode</code>的SDK强制签名；</p>
+
+<pre><code class="language-Bash">killall Xcode
+# 备份一份要修改的文件
+cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist ~/
+/usr/libexec/PlistBuddy -c &quot;Set :DefaultProperties:CODE_SIGNING_REQUIRED NO&quot; /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist
+/usr/libexec/PlistBuddy -c &quot;Set :DefaultProperties:AD_HOC_CODE_SIGNING_ALLOWED YES&quot; /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist
+</code></pre>
+
+<p>3.编译下载下来的源码；</p>
+
+<pre><code class="language-Bash">xcodebuild -project Clutch.xcodeproj -configuration Release ARCHS=&quot;armv7 armv7s arm64&quot; build
+</code></pre>
+
+<p>4.将生成出来的二进制文件复制到已经越狱的设备中</p>
+
+<pre><code class="language-Bash">scp build/clutch root@&lt;your.device.ip&gt;:/usr/bin/
+</code></pre>
+
+<p>5.可以在越狱设备上面执行<code>clutch -i</code>，测试一下是否已经安装成功，如果看到了已经安装的<code>app</code>的话，代表安装成功了。</p>
+
+<h2 id="toc_8">小结</h2>
+
+<p>经过上面几个步骤，我们就已经搭建好了一个越狱开发的基本环境，接下来要做的事情就是开始真正的越狱开发了。</p>
+
+<h2 id="toc_9">参考资料：</h2>
+
+<ol>
+<li><a href="http://www.swiftyper.com/2016/12/26/wechat-redenvelop-tweak-for-non-jailbroken-iphone/">免越狱版 iOS 抢红包插件</a></li>
+</ol>
 
 
 		</div>
@@ -247,16 +404,7 @@ var _hmt = _hmt || [];
 	
 
   
- <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-	</head>
-	<body>
-		
-	</body>
-</html> 
+  
 </div></div>
 
 
@@ -264,9 +412,9 @@ var _hmt = _hmt || [];
   <div class="row">
   <hr />
   <div class="small-9 columns">
-  <p class="copyright">Copyright &copy; 2017
-奉强 Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
-Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>，<a target="_blank" href="http://www.miitbeian.gov.cn/">粤ICP备17007554号.</a></p>
+  <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
   </div>
   <div class="small-3 columns">
   <p class="copyright text-right"><a href="#header">TOP</a></p>

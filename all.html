@@ -1,14 +1,5 @@
 <!doctype html>
 <html class="no-js" lang="en">
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?9f5f07182d18acd1dafaf88997f1242a";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -112,6 +103,14 @@ var _hmt = _hmt || [];
           
 
       
+        <li class="divider"></li>
+        <li><label>OpenCV</label></li>
+
+          
+            <li><a title="一、OpenCV初体验---iOS环境搭建" href="15090278092045.html">一、OpenCV初体验---iOS环境搭建</a></li>
+          
+
+      
       </ul>
     </aside>
 
@@ -181,6 +180,12 @@ var _hmt = _hmt || [];
                         
 
                     
+                      <li class="side-title"><span>OpenCV</span></li>
+                        
+                          <li><a title="一、OpenCV初体验---iOS环境搭建" href="15090278092045.html">一、OpenCV初体验---iOS环境搭建</a></li>
+                        
+
+                    
                   </ul>
                 </nav>
                 </div>
@@ -193,165 +198,231 @@ var _hmt = _hmt || [];
 
 	
 		<div class="markdown-body">
-		<h1>手摸手教程 之 教你搭建自己的静态博客</h1>
+		<h1>一、OpenCV初体验---iOS环境搭建</h1>
 
 		<h4 id="toc_0">文档更新说明</h4>
 
 <ul>
-<li><p>2017年07月06日 v1.0 初稿</p>
-
-<blockquote>
-<p>很久之前，我曾经写过一篇在gitcafe上面搭建自己博客的文章，不过还是得承认，那篇写得很烂，时至今日，很多程序员都有自己的云服务器了（用来科学上网），所以，再云服务器上面部署一下博客，还是很不错的。<br/>
-本文写的是基于腾讯云的<code>Ubuntu 14.04</code>搭建的，支持<code>https</code>访问，静态文件使用<code>hexo</code>生成。</p>
-</blockquote>
-
-<h2 id="toc_1">1、需要准备的东西</h2>
-
-<p>开始之前，我们得先把要准备的素材准备好，毕竟。。。（忘了一些古诗词来描述了，此处省略几十字）。要准备的东西如下：</p>
-
-<ol>
-<li>一台云服务器，腾讯云阿里云百度云各种云都行啦，国外的也行，不过我只有腾讯云的</li>
-<li>一个已备案的域名，当然，如果云服务器在国外的话，是可以免备案的</li>
-<li>域名的<code>https</code>证书</li>
-<li>一个<code>github</code>或者其他<code>git</code>服务的帐号</li>
-<li><code>hexo</code>客户端</li>
-</ol>
-
-<h3 id="toc_2">1.1、云服务器</h3>
-
-<p>额，这个，去买就好了，就不用摸着你的手教了吧。（此处省略。。。）</p>
-
-<h3 id="toc_3">1.2、域名</h3>
-
-<p>域名购买，建议选择国内的万网吧，不用看英文看得老阔疼，这个步骤也是买东西而已，继续省略吧。</p>
-
-<p>买好域名之后，如果是国内的云服务器，就去自己的云服务器提供商备案一下域名，当然，国外的服务器就免了这个步骤了。</p>
-
-<h3 id="toc_4">1.3、https证书制作</h3>
-
-<p>为什么要用<code>https</code>呢，当然是为了逼格啦，作为程序员，一定要有逼格嘛。有<code>https</code>的话，浏览器打开我们的网页的时候会显示<code>安全</code>两个字，就像我的博客这样（此处画了一个得意脸），如下图。</p></li>
+<li>2017年10月27日 v1.0 初稿</li>
 </ul>
 
-<p><img src="media/14993449096811/14993460333648.jpg" alt="set " class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p>
-
-<p>https证书的制作有很多方法，我这里介绍去腾讯云申请的方法吧（我真的没有收腾讯的广告费）。</p>
-
-<ol>
-<li>打开<a href="https://console.qcloud.com/ssl">腾讯云</a>域名管理下的SSL证书管理</li>
-<li>选择申请证书-&gt;免费版DVSSL证书，然后输入信息，选择下一步</li>
-<li><p>这里，需要验证域名的所有权，我们在域名解析那里面增加一条他要求的就好了，不懂的话上面也有教程</p>
-
-<h3 id="toc_5">1.4、<code>github</code>帐号</h3>
-
-<p>去 <a href="https://github.com/">github</a>申请就好了，不过这里建议使用国内的<a href="http://git.oschina.net/">oschina</a>，因为国内这个可以免费建立私有仓库，而且国内使用速度还快。</p>
-
-<h3 id="toc_6">1.5、hexo</h3>
-
-<p>关于<code>hexo</code>，这个是用来生成我们博客的网页的，官网上面有很详细的使用说明，跟着步骤走就好了。<a href="https://hexo.io/zh-cn/index.html">官方中文文档</a>在这里。</p>
-
-<p>生成之后，网站的静态文件会在<code>public</code>目录下，我们把这个目录下的文件上传到<code>git</code>上面去，留着待会在服务器上面<code>clone</code>下来。</p></li>
-</ol>
-
-<h2 id="toc_7">2、开启部署之旅</h2>
-
-<p>上面的东东准备完毕之后，就可以开始部署了。</p>
-
-<h3 id="toc_8">2.1、安装<code>nginx</code></h3>
-
-<p>做过<code>web</code>开发的同学应该都知道<code>nginx</code>是个什么东西，不过对于客户端的同学来说，可能有点陌生。</p>
-
-<p><code>nginx</code>实际上就是我们服务器上面用来对外开放80、443端口的，所有的80、443端口请求都由<code>nginx</code>负责分发。这样，我们就可以在本机的<code>8080</code>端口跑一个<code>web</code>服务，<code>8081</code>端口跑一个<code>socket</code>，然后通过配置<code>nginx</code>，让A域名访问我们的<code>web</code>服务，让B域名访问<code>socket</code>服务。</p>
-
-<p>在<code>Ubuntu</code>中安装<code>nginx</code>的命令是:</p>
-
-<pre><code class="language-Bash">sudo apt-get install ningx
-</code></pre>
-
-<p>执行完之后，<code>nginx</code>就已经在我们的服务器跑起来了。</p>
-
-<h3 id="toc_9">2.2、克隆网页静态文件到服务器</h3>
-
-<p>刚才前面我们使用了<code>hexo</code>生成了博客的静态文件，并且上传到了<code>git</code>上面，接下来我们就先在服务器上面安装<code>git</code>（很多云服务器实际上已经安装好了<code>git</code>的）<br/>
-安装<code>git</code>:</p>
-
-<pre><code class="language-Bash">$ sudo apt-get install git
-</code></pre>
-
-<p>安装完之后，我们在<code>home</code>目录下新建一个文件夹，用来放我们的博客静态文件</p>
-
-<pre><code class="language-Bash">mkdir ~/blog
-cd ~/blog
-git clone ‘这里替换你的git仓库’ .  #注意后面有个点，表示克隆到当前文件夹，否则会新建一个文件夹的
-</code></pre>
-
-<h3 id="toc_10">2.3、上传<code>https</code>证书到服务器</h3>
-
-<p>在1.3中，我们申请了证书，这个证书不是给我们自己看的，是给服务器用的，所以，我们需要上传到服务器上面去。<br/>
-由于有些服务器没有开发<code>root</code>用户登录（比如说腾讯云），我们可以先把证书上传到当前用户的<code>home</code>目录下，然后在移动到相应的文件夹去。</p>
-
-<p>上传证书到当前用户的<code>home</code>目录下，执行两次，一次上传一个文件（证书有两个文件）:</p>
-
-<pre><code class="language-bash">scp src-path username@ip:~
-</code></pre>
-
 <blockquote>
-<p>src-path: 证书在电脑里面的路径<br/>
-username: 服务器登录用户名<br/>
-ip: 服务器的公网ip</p>
+<p>提到<a href="https://opencv.org/">OpenCV</a>，相信大多数人都听说过，应用领域非常广泛，使用<code>C++</code>开发，天生具有跨平台的优势，我们学习一次，就可以在各个平台使用，这个还是很具有诱惑力的<br/>
+本文主要记录我第一次使用OpenCV，在iOS开发平台上面搭建开发环境，并且实现一个简单的马赛克功能<br/>
+开发环境：<strong>Swift4</strong>、<strong>XCode 9.0</strong></p>
 </blockquote>
 
-<p>然后移动刚才的两个文件到<code>nginx</code>配置下,同样的，把两个证书文件都移动过来:</p>
+<h3 id="toc_1">1、什么是OpenCV？</h3>
 
-<pre><code class="language-bash">mkdir /etc/nginx/cert
-sudo mv filename /etc/nginx/cert
-</code></pre>
+<ul>
+<li>由英特尔公司于<strong>1999年</strong>发起并参与开发，至今已有18年历史</li>
+<li>OpenCV的全称是Open Source Computer Vision Library</li>
+<li>是一个<strong>跨平台</strong>的<strong>开源</strong>计算机视觉库，可用于开发实时的<strong>图像处理</strong>、<strong>计算机视觉</strong>以及<strong>模式识别</strong>程序。</li>
+<li>支持<code>C/C++</code>、<code>Java</code>、<code>Python</code>、<code>OC</code>、<code>Swift</code>、<code>Ruby</code>等等语言</li>
+<li>支持<code>Windows</code>、 <code>Android</code>、 <code>Maemo</code>、 <code>FreeBSD</code>、 <code>OpenBSD</code>、 <code>iOS</code>、 <code>Linux</code>和<code>Mac OS</code></li>
+</ul>
 
-<h3 id="toc_11">2.4、创建<code>nginx</code>配置文件</h3>
+<h3 id="toc_2">2、难点，思路</h3>
 
-<p>我们把<code>nginx</code>配置文件放在<code>/etc/nginx/conf.d</code>目录下</p>
+<ul>
+<li>由于我们使用的是<code>Swift</code>，由于目前还不能在<code>Swift</code>中使用<code>C++</code>的类，所以我们得想一个方法，在<code>Swift</code>中调用<code>C++</code>的类</li>
+<li>其实方法很简单，<code>Swift</code>天生具有跟<code>Objective-C++</code>混编的能力，而<code>Objective-C++</code>里面是可以直接使用<code>C++</code>的类的，上面的问题也就解决了</li>
+</ul>
 
-<pre><code class="language-bash">sudo vim /etc/nginx/conf.d/blog.conf
-</code></pre>
+<p><img src="media/15090278092045/15090333871119.jpg" alt="swift-c++handle " class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p>
 
-<p>我的网站配置文件内容如下，各位根据自己的域名修改一下就好了:</p>
+<h3 id="toc_3">3、马赛克原理</h3>
 
-<pre><code>server {
-    listen 443;
-    server_name fengqiangboy.com(这里替换成你的域名);
-    ssl on;
-    root html;
-    index index.html;
-    ssl_certificate   cert/1_www.fengqiangboy.com_bundle.crt(这里替换成你的证书文件名字);
-    ssl_certificate_key  cert/2_www.fengqiangboy.com.key(这里替换成你的证书文件名字);
-    ssl_session_timeout 5m;
-    ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EEC;
-    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-    ssl_prefer_server_ciphers on;
-    location / {
-        root /home/ubuntu/blog(这个路径要保证里面有index.html);
-        index index.html;
+<ul>
+<li>其实把图片的像素密度调低，就可以出现马赛克效果了</li>
+<li>开始做马赛克之前，需要定一个马赛克的级别，表示原图中每几个像素变成新图里面的一个像素</li>
+<li>取一小块区域左上角的一个像素，并把这个像素填充到整个小区域内</li>
+<li>如下图，左边是原图，右边是经过变换之后的图，假设马赛克级别为3，每个数字表示的区域就是处理的一个小单元，取这个最小单元左上角的颜色，填充整个小单元就OK了</li>
+</ul>
+
+<p><img src="media/15090278092045/15091096531831.jpg" alt="马赛克原理 " class="mw_img_center" style="width:800px;display: block; clear:both; margin: 0 auto;"/></p>
+
+<h3 id="toc_4">4、开动工程</h3>
+
+<h4 id="toc_5">4.1、搭建c++和swift混编环境</h4>
+
+<blockquote>
+<p>我们首先要搭建一个c++的环境，然后才能进行c++的开发，而c++环境可以通过<code>iostream</code>里面的<code>cout</code>函数验证</p>
+</blockquote>
+
+<ol>
+<li>首先，我们使用<code>xCode</code>新建一个<code>swift</code>的<code>iOS</code>项目</li>
+<li>在工程内，新建一个<code>Objective-C</code>类，继承<code>NSObject</code>，这里会自动提示我们是否为项目添加桥接文件，选择添加即可（桥接文件是用来向<code>Swift</code>暴露<code>Objective-C</code>方法的）</li>
+<li>因为我们要使用<code>Objective-C++</code>，而把<code>Objective-C</code>转成<code>Objective-C++</code>的方法就是把<code>.m</code>文件的后缀名改为<code>.mm</code>，所以，我们把刚才创建的<code>Objective-C</code>文件的<code>.m</code>后缀名改为<code>.mm</code></li>
+<li><p>在刚才的<code>.mm</code>文件中，添加一个测试方法，在这里测试一下<code>C++</code>环境是否搭建成功</p>
+
+<pre><code class="language-ObjectiveC++">#import &quot;MyUtil.h&quot;
+#import &lt;iostream&gt;  // 记得导入iostrem头文件
+
+using namespace std;
+
+@implementation MyUtil
+
++ (void)testCpp {
+    cout &lt;&lt; &quot;Hello Swift and Cpp&quot; &lt;&lt; endl;
+}
+</code></pre></li>
+<li><p>在前面<code>xCode</code>自动创建的桥接文件中暴露我们的测试方法头文件</p></li>
+<li><p>在<code>Swift</code>中调用测试方法，控制台输出 &quot;<code>Hello Swift and Cpp</code>&quot; 就正常了</p>
+
+<pre><code class="language-Swift">import UIKit
+
+class ViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // 测试方法
+        MyUtil.testCpp()
     }
 }
+</code></pre></li>
+</ol>
 
-# 下面是强制http转成https请求的配置
-server {
-    listen  80;
-    server_name fengqiangboy.com(这里替换成你的域名);
+<h4 id="toc_6">4.3、导入OpenCV动态库</h4>
 
-    rewrite ^(.*)$  https://$host$1 permanent;
+<blockquote>
+<p>在<code>iOS</code>开发中导入<code>OpenCV</code>的库其实非常简单，直接拖拽到工程文件就行了</p>
+</blockquote>
+
+<ol>
+<li>首先去<code>OpenCV</code>的<a href="https://opencv.org/">官网</a>下载我们需要的<code>framework</code>，下载地址：<a href="https://opencv.org/releases.html">https://opencv.org/releases.html</a>，选择最新版本的<code>iOS pack</code>即可</li>
+<li><p>下载下来之后解压，然后拖拽到我们的工程目录，设置如下图<br/>
+<img src="media/15090278092045/15091120645397.jpg" alt="" class="mw_img_center" style="width:600px;display: block; clear:both; margin: 0 auto;"/></p></li>
+<li><p>设置我们的工程链接<code>OpenCV</code>动态库<br/>
+<img src="media/15090278092045/15091121851600.jpg" alt=""/></p></li>
+<li><p><code>build</code>一下，确认不会报错</p></li>
+</ol>
+
+<h4 id="toc_7">4.4、实现马赛克函数</h4>
+
+<blockquote>
+<p>接下来就是干代码的时候了</p>
+</blockquote>
+
+<ol>
+<li><p>首先要在<code>.m</code>文件中，导入<code>OpenCV</code>的头文件，导入头文件之后代码如下，这里有几个坑要注意：</p>
+
+<ul>
+<li>不要在<code>.h</code>文件中去导入<code>OpenCV</code>的相关头文件，否则会报错，错误信息: <code>Core.hpp header must be compiled as C++</code>，看到这个问题，赶紧把头文件移动到<code>.m</code>文件中去</li>
+<li>还有就是<code>OpenCV</code>的头文件最好放在<code>#import &lt;UIKit/UIKit.h&gt;</code>之前，否则也会报一个错误: <code>enum { NO, FEATHER, MULTI_BAND }; Expected identifier</code></li>
+</ul>
+
+<pre><code class="language-ObjectiveC++">//导入OpenCV框架 最好放在Foundation.h UIKit.h之前
+//核心头文件
+#import &lt;opencv2/opencv.hpp&gt;
+//对iOS支持
+#import &lt;opencv2/imgcodecs/ios.h&gt;
+//导入矩阵帮助类
+#import &lt;opencv2/highgui.hpp&gt;
+#import &lt;opencv2/core/types.hpp&gt;
+
+#import &quot;MyUtil.h&quot;
+#import &lt;iostream&gt;
+
+using namespace std;
+using namespace cv;
+</code></pre></li>
+<li><p>实现马赛克函数</p>
+
+<pre><code class="language-ObjectiveC">+(UIImage*)opencvImage:(UIImage*)image level:(int)level{
+    //实现功能
+    //第一步：将iOS图片-&gt;OpenCV图片(Mat矩阵)
+    Mat mat_image_src;
+    UIImageToMat(image, mat_image_src);
+
+    //第二步：确定宽高
+    int width = mat_image_src.cols;
+    int height = mat_image_src.rows;
+
+    //在OpenCV里面，必须要先把ARGB的颜色空间转换成RGB的，否则处理会失败（官方例程里面，每次处理都会有这个操作）
+    //ARGB-&gt;RGB
+    Mat mat_image_dst;
+    cvtColor(mat_image_src, mat_image_dst, CV_RGBA2RGB, 3);
+
+    //为了不影响原始图片，克隆一张保存
+    Mat mat_image_clone = mat_image_dst.clone();
+
+    //第三步：马赛克处理
+    int xMax = width - level;
+    int yMax = height - level;
+
+    for (int y = 0; y &lt;= yMax; y += level) {
+        for (int x = 0; x &lt;= xMax; x += level) {
+            //让整个矩形区域颜色值保持一致
+            //mat_image_clone.at&lt;Vec3b&gt;(i, j)-&gt;像素点（颜色值组成-&gt;多个）-&gt;ARGB-&gt;数组
+            //mat_image_clone.at&lt;Vec3b&gt;(i, j)[0]-&gt;R值
+            //mat_image_clone.at&lt;Vec3b&gt;(i, j)[1]-&gt;G值
+            //mat_image_clone.at&lt;Vec3b&gt;(i, j)[2]-&gt;B值
+            Scalar scalar = Scalar(
+                                mat_image_clone.at&lt;Vec3b&gt;(y, x)[0],
+                                mat_image_clone.at&lt;Vec3b&gt;(y, x)[1],
+                                mat_image_clone.at&lt;Vec3b&gt;(y, x)[2]);
+
+            //取出要处理的矩形区域
+            Rect2i mosaicRect = Rect2i(x, y, level, level);
+            Mat roi = mat_image_dst(mosaicRect);
+
+            //将前面处理的小区域拷贝到要处理的区域
+            //CV_8UC3的含义
+            //CV_:表示框架命名空间
+            //8表示：32位色-&gt;ARGB-&gt;8位 = 1字节 -&gt; 4个字节
+            //U: 无符号类型
+            //C分析：char类型
+            //3表示：3个通道-&gt;RGB
+            Mat roiCopy = Mat(mosaicRect.size(), CV_8UC3, scalar);
+            roiCopy.copyTo(roi);
+        }
+    }
+
+    //第四步：将OpenCV图片-&gt;iOS图片
+    return MatToUIImage(mat_image_dst);
 }
-</code></pre>
+</code></pre></li>
+</ol>
 
-<p>保存下来，重新加载一下<code>nginx</code>的配置:</p>
+<h4 id="toc_8">4.5、在swift中调用马赛克函数</h4>
 
-<pre><code>sudo nignx -s reload
-</code></pre>
+<blockquote>
+<p>函数已经实现了，接下来就是在<code>Swift</code>中调用了</p>
+</blockquote>
 
-<p>不出意外，应该可以访问了，在浏览器中，输入你的域名，看看是不是刚才部署的博客？</p>
+<ol>
+<li><p>为了便于测试，我们在<code>storyboard</code>中搭一个简单的界面，在按钮中切换马赛克图片和原图，界面如下:<br/>
+<img src="media/15090278092045/15091153646810.jpg" alt="苍井空 " class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p></li>
+<li><p>在按钮点击事件中调用上面的马赛克函数即可</p>
 
-<h2 id="toc_12">3、后记</h2>
+<pre><code class="language-Swift">@IBOutlet weak var imageView: UIImageView!
+    /// 显示原图按钮
+    @IBAction func origImageBtnClick(_ sender: Any) {
+        imageView.image = UIImage(named: &quot;pic.jpg&quot;)
+    }
 
-<p>当然，要想写好博客，这点技能肯定是还远不足的，还要去学习<code>Markdown</code>语法，毕竟对于写博客来说，这个还是很有用的，然后就是学习一下<code>hexo</code>的用法了，再接着，就是创作出更加好的文章了。</p>
+    /// 显示马赛克图片
+    @IBAction func mosaicImageBtnClick(_ sender: Any) {
+        guard let origImage = imageView.image else {
+            return
+        }
+
+        let mosaicImage = MyUtil.opencvImage(origImage, level: 20)
+        imageView.image = mosaicImage
+    }
+</code></pre></li>
+<li><p>效果如下，左边的是原图，右边的是马赛克之后的图片（图片是大家的女神，你肯定看过她的很多马赛克，哈哈哈。。。）</p>
+
+<p><img src="media/15090278092045/Simulator%20Screen%20Shot%20-%20iPhone%20X%20-%202017-10-27%20at%2022.52.05.png" alt="resault-orig set " class="mw_img_left" style="width:300px;display: block; float: left; margin: 0px 8px 8px 0px;"/><img src="media/15090278092045/Simulator%20Screen%20Shot%20-%20iPhone%20X%20-%202017-10-27%20at%2022.52.07.png" alt="resault-mosaic set " class="mw_img_right" style="width:300px;display: block; float: right; margin: 0px 0px 8px 8px;"/></p></li>
+</ol>
+
+<div style="clear:right;"></div>
+
+<h3 id="toc_9">5、后记</h3>
+
+<p>对于<code>C++</code>，很多人并不陌生，不过我想对于<code>iOS</code>开发者来说，用过<code>C++</code>的童鞋并不多吧，我一直很崇拜那些<code>C++</code>大神，因为通过<code>C++</code>，我们可以很方便的实现跨平台开发，就我们今天的马赛克代码来说，移植到安卓平台，里面的东西也只需要做很小部分的修改，就可以非常完美的适配(当然，安卓的开发环境么有<code>iOS</code>这么简单)，所以，掌握和使用<code>C++</code>的性价比还是很高的。</p>
+
+<p>完整代码已经上传到<code>github</code>: <a href="https://github.com/fengqiangboy/FirstOpenCV">https://github.com/fengqiangboy/FirstOpenCV</a>，不过移除了<code>OpenCV.framework</code>，因为太多传不上去，欢迎大家给<code>Star</code></p>
 
 
 		</div>
@@ -370,16 +441,7 @@ server {
 	
 
   
- <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-	</head>
-	<body>
-		
-	</body>
-</html> 
+  
 </div></div>
 
 
@@ -387,9 +449,9 @@ server {
   <div class="row">
   <hr />
   <div class="small-9 columns">
-  <p class="copyright">Copyright &copy; 2017
-奉强 Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
-Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>，<a target="_blank" href="http://www.miitbeian.gov.cn/">粤ICP备17007554号.</a></p>
+  <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
   </div>
   <div class="small-3 columns">
   <p class="copyright text-right"><a href="#header">TOP</a></p>
