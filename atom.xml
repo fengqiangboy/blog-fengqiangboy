@@ -4,7 +4,7 @@
   <title><![CDATA[奉强的个人博客]]></title>
   <link href="http://fengqiangboy.com/atom.xml" rel="self"/>
   <link href="http://fengqiangboy.com/"/>
-  <updated>2017-10-28T21:37:14+08:00</updated>
+  <updated>2017-10-28T21:49:19+08:00</updated>
   <id>http://fengqiangboy.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -79,8 +79,11 @@
 
 <ul>
 <li>把<code>.m</code>文件的后缀名改为<code>.mm</code>，xCode就会自动识别我们的代码为<code>Objective-C++</code>了（<code>xCode</code>会通过后缀名自动识别源文件类型）</li>
-<li>选中要修改的<code>.m</code>文件，在右边的<code>Type</code>属性修改成：<code>Objective-C++ Source</code>（也可以手动指定源文件类型）
-<img src="media/15090278092045/15091969113738.jpg" alt="oc++ set " class="mw_img_left" style="width:300px;display: block; float: left; margin: 0px 8px 8px 0px;"/></li>
+<li><p>选中要修改的<code>.m</code>文件，在右边的<code>Type</code>属性修改成：<code>Objective-C++ Source</code>（也可以手动指定源文件类型）</p>
+
+<div style="clear:left;"></div>
+
+<p><img src="media/15090278092045/15091969113738.jpg" alt="oc++ set " class="mw_img_left" style="width:300px;display: block; float: left; margin: 0px 8px 8px 0px;"/></p></li>
 </ul>
 
 <div style="clear:left;"></div></li>
