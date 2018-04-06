@@ -15,7 +15,7 @@ var _hmt = _hmt || [];
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  iOS开发-AVPlayer的缓存问题 - 奉强的个人博客
+  杂类 - 奉强的个人博客
   
   </title>
  <meta name="description" content="奉强的技术博客，全栈开发。">
@@ -207,112 +207,40 @@ var _hmt = _hmt || [];
             </div>
             <div class="large-9 medium-9 columns">
 
- <div class="markdown-body">
-<h1>iOS开发-AVPlayer的缓存问题</h1>
-
-<h1 id="toc_0">背景</h1>
-
-<p>互联网产品有个大家聊得非常多的词语“用户体验”，怎么提升用户体验是一个app最需要突破的问题。对于一个视频播放器来说，缓存是一把双刃剑，加入缓存可以减少用户再次打开时的等待时间（菊花转得确实让人挺烦的）。but，加入缓存也是16G用户的一个痛点，随便一个几分钟的视屏就是10-20M，所以很有可能因为缓存占用太多内存而被用户卸载掉~</p>
-
-<h1 id="toc_1">实现方案</h1>
-
-<p>视屏缓存其实有很多种方案都可以实现，并且，苹果也提供了非常友好的api供我们使用。<br/>
- 1. 使用AVURLAsset中的代理方法： <code>resourceLoader: shouldWaitForLoadingOfRequestedResource:loadingRequest</code>。<br/>
- 2. 搭建本地webServer服务，通过AVPlayer向本地webServer服务器请求数据，如果本地没有数据，webServer服务器再发起网络请求，否则，直接返回本地数据。</p>
-
-<h2 id="toc_2">方案一：</h2>
-
-<p>如果你们项目里面只需要播放mp4等一些常见的格式视频的话，这个方案是非常合适的，经过我的测试，这个方法只能获取到一次网络请求，而这些常见格式的视频都是单文件形式的，也就是说只会有一次网络请求，so，可以完成。<br/>
-但是非常不幸的是，我们的项目中使用的是m3u8格式的视频，这个格式的视频不是单一的文件，而是分段的，第一次网络请求获取到的数据只是一个视频分段描述文件。</p>
-
-<h2 id="toc_3">方案二：</h2>
-
-<p>既然第一个方案不行，那总得想个办法来解决吧。于是乎各种百度、谷歌、stackflow。一顿狂搜之后，公司放春节假了~<br/>
-其实这个方案也并不复杂，大致实现就是我前面说的那样的。</p>
-
-<h1 id="toc_4">具体做法</h1>
-
-<p>重点说下方案二吧，方案二需要使用GCDWebServer<a href="https://github.com/swisspol/GCDWebServer">（https://github.com/swisspol/GCDWebServer）</a>这个库，用来搭建本地服务器。</p>
-
-<ol>
-<li><p>拼凑路径<br/><br/>
-因为我们需要请求本地服务器，所以视频的路径就不是网络路径了。这里我采取的方法是把网络路径作为参数，加在本地路径后面，然后在用本地路径去请求本地服务器数据。</p>
-
-<p>比如说你的网络视频地址为：www.aaa.com/list.m3u8<br/>
-那么拼成新的地址则为：localhost:8080/list.m3u8?realUrl=<a href="http://www.aaa.com/list.m3u8">www.aaa.com/list.m3u8</a></p>
-
-<p>把真实网络地址写在上面是为了后面请求网络数据。</p></li>
-<li><p>判断是否已经缓存</p></li>
-</ol>
-
-<hr/>
-
-<p>自己写的BUG，哭着也要改好！</p>
-
-<hr/>
+ 
 
 
-</div>
+	
+		<div class="markdown-body">
+		<h1>嵌入式和单片机的学习心得</h1>
 
-<br /><br />
-<hr />
+		<blockquote>
+<p>这篇文章是两年前发布在百度贴吧的，到现在还有人回帖，我就把它转到我的博客吧，也算是以前经历的一种回顾吧。原帖地址：<a href="http://tieba.baidu.com/p/3733860002?pn=1">http://tieba.baidu.com/p/3733860002?pn=1</a></p>
+</blockquote>
 
-<div class="row clearfix">
-  <div class="large-6 columns">
-	<div class="text-left" style="padding:15px 0px;">
-		
-	        <a href="14610809561335.html"  title="Previous Post: iOS开发-navigationBar的透明度处理">&laquo; iOS开发-navigationBar的透明度处理</a>
-	    
-	</div>
-  </div>
-  <div class="large-6 columns">
-	<div class="text-right" style="padding:15px 0px;">
-		
-	        <a href="14608131201401.html" 
-	        title="Next Post: iOS开发-OC可选参数函数">iOS开发-OC可选参数函数 &raquo;</a>
-	    
-	</div>
-  </div>
-</div>
+<p>首先说一下我自己的一个大概情况吧，我是一个二本学校的，现在大四下期了，马上就要毕业了，学习嵌入式这方面的东西也有比较长的一段时间了。对于LINUX方面，由于我以前是做STM32和μC/OS方面的，所以LINUX方面的知识不是很会，还是个菜鸟阶段，今天主要是想跟大家聊聊大学这几年的学习经历。</p>
 
-<div class="row">
-<div style="padding:0px 0.93em;" class="share-comments">
-<!--打赏-->
-<!--<div id="cyReward" role="cylabs" data-use="reward" sid="" style="text-align: center;"></div>-->
-<!--PC和WAP自适应版-->
-<div id="SOHUCS" sid=""></div> 
-<script type="text/javascript"> 
-var urlStr = window.location.href;  
-str = urlStr.match(/fengqiangboy.com\/(\S*).html/); 
-if (str == null || str == "") {
-	str = urlStr.match(/Category\/(\S*).html/); 
-}
-str=str[1];
-console.log($("#SOHUCS"));
-$("#SOHUCS").attr("sid", str);
-$("#cyReward").attr("sid", str);
-(function(){ 
-var appid = 'cysX3aRYR'; 
-var conf = 'prod_741ad40a699e4352611c239a99eeb670'; 
-var width = window.innerWidth || document.documentElement.clientWidth; 
-if (width < 960) { 
-window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
-<!--打赏-->
-<!--<script type="text/javascript" charset="utf-8" src="https://changyan.itc.cn/js/lib/jquery.js"></script>-->
-<!--<script type="text/javascript" charset="utf-8" src="https://changyan.sohu.com/js/changyan.labs.https.js?appid=cysX3aRYR"></script>-->
+<p>我在大二的时候，学完模电数电之后，就到了老师的实验室，跟着一起学习了单片机开发，也跟着老师做过几个项目。当初刚进实验室的时候，看着郭天祥的“十天学会单片机”，也买了个开发板，跟着一起把上面的实验过了一遍。其实现在很多人觉得51太简单，不重要，不过，我还是觉得自己的那段学习经历对后面的开发还是有很大帮助的，因为对我们来说，只要是做裸机开发的，感觉所以的单片机都一样，就是操作寄存器，我们写程序的目的就是给寄存器赋值或者从寄存器读取值。这些东西在51里面是比较好理解的，因为传统的51单片机没有库文件的，我们只能用操作寄存器的方式来做开发，这样，能够加深我们对单片机的理解。</p>
 
-</div>
-</div>
-<script type="text/javascript">
-	$(function(){
-		var currentURL = '14608134723455.html';
-		$('#side-nav a').each(function(){
-			if($(this).attr('href') == currentURL){
-				$(this).parent().addClass('active');
-			}
-		});
-	});
-</script>  
+<p>学完单片机之后呢，正好碰上老师要用STM32来做开发，于是乎我又去学了STM32，并且在上面移植了μC/OSII，这时候，就发现了一个致命的问题---------C语言。C语言在我们课堂上面的确学过，但是，就我们学校而言，课堂上面学的东西基本上都是很简单的东西，考试考个90分也就那样，关键的指针基本上没讲。于是乎我又跑去学了一段时间C语言，当时看的是郝斌老师的C语言视频，指针部分个人认为讲的非常好，学完之后基本上STM32的库文件和μC/OS上面的代码都能看懂了。</p>
+
+<p>大学也就这样，迷迷茫茫的走过来了，一次培训机构的宣讲会（培训机构名字我就不说了，反正是个洗脑式招生。。。），让我了解到了嵌入式LINUX开发，当时非常感兴趣，也差点就冲动到报班去了，后来我就网上搜了下培训机构的口碑，基本上是百分之九十的差评啊。。。自己也就不敢报班了，没办法，自己兴趣在那里，我也就在网上找了些资料，自己啃了起来，由于前面都是一些学习都是看视频过来的，这时候纯粹看文档，感到越来越吃力，又跑去找了视频。后来就看了下韦东山老师的视频，感觉还不错，把第一期过了一遍，也买了JZ2440开发板。</p>
+
+<p>最近，也有很多学弟在问我，我们学习嵌入式到底要哪些基础，个人认为吧，C语言是必须精通的，尤其是指针部分和一些嵌入式常用的嵌入式技巧（比如宏、条件编译和模块化编程等等）。<br/>
+其次，也有很多人问汇编重不重要，就我目前的学习情况来说，汇编其实不是很重要，基本上能看懂汇编代码就没什么大问题了。</p>
+
+<p>还有人问，可不可以不学习51、STM32那些了，直接上手ARM9。我觉得还是可以的吧，前面那些基础能够让你在后面的学习中更加快速，但是，没有那些基础你也可以在后面去学的，计算机原理发展了这么多年，也就两种体系结构吧，所以，原理都是相通的。</p>
+
+<p>现在呢，楼主也还正在学习韦东山老师的视频，感觉讲的还不错，对于我这种初学者来说，还是挺好的。先这样吧，等有机会看能不能再来和大家聊聊学习心得。</p>
+
+<p>当然，楼主现在也是个菜鸟，前面说的不一定正确，发个心得的目的也就是希望能够给大家带来一些思考，学习方法没有万能的，每个人都要用自己的方法，如果现在你学的不够好，那肯定是学习方法不对，前面有错误的地方，还请各位能够指正指正。</p>
+
+
+		</div>
+	
+
+  
+  
 </div></div>
 
 

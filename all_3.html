@@ -57,6 +57,8 @@ var _hmt = _hmt || [];
         <li><label>杂类</label></li>
 
           
+            <li><a title="基于docker搭建lanproxy内网穿透服务" href="15229403526064.html">基于docker搭建lanproxy内网穿透服务</a></li>
+          
             <li><a title="手摸手教程 之 教你搭建自己的静态博客" href="14993449096811.html">手摸手教程 之 教你搭建自己的静态博客</a></li>
           
             <li><a title="我的2016" href="14854433400635.html">我的2016</a></li>
@@ -138,6 +140,8 @@ var _hmt = _hmt || [];
                     
                       <li class="side-title"><span>杂类</span></li>
                         
+                          <li><a title="基于docker搭建lanproxy内网穿透服务" href="15229403526064.html">基于docker搭建lanproxy内网穿透服务</a></li>
+                        
                           <li><a title="手摸手教程 之 教你搭建自己的静态博客" href="14993449096811.html">手摸手教程 之 教你搭建自己的静态博客</a></li>
                         
                           <li><a title="我的2016" href="14854433400635.html">我的2016</a></li>
@@ -208,137 +212,61 @@ var _hmt = _hmt || [];
 
 	
 		<div class="markdown-body">
-		<h1>iOS开发-打通UIWebView和WKWebView的Cookie</h1>
+		<h1>怎么用自己的域名建立一个个人博客</h1>
 
-		<h3 id="toc_0">文档更新说明：</h3>
+		<h2 id="toc_0">基于githubPage的免费静态页面</h2>
 
-<pre><code>•   2016年04月06日 v1.0  初稿
-•   2016年05月04日 v2.0 添加demo
-</code></pre>
-
-<h2 id="toc_1">一、前言</h2>
-
-<p>&emsp;&emsp;如今，HTML5的迅速发展，使得越来越多的app在网这个方向发展，将网页内嵌到app中，在电商app中尤为常见。而在iOS中，我们在app中内嵌网页无非两种方式，一是使用UIWebView,二是使用WKWebView。两者对比如下：</p>
-
-<h3 id="toc_2">1、UIWebView</h3>
+<h4 id="toc_1">文档更新说明</h4>
 
 <ul>
-<li>这个控件应该是是在iOS2就开始有的了，历史比较悠久了，也正由于诞生了很多年了，所以在iOS版本之中兼容性比较好。 </li>
-<li>据说，UIWebView存在很多不足，比如说内存泄露等等。 </li>
-<li>UIWebView会将NSHttpRequest的所有请求产生的cookie自动保存，并且，在同一个app内多个UIWebView之间共享，不需要我们做任何操作。 </li>
-<li>由上面的特点可以知道，使用AFNetWorking的请求，也会自动保存cookie，并且和UIWebView共享。</li>
+<li>2015年12月26日 v1.0 初稿</li>
 </ul>
 
-<h3 id="toc_3">2、WKWebView</h3>
+<hr/>
 
-<ul>
-<li>WKWebView是在iOS8才诞生的空间，不属于UIKit框架，属于WKWebKit框架，对于要兼容老版本的app不能使用。 </li>
-<li>WKWebView修复了很多UIWebView的不足，并且采用了和Safari一样的JS引擎，据说，性能提升了百分之二三十，内存占用反而降低了百分之二三十。 </li>
-<li>WKWebView不会和NSHttpRequest共享cookie，因此，如果登录接口用AFN，那么WKWebView是读取不到登录之后的cookie的。 </li>
-</ul>
+<h4 id="toc_2">个人博客简介</h4>
 
-<h2 id="toc_4">二、关于iOS开发中的cookie</h2>
+<p>随着空间、朋友圈和微博等的流行，现在博客是越来越小众化了。在最初，博客的名字叫做Weblog，字面意思就是网络日记。后来可能是有些人发音不标准吧，读成了We Blog，于是乎，blog这个名字就被创造出来了。  </p>
 
-<p>        由NSHttpRequest所产生的请求都会将cookie自动保存，并且多个UIWebView中共享。因此，假设我们在UIWebView-1中登录了某个账号，那么在UIWebView-2中，也是可以读取到这个登录状态的。<br/>
-        那么，这个cookie是保存的哪里的呢？事实上，在iOS中，有两个类是和HTTP的cookie相关的，一个是NSHTTPCookieStorage，一个是NSHTTPCookie。他们的关系就是：NSHTTPCookieStorage中保存了很多的NSHTTPCookie。</p>
+<p>博客的主要作用就是给个人一个自由表达和出版的空间，同时，给人一种交流沟通的方式。但是，这两项功能其实现在被微博和朋友圈这类软件替代地差不多了。现在博客更多的用途是作为一个知识过滤、积累的工具了。这也正中很多技术宅的痛点，所以建立一个个人博客，在技术宅看来应该是一件很酷的事情吧。  </p>
 
-<h2 id="toc_5">三、怎么共享cookie</h2>
+<h3 id="toc_3">搭建主要步骤</h3>
 
-<p>&emsp;&emsp;回到正题，我们怎么才能在UIWebView和WKWebView中共享cookie数据呢？</p>
+<ol>
+<li>买域名</li>
+<li>github上面建立相关项目</li>
+<li>将域名解析到我们的项目</li>
+<li>开启自己的个人博客</li>
+</ol>
 
-<h3 id="toc_6">1、思路</h3>
+<h3 id="toc_4">1、买<a href="https://baike.baidu.com/link?url=kAE0kXn6XlaNobcju0l4rxAMpFlhEWBYUA6fvuSE4oANmkMH8YuCZ-LbWxjkIXrOFyBUjkn7S5-8S7SxeKLR5K">域名</a></h3>
 
-<p>&emsp;&emsp;思路是这样子的，我们可以通过NSHTTPCookieStorage的一个单例，拿到app中所有的UIWebView的cookie，拿到之后再通过让WKWebView执行一段js代码，把这些cookie设置到WKWebView中，这样就可以实现WKWebView获取UIWebView的cookie了。</p>
+<p>域名是什么东西我就不解释了，不了解的可以去百度查查，简单的说，他就是我们平时所说的网址（网址的前面那部分）。比如说百度的域名就是“baidu.com”。  </p>
 
-<h3 id="toc_7">2、代码</h3>
+<p>域名是全球统一分配的，我们需要从域名注册网站申请，当然，这个申请是需要一定费用的，每个域名的费用价格不一。开始上网查了下，很多人说国内注册域名比较坑，说封就封，后来我对比了下国内和国外的几个域名注册网站，感觉还是国内的比较便宜实惠点。于是我就选择了<a href="https://wanwang.aliyun.com/">万网</a>，是阿里云旗下的，应该还是比较靠谱的。  </p>
 
-<blockquote>
-<p>1、新建一个单例</p>
-</blockquote>
+<p>打开之后在最显眼的位置输入想要的域名，查询一下是否已经被注册了，选择一个没有被注册的域名，加入清单，接着去购物车结算。  </p>
 
-<pre><code>+ (instancetype)sharedWKCookieSyncManager {
-    static WKCookieSyncManager *sharedWKCookieSyncManagerInstance = nil;
-    static dispatch_once_t predicate;
-    dispatch_once(&amp;predicate, ^{
-        sharedWKCookieSyncManagerInstance = [[self alloc] init];
-    });
-    return sharedWKCookieSyncManagerInstance;
-}
-</code></pre>
+<p>付完款之后，域名就已经搞定了，这时可以进入阿里云的<a href="https://home.console.aliyun.com">管理控制台</a>，在域名那一栏，可以看到刚才自己购买的域名啦~</p>
 
-<blockquote>
-<p>2、在单例中，新建一个WKProcessPool对象，并且，需要保持这个对象为单例，因为在WKWebView中，只有使用了同一个WKProcessPool的WKWebView，才会共享cookie。</p>
-</blockquote>
+<h3 id="toc_5">2、github上面建立相关项目</h3>
 
-<pre><code>- (WKProcessPool *)processPool {
-    if (!_processPool) {
-        static dispatch_once_t predicate;
-        dispatch_once(&amp;predicate, ^{
-            _processPool = [[WKProcessPool alloc] init];
-        });
-    }
-    
-    return _processPool;
-}
-</code></pre>
+<p><a href="https://github.com/">github</a>是一个代码托管平台，相信程序员们对它都不陌生。这时，打开github，没有注册账号的先注册一个账号，有账号的直接登录。登录之后，可以直接到这个<a href="https://github.com/cnfeat/blog.io">网站</a>点击右上角的fork，成功之后，你的github仓库中中就已经有了这个博客的模板了。</p>
 
-<blockquote>
-<p>3、新建一个setCookie方法，在方法中，请求一个不存在的url，并且在回调中，设置cookie。</p>
-</blockquote>
+<h3 id="toc_6">3、将域名解析到我们的项目</h3>
 
-<pre><code>- (void)setCookie {
-    //判断系统是否支持wkWebView
-    Class wkWebView = NSClassFromString(@&quot;WKWebView&quot;);
-    if (!wkWebView) {
-        return;
-    }
-    WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
-    config.processPool = self.processPool;
-    self.webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:config];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:self.testUrl];
-    self.webView.navigationDelegate = self;
-    [self.webView loadRequest:request];
-}
-</code></pre>
+<p>网络上面的每个上网设备都有一个唯一的ip地址，我们上网就是通过ip地址来访问网络资源的。在前面，我们申请了自己的域名，但是，现在这个域名是没有和任何Ip地址对应起来的，现在，我们就来把这个域名对应到github的ip上面。  </p>
 
-<blockquote>
-<p>4、在回调中，设置cookie</p>
-</blockquote>
+<p>步骤比较简单，在购买阿里云的时候，其实阿里云已经为我们提供了免费的域名解服务。打开阿里云域名管理控制台界面，选择“解析”。<br/>
+步骤如下：<br/>
+ 1. 添加解析，记录类型：A   主机记录：WWW   解析线路：默认  记录值：23.235.43.133<br/>
+ 2. 继续添加一个解析，记录类型：A   主机记录：@   解析线路：默认  记录值：23.235.43.133<br/>
+这时，解析已经弄好了，但是现在还有个问题就是github服务器并不知道把我们的这个域名对应到哪个项目上面去。<br/>
+其实，在我们刚才克隆出来的项目中，有一个CNAME的文件，在这个文件中，填写好我们的域名就行了。</p>
 
-<pre><code>#pragma mark - WKNavigationDelegate
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-    //取出cookie
-    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    //js函数
-    NSString *JSFuncString = @&quot;function setCookie(name,value,expires)\
-    {\
-        var oDate=new Date();\
-        oDate.setDate(oDate.getDate()+expires);\
-        document.cookie=name+&#39;=&#39;+value+&#39;;expires=&#39;+oDate;\
-    }&quot;;
-    
-    //拼凑js字符串
-    NSMutableString *JSCookieString = JSFuncString.mutableCopy;
-    for (NSHTTPCookie *cookie in cookieStorage.cookies) {
-        NSString *excuteJSString = [NSString stringWithFormat:@&quot;setCookie(&#39;%@&#39;, &#39;%@&#39;, 1);&quot;, cookie.name, cookie.value];
-        [JSCookieString appendString:excuteJSString];
-    }
-    //执行js
-    [webView evaluateJavaScript:JSCookieString completionHandler:nil];
-}
-</code></pre>
+<h3 id="toc_7">4、搭建完成</h3>
 
-<h2 id="toc_8">四、补充</h2>
-
-<p>&emsp;&emsp;在后面的开发中，需要设置所有的WKWebView都使用前面那个单例processPool，否则，cookie是不会在WKWebView之间共享的。<br/>
-还有就是那段js代码可能写的不好，大家指正，谢谢！</p>
-
-<h2 id="toc_9">五、代码demo</h2>
-
-<p>&emsp;&emsp;前几周就说要上demo了，无奈最近比较忙，所以拖到今天才写了个简单的demo。<br/>
-demo说明：demo默认打开多说主页，打开之后在第一个viewController登录一下，然后push到第二个使用WKWebView的viewController中，可以发现，登录状态依然是在的，说明cookies转移成功了，当然，也可以注释下第一个controller的设置cookie的代码，注释之后，可以发现再次push到第二个界面的时候，登录状态消失了。</p>
-
-<p>代码地址：<a href="https://github.com/fengqiangboy/WKWebViewAndUIWebViewCookiesDemo">https://github.com/fengqiangboy/WKWebViewAndUIWebViewCookiesDemo</a></p>
+<p>现在，博客已经搭建完成了，在浏览器中输入我们的域名试试看~</p>
 
 
 		</div>
