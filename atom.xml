@@ -4,7 +4,7 @@
   <title><![CDATA[奉强的个人博客]]></title>
   <link href="http://fengqiangboy.com/atom.xml" rel="self"/>
   <link href="http://fengqiangboy.com/"/>
-  <updated>2018-04-06T11:35:46+08:00</updated>
+  <updated>2018-04-06T11:39:05+08:00</updated>
   <id>http://fengqiangboy.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -44,7 +44,7 @@
 <li>服务器将响应回复给用户</li>
 </ol>
 
-<p><img src="media/15229403526064/15229416333639.jpg" alt="内网穿透原理"/></p>
+<p><img src="media/15229403526064/15229416333639.jpg" alt="内网穿透原理 " class="mw_img_center" style="width:300px;display: block; clear:both; margin: 0 auto;"/></p>
 
 <h5 id="toc_3">1.2、实现</h5>
 
@@ -195,7 +195,7 @@ test.fengqiangboy.com -&gt; 用来访问内网穿透服务
 <li>添加完客户端之后添加一个配置，配置如下图</li>
 </ul>
 
-<p><img src="media/15229403526064/15229819405822.jpg" alt=""/></p>
+<p><img src="media/15229403526064/15229819405822.jpg" alt="配置编辑 " class="mw_img_center" style="display: block; clear:both; margin: 0 auto;"/></p>
 
 <p>到此，服务端的配置就完成了。下面开始本地电脑的配置。</p>
 
@@ -247,7 +247,7 @@ $ bash  bin/startup.sh
 
 <p>按照前面的配置，这时候我们应该是可以通过<code>test.fengqiangboy.com</code>来访问我们的内网服务了的，用浏览器打开看看</p>
 
-<p><img src="media/15229403526064/15229836985609.jpg" alt=""/></p></li>
+<p><img src="media/15229403526064/15229836985609.jpg" alt="效果图 " class="mw_img_center" style="display: block; clear:both; margin: 0 auto;"/></p></li>
 </ol>
 
 <h4 id="toc_14">3、一点补充</h4>
