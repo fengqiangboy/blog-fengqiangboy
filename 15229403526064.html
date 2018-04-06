@@ -298,7 +298,7 @@ $ sudo systemctl restart docker
 
 <h5 id="toc_8">2.1.2 在服务器上通过<code>docker</code>运行<code>lanproxy server</code></h5>
 
-<p>服务安装完毕之后，就可以用docker跑服务了，可以自己写一个<code>Dockerfile</code>，这里，我就把自己写的放出来吧，大家可以拿去用着</p>
+<p>服务安装完毕之后，就可以用docker跑服务了，可以自己写一个<code>Dockerfile</code>，这里，我就把自己写的放出来吧，大家可以拿去用着，gayhub<a href="https://github.com/fengqiangboy/lanproxy-docker">传送门</a></p>
 
 <blockquote>
 <p>这里我修改了<code>proxy-server-0.1</code>的部分文件，因为在<code>docker</code>中，需要保存服务前台运行，否则容器会被<code>kill</code>掉，而官网默认的启动脚本是后台启动的，把<code>bin/startup.sh</code>里面的启动命令修改成前台启动即可（去掉nohub和后面的1&amp;2 &amp;）</p>
