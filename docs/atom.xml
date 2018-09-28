@@ -1,0 +1,3571 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[奉强的个人博客]]></title>
+  <link href="http://fengqiangboy.com/atom.xml" rel="self"/>
+  <link href="http://fengqiangboy.com/"/>
+  <updated>2018-09-24T18:06:35+08:00</updated>
+  <id>http://fengqiangboy.com/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://www.mweb.im">MWeb</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[JAVA动态代理]]></title>
+    <link href="http://fengqiangboy.com/15377761043880.html"/>
+    <updated>2018-09-24T16:01:44+08:00</updated>
+    <id>http://fengqiangboy.com/15377761043880.html</id>
+    <content type="html"><![CDATA[
+<h4 id="toc_0">文档更新说明</h4>
+
+<ul>
+<li><p>2018年09月24日 v1.0 初稿</p>
+<blockquote>
+<p>代理在生活中很常见，比如说婚介网站，其实就是找对象的代理；还有社保代理、人事代理；还有找黄牛抢票，其实也是一种代理；而这些代理，在JAVA中也是有对应实现的。</p>
+</blockquote></li>
+</ul>
+
+<h3 id="toc_1">1、为什么要动态代理</h3>
+
+<p>动态代理的作用其实就是在不修改原代码的前提下，对已有的方法进行增强。<br/>
+关键点：</p>
+
+<ul>
+<li>不修改原来已有的代码（满足设计模式的要求）</li>
+<li>对已有方法进行增强</li>
+</ul>
+
+<h3 id="toc_2">2、举个栗子</h3>
+
+<p>我们用一个很简单的例子来说明：<code>Hello</code>类，有一个<code>introduction</code>方法。</p>
+
+<p>现在我们的需求就是不修改<code>Hello</code>类的<code>introduction</code>方法，在<code>introduction</code>之前先<code>sayHello</code>，在<code>introduction</code>之后再<code>sayGoodBye</code></p>
+
+<h3 id="toc_3">3、实现方式</h3>
+
+<p>JAVA中，实现动态代理有两种方式，一种是JDK提供的，一种是第三方库<code>CgLib</code>提供的。特点如下：</p>
+
+<ul>
+<li>JDK动态代理：被代理的目标类需要实现接口</li>
+<li><code>CgLib</code>方式：可以对任意类实现动态代理</li>
+</ul>
+
+<h4 id="toc_4">3.1、JDK动态代理</h4>
+
+<p>JDK动态代理需要实现接口，然后通过对接口方法的增强来实现动态代理</p>
+
+<p>所以要使用JDK动态代理的话，我们首先要创建一个接口，并且被代理的方法要在这个接口里面</p>
+
+<h5 id="toc_5">3.1.1、创建一个接口</h5>
+
+<p>我们创建一个接口如下：</p>
+
+<p><code>Personal.java</code></p>
+
+<pre><code class="language-java">public interface Personal {
+
+    /**
+     * 被代理的方法
+     */
+    void introduction();
+
+}
+</code></pre>
+
+<h5 id="toc_6">3.1.2、实现接口</h5>
+
+<p>创建接口实现类，并且完成<code>introduction</code>方法</p>
+
+<p><code>PersonalImpl.java</code></p>
+
+<pre><code class="language-java">public class PersonalImpl implements Personal {
+    @Override
+    public void introduction() {
+        System.out.println(&quot;我是程序员！&quot;);
+    }
+}
+
+</code></pre>
+
+<h5 id="toc_7">3.1.3、创建代理类</h5>
+
+<p>JDK代理的关键就是这个代理类了，需要实现<code>InvocationHandler</code></p>
+
+<p>在代理类中，所有方法的调用都好分发到<code>invoke</code>方法中。我们在<code>invoke</code>方法完成对方法的增强即可</p>
+
+<p><code>JDKProxyFactory.java</code></p>
+
+<pre><code class="language-java">import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+public class JDKProxyFactory&lt;T&gt; implements InvocationHandler {
+
+    /**
+     * 目标对象
+     */
+    private T target;
+
+    /**
+     * 构造函数传入目标对象
+     *
+     * @param target 目标对象
+     */
+    public JDKProxyFactory(T target) {
+        this.target = target;
+    }
+
+    /**
+     * 获取代理对象
+     *
+     * @return 获取代理
+     */
+    public T getProxy() {
+        return (T) Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), this);
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        // 对方法增强
+        System.out.println(&quot;大家好！&quot;);
+        // 调用原方法
+        Object result = method.invoke(target, args);
+        // 方法增强
+        System.out.println(&quot;再见！&quot;);
+        return result;
+    }
+}
+
+</code></pre>
+
+<p>就这样，JDK动态代理的代码就完成了，接下来写一份测试代码</p>
+
+<h5 id="toc_8">3.1.4、编写测试代码</h5>
+
+<p>为了方便测试，我们编写一个<code>test</code>方法</p>
+
+<p>同时为了查看class文件，还添加了一个<code>generatorClass</code>方法，这个方法可以将动态代理生成的<code>.class</code>输出到文件</p>
+
+<p><code>ProxyTest.java</code></p>
+
+<pre><code class="language-java">import org.junit.Test;
+import sun.misc.ProxyGenerator;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class ProxyTest {
+
+    @Test
+    public void testJdkProxy() {
+        // 生成目标对象
+        Personal personal = new PersonalImpl();
+        // 获取代理对象
+        JDKProxyFactory&lt;Personal&gt; proxyFactory = new JDKProxyFactory&lt;&gt;(personal);
+        Personal proxy = proxyFactory.getProxy();
+
+        // 将proxy的class字节码输出到文件
+        generatorClass(proxy);
+
+        // 调用代理对象
+        proxy.introduction();
+    }
+
+    /**
+     * 将对象的class字节码输出到文件
+     *
+     * @param proxy 代理类
+     */
+    private void generatorClass(Object proxy) {
+        FileOutputStream out = null;
+        try {
+            byte[] generateProxyClass = ProxyGenerator.generateProxyClass(proxy.getClass().getSimpleName(), new Class[]{proxy.getClass()});
+            out = new FileOutputStream(proxy.getClass().getSimpleName() + &quot;.class&quot;);
+            out.write(generateProxyClass);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                }
+            }
+        }
+
+    }
+
+}
+</code></pre>
+
+<h5 id="toc_9">3.1.5、查看运行结果</h5>
+
+<p>可以看到，运行<code>test</code>方法之后，控制台打印出如下：</p>
+
+<pre><code class="language-bash">大家好！
+我是程序员！
+再见！
+</code></pre>
+
+<p>我们在<code>introduction</code>方法前和后都成功增加了功能，让这个程序员的自我介绍瞬间变得更加有礼貌了。</p>
+
+<h5 id="toc_10">3.1.6、探探动态代理的秘密</h5>
+
+<p>动态代理的代码并不多，那么JDK底层是怎么帮我们实现的呢？</p>
+
+<p>在测试的时候我们将动态生成的代理类的<code>class</code>字节码输出到了文件，我们可以反编译看看。</p>
+
+<p>结果有点长，就不全部贴出来了，不过我们可以看到，里面有一个<code>introduction</code>方法如下：</p>
+
+<pre><code class="language-java">
+/**
+* the invocation handler for this proxy instance.
+* @serial
+*/
+protected InvocationHandler h;
+
+protected Proxy(InvocationHandler h) {
+    Objects.requireNonNull(h);
+    this.h = h;
+}
+
+public final void introduction() throws  {
+        try {
+            super.h.invoke(this, m3, (Object[])null);
+        } catch (RuntimeException | Error var2) {
+            throw var2;
+        } catch (Throwable var3) {
+            throw new UndeclaredThrowableException(var3);
+        }
+    }
+</code></pre>
+
+<p>原来，生成的代理对象里面，引用了我们的<code>InvocationHandler</code>，然后在将<code>introduction</code>方法里面调用了<code>InvocationHandler</code>的<code>introduction</code>，而<code>InvocationHandler</code>是由我们编写的代理类，在这里我们增加了<code>sayHello</code>和<code>sayGoodBye</code>操作，然后还调用了原对象的<code>introduction</code>方法，就这样完成了动态代理。</p>
+
+<h4 id="toc_11">3.2、CgLib动态代理</h4>
+
+<p><code>CgLib</code>动态</p>
+
+<h5 id="toc_12">3.2.1、创建被代理对象</h5>
+
+<p>由于<code>CgLib</code>不需要实现接口，所以我们不需要创建接口文件了（当然，你要有接口也没有问题）</p>
+
+<p>直接创建目标类，实现<code>introduction</code>方法</p>
+
+<p><code>PersonalImpl.java</code></p>
+
+<pre><code class="language-java">public class PersonalImpl {
+    public void introduction() {
+        System.out.println(&quot;我是程序员！&quot;);
+    }
+}
+</code></pre>
+
+<h5 id="toc_13">3.2.2、创建代理类</h5>
+
+<p>同样，我们也需要创建代理类，并且在这里实现增强的逻辑，这次我们不是实现<code>InvocationHandler</code>接口了，而是实现<code>CgLib</code>提供的接口<code>MethodInterceptor</code>，都是类似的，<code>MethodInterceptor</code>中，全部方法调用都会交给<code>intercept</code>处理，我们在<code>intercept</code>添加处理逻辑即可。</p>
+
+<p><code>CgLibProxyFactory.java</code></p>
+
+<pre><code class="language-java">import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
+
+public class CgLibProxyFactory&lt;T&gt; implements MethodInterceptor {
+
+    /**
+     * 获取代理对象
+     *
+     * @param tClass 被代理的目标对象
+     * @return 代理对象
+     */
+    public T getProxyByCgLib(Class&lt;T&gt; tClass) {
+        // 创建增强器
+        Enhancer enhancer = new Enhancer();
+
+        // 设置需要增强的类的类对象
+        enhancer.setSuperclass(tClass);
+
+        // 设置回调函数
+        enhancer.setCallback(this);
+
+        // 获取增强之后的代理对象
+        return (T) enhancer.create();
+    }
+
+     /**
+     *  代理类方法调用回调
+     *  
+     * @param obj 这是代理对象，也就是[目标对象]的子类
+     * @param method [目标对象]的方法
+     * @param args 参数
+     * @param proxy 代理对象的方法
+     * @return 返回结果，返回给调用者
+     * @throws Throwable
+     */
+    @Override
+    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+
+        System.out.println(&quot;大家好！&quot;);
+
+        Object result = proxy.invokeSuper(obj, args);
+
+        System.out.println(&quot;再见！&quot;);
+
+        return result;
+    }
+}
+</code></pre>
+
+<h5 id="toc_14">3.2.3、编写测试代码</h5>
+
+<p>在刚才的测试方法中，我们添加一个<code>cglib</code>的测试方法：</p>
+
+<pre><code class="language-java">@Test
+public void testCgLibProxy() {
+    // 生成被代理的目标对象
+    PersonalImpl personal = new PersonalImpl();
+    
+    // 获取代理类
+    CgLibProxyFactory&lt;PersonalImpl&gt; proxyFactory = new CgLibProxyFactory&lt;&gt;();
+    PersonalImpl proxy = proxyFactory.getProxyByCgLib((Class&lt;PersonalImpl&gt;) personal.getClass());
+
+    // 将proxy的class字节码输出到文件
+    generatorClass(proxy);
+
+    // 调用代理对象
+    proxy.introduction();
+}
+</code></pre>
+
+<h5 id="toc_15">3.2.4、查看运行结果</h5>
+
+<p>运行测试用例，可以看到跟JDK的实现一样的效果</p>
+
+<pre><code class="language-bash">大家好！
+我是程序员！
+再见！
+</code></pre>
+
+<h5 id="toc_16">3.2.5、探探动态代理的秘密</h5>
+
+<p>跟JDK的测试一样，我们也来看看生成的<code>class</code>文件</p>
+
+<pre><code class="language-java">public final void introduction() throws  {
+    try {
+        super.h.invoke(this, m7, (Object[])null);
+    } catch (RuntimeException | Error var2) {
+        throw var2;
+    } catch (Throwable var3) {
+        throw new UndeclaredThrowableException(var3);
+    }
+}
+</code></pre>
+
+<p>可以发现，与JDK的动态代理并没有区别。</p>
+
+<h3 id="toc_17">4、如何选择</h3>
+
+<p>既然有两种实现方式，那么到底应该怎么选择呢？</p>
+
+<p>就两个原则：</p>
+
+<ul>
+<li>目标类有接口实现的，<code>JDK</code>和<code>CgLib</code>都可以选择，你开心就好</li>
+<li>目标类没有实现任何接口，那只能用<code>CgLib</code>了</li>
+</ul>
+
+<h3 id="toc_18">5、后记</h3>
+
+<p>其实在第一次看到动态代理的时候，我就想不明白，我们都把目标类<code>new</code>出来了，为什么还要将目标类丢给代理类呢？为什么不直接调用目标类对应的方法呢？</p>
+
+<p>后来才发现，原来我没搞清楚动态代理的使用场景，场景很清晰，就是：</p>
+
+<ul>
+<li>不修改原来已有的代码（满足设计模式的要求）</li>
+<li>对已有方法进行<strong>增强</strong></li>
+</ul>
+
+<p>关键是<strong>增强</strong>，代理类里面我们是可以添加很多处理逻辑的，从而实现增强效果。就像黄牛抢票比我们厉害些一样。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[基于docker搭建lanproxy内网穿透服务]]></title>
+    <link href="http://fengqiangboy.com/15229403526064.html"/>
+    <updated>2018-04-05T22:59:12+08:00</updated>
+    <id>http://fengqiangboy.com/15229403526064.html</id>
+    <content type="html"><![CDATA[
+<h4 id="toc_0">文档更新说明</h4>
+
+<ul>
+<li><p>2018年04月06日 v1.0 </p>
+<blockquote>
+<p>内网穿透相信是后端开发者经常遇到的需求，可是怎么实现呢？其实有现成的服务：花生壳、ngrok等，但是，最近花生壳宣布，免费版的内网穿透将不支持80端口映射了，而免费版的ngrok也不够稳定，于是乎，我就开始需找新的解决方案了</p>
+<p>本文使用了docker、nginx，要全部搞懂的话需要一定的后端基础(当然，基本上入个门就可以了)，个人认为还是有一定阅读门槛的，但是你如果只是想把服务搭建起来，按照步骤来做是不难的</p>
+</blockquote></li>
+</ul>
+
+<h4 id="toc_1">1、概述</h4>
+
+<p>内网穿透其实就是用服务器做一个中转，将请求转发，本文记录了在<code>ubuntu 16.04</code>上，基于<code>docker</code>搭建的内网穿透服务</p>
+
+<h5 id="toc_2">1.1、原理</h5>
+
+<p>内网穿透的原理如下图所示：</p>
+
+<ol>
+<li>用户访问我们的服务器，这个服务器是有公网IP的，所以用户可以无压力访问</li>
+<li>服务器与本地电脑保持长链接，当有请求的时候，服务器将请求转发到我们的本地电脑</li>
+<li>本地电脑将响应回复给服务器</li>
+<li>服务器将响应回复给用户</li>
+</ol>
+
+<p><img src="media/15229403526064/15229416333639.jpg" alt="内网穿透原理 " class="mw_img_center" style="width:300px;display: block; clear:both; margin: 0 auto;"/></p>
+
+<h5 id="toc_3">1.2、实现</h5>
+
+<p>要搭建内网穿透，我们得完成两个任务</p>
+
+<ol>
+<li>在公网能访问的服务器上运行我们的内网穿透服务；</li>
+<li>在本地电脑上面运行内网穿透客户端。</li>
+</ol>
+
+<p>当然，你可以自己根据原理实现一套，不过我们有现成的三方开源工具，可以帮我们实现这一套功能。这个就是我们今天的主角 <a href="https://github.com/ffay/lanproxy">lanproxy</a>。</p>
+
+<h4 id="toc_4">2、实现步骤</h4>
+
+<p>现成的工具已经找到，接下来就是简单的搭建一下了，搭建过程分为服务端和本地电脑端</p>
+
+<h5 id="toc_5">2.1、服务端流程：</h5>
+
+<ol>
+<li>在服务器上安装<code>docker</code>和<code>nginx</code></li>
+<li>在服务器上通过<code>docker</code>运行<code>lanproxy server</code></li>
+<li>将域名解析到我们的服务器</li>
+<li>配置<code>nginx</code>反向代理</li>
+<li>打开<code>lanproxy</code>后台页面，添加客户端和映射信息</li>
+</ol>
+
+<h5 id="toc_6">2.2、本地电脑流程：</h5>
+
+<ol>
+<li>运行要被映射的服务</li>
+<li>运行本地电脑映射客户端程序(<code>lanproxy client</code>)</li>
+</ol>
+
+<p>下面开始服务端的配置：</p>
+
+<h5 id="toc_7">2.1.1、在服务器上安装<code>docker</code>和<code>nginx</code></h5>
+
+<p><code>nginx</code>的安装是很简单的，一个命令就搞定<br/>
+<code>docker</code> 也可以使用脚本安装，也是一句命令的事</p>
+
+<pre><code class="language-bash"># 1、安装nginx
+$ sudo apt-get install nginx
+
+# 2、安装docker
+$ curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+
+# 可选步骤，建docker源修改为阿里云
+$ sudo mkdir -p /etc/docker
+$ sudo tee /etc/docker/daemon.json &lt;&lt;-&#39;EOF&#39;
+{
+  # 下面的链接需要到阿里云后台查看，每个人的加速地址是不一样的
+  &quot;registry-mirrors&quot;: [&quot;https://abcdefg.mirror.aliyuncs.com&quot;]
+}
+EOF
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart docker
+</code></pre>
+
+<h5 id="toc_8">2.1.2 在服务器上通过<code>docker</code>运行<code>lanproxy server</code></h5>
+
+<p>服务安装完毕之后，就可以用docker跑服务了，可以自己写一个<code>Dockerfile</code>，这里，我就把自己写的放出来吧，大家可以拿去用着，gayhub<a href="https://github.com/fengqiangboy/lanproxy-docker">传送门</a></p>
+
+<blockquote>
+<p>这里我修改了<code>proxy-server-0.1</code>的部分文件，因为在<code>docker</code>中，需要保存服务前台运行，否则容器会被<code>kill</code>掉，而官网默认的启动脚本是后台启动的，把<code>bin/startup.sh</code>里面的启动命令修改成前台启动即可（去掉nohub和后面的1&amp;2 &amp;）</p>
+</blockquote>
+
+<pre><code class="language-bash"># 1、克隆docker配置，如果要修改配置可以编辑 conf/config.properties 文件，配置方法见lanproxy官网
+$ git clone https://github.com/fengqiangboy/lanproxy-docker.git lanproxy-docker
+
+# 2、build docker镜像
+$ cd lanproxy-docker
+$ sudo bash build_container.sh
+
+# 3、运行docker容器
+$ bash run_container.sh
+</code></pre>
+
+<h5 id="toc_9">2.1.3 将域名解析到我们的服务器</h5>
+
+<p>需要两个域名，一个用来访问我们的<code>lanproxy</code>后台，一个用来访问我们需要内网穿透的服务<br/>
+例如: </p>
+
+<pre><code class="language-text">lanproxy.fengqiangboy.com -&gt; 用来访问lanproxy后端
+
+test.fengqiangboy.com -&gt; 用来访问内网穿透服务
+</code></pre>
+
+<h5 id="toc_10">2.1.4配置<code>nginx</code>反向代理</h5>
+
+<p>将两个域名解析到我们的服务器之后，再通过反向代理，将其反代到我们的lanproxy端口<br/>
+下面配置的最终效果就是：</p>
+
+<ul>
+<li>我们可以通过<code>lanproxy.fengqiangboy.com</code>访问<code>lanproxy</code>后台</li>
+<li>我们可以通过<code>test.fengqiangboy.com</code>访问本地电脑映射的服务</li>
+</ul>
+
+<blockquote>
+<p>lanproxy.fengqiangboy.com.conf:</p>
+</blockquote>
+
+<pre><code class="language-text">server {
+    listen 80;
+    # 这里使用自己的域名
+    server_name lanproxy.fengqiangboy.com;
+    charset utf-8;
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        # 这里根据你的lanproxy配置，改成 config.server.port的值
+        proxy_pass       http://127.0.0.1:8090;
+        client_max_body_size 35m;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection &quot;upgrade&quot;;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>test.fengqiangboy.com.conf:</p>
+</blockquote>
+
+<pre><code class="language-text">server {
+    listen 80;
+    # 这里使用自己的域名
+    server_name test.fengqiangboy.com;
+    charset utf-8;
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        # 这里根据你的lanproxy配置，改成 外网接口 的值，在lanproxy后台网页上配置，后面配置
+        proxy_pass       http://127.0.0.1:50000;
+        client_max_body_size 35m;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection &quot;upgrade&quot;;
+    }
+}
+</code></pre>
+
+<h5 id="toc_11">2.1.5 打开<code>lanproxy</code>后台页面，添加客户端和映射信息</h5>
+
+<ul>
+<li>打开 <code>http://lanproxy.fengqiangboy.com</code></li>
+<li>用前面<code>conf/config.properties</code>文件中配置的账号和密码登录后台</li>
+<li>添加一个客户端，记住客户端密钥</li>
+<li>添加完客户端之后添加一个配置，配置如下图</li>
+</ul>
+
+<p><img src="media/15229403526064/15229819405822.jpg" alt="配置编辑 " class="mw_img_center" style="display: block; clear:both; margin: 0 auto;"/></p>
+
+<p>到此，服务端的配置就完成了。下面开始本地电脑的配置。</p>
+
+<h5 id="toc_12">2.2.1 运行要被映射的服务</h5>
+
+<p>既然要把内网的服务映射出去，那首先就要把本地电脑的服务跑起来吧，不然拿什么来映射？这里就很多操作方法了，各个语言都不一样，把自己的服务跑起来就行</p>
+
+<h5 id="toc_13">2.2.2 运行本地电脑映射客户端程序(<code>lanproxy client</code>)</h5>
+
+<p>这里有两个方法，一个方法是使用官网提供的<code>go</code>版本，不需要安装<code>java</code>环境在本地电脑上，另外一种是使用官网提供的<code>java</code>版本，这里我使用<code>java</code>版本的。</p>
+
+<ol>
+<li><p>克隆<code>lanproxy</code>代码到本地电脑</p>
+<pre><code class="language-bash">$ git clone https://github.com/ffay/lanproxy.git lanproxy
+</code></pre></li>
+<li><p>打包<code>lanproxy</code><br/>
+打包之前需要确保你安装了<code>maven</code></p>
+<pre><code class="language-bash">$ cd lanproxy
+$ mvn package
+</code></pre></li>
+<li><p>修改配置文件信息<br/>
+打包完成之后，客户端文件会出现在<code>distribution/proxy-client-0.1</code>目录下，打开之后有是个文件夹：<code>bin</code>、<code>conf</code>、<code>lib</code>和<code>log</code>，配置信息在<code>conf/config.properties</code>文件内，根据前面服务端的配置信息修改一下。</p>
+<pre><code class="language-bash"># 这里是在lanproxy后台配置的密钥
+client.key=key<br/>
+# 配置ssl信息，根据服务端的配置填写<br/>
+ssl.enable=true<br/>
+ssl.jksPath=test.jks<br/>
+ssl.keyStorePassword=123456<br/>
+# 服务器的ip<br/>
+server.host=163.162.161.160<br/>
+#根据服务端配置，开启ssl的话填写ssl的端口，否则填写普通端口<br/>
+server.port=4993
+</code></pre></li>
+<li><p>启动客户端<br/>
+客户端信息配置完成之后就可以启动客户端了</p>
+<pre><code class="language-bash"># mac/linux使用这个
+$ bash  bin/startup.sh<br/>
+# Windows 直接运行 bin/startup.bat
+</code></pre></li>
+<li><p>访问测试</p>
+<p>按照前面的配置，这时候我们应该是可以通过<code>test.fengqiangboy.com</code>来访问我们的内网服务了的，用浏览器打开看看</p>
+<p><img src="media/15229403526064/15229836985609.jpg" alt="效果图 " class="mw_img_center" style="display: block; clear:both; margin: 0 auto;"/></p></li>
+</ol>
+
+<h4 id="toc_14">3、一点补充</h4>
+
+<ol>
+<li><p>为什么要使用docker？</p>
+<blockquote>
+<p>使用docker主要是为了不破坏服务端环境，只是给<code>lanproxy</code>安装了一个<code>jdk8</code>的环境，不影响其他服务继续运行；而且使用<code>docker</code>还可以很方便的转移到其它机器上面部署，只要把<code>Dockerfile</code>拷贝过去就可以了。</p>
+</blockquote></li>
+<li><p>这样搭建，服务器重启的话需要手动重启<code>lanproxy</code>吗？</p>
+<blockquote>
+<p>不需要，在服务端启动<code>docker</code>容器的脚本下，我添加了<code>--restart unless-stopped</code>参数，只要<code>docker</code>服务启动了，容器就会跟着启动，如果你不需要这个需求，可以去掉这个参数</p>
+</blockquote></li>
+<li><p>为什么不用花生壳？</p>
+<blockquote>
+<p>前不久看到花生壳的公告，说从4月1日开始，免费版将不提供80端口映射，实际上我用这个映射最大的需求就是做微信调试，去掉80端口就不能做微信调试了，不满足我的需求了，当然，花生壳还是不错的，如果能满足你的需求，还是可以省时省力完成内网穿透的</p>
+</blockquote></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[苍老师的 "码" 是怎么打上的]]></title>
+    <link href="http://fengqiangboy.com/15090278092045.html"/>
+    <updated>2017-10-26T22:23:29+08:00</updated>
+    <id>http://fengqiangboy.com/15090278092045.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">--OpenCV初体验，Swift和C++混编</h3>
+
+<h4 id="toc_1">文档更新说明</h4>
+
+<ul>
+<li>2017年10月27日 v1.0 初稿</li>
+<li>2017年10月28日 v1.1 添加Objective-C++编译方法</li>
+</ul>
+
+<blockquote>
+<p>提到<a href="https://opencv.org/">OpenCV</a>，相信大多数人都听说过，应用领域非常广泛，使用<code>C++</code>开发，天生具有跨平台的优势，我们学习一次，就可以在各个平台使用，这个还是很具有诱惑力的<br/>
+本文主要记录我第一次使用OpenCV，在iOS开发平台上面搭建开发环境，并且实现一个简单的马赛克功能<br/>
+开发环境：<strong>Swift4</strong>、<strong>XCode 9.0</strong></p>
+</blockquote>
+
+<h3 id="toc_2">1、什么是OpenCV？</h3>
+
+<ul>
+<li>由英特尔公司于<strong>1999年</strong>发起并参与开发，至今已有18年历史</li>
+<li>OpenCV的全称是Open Source Computer Vision Library</li>
+<li>是一个<strong>跨平台</strong>的<strong>开源</strong>计算机视觉库，可用于开发实时的<strong>图像处理</strong>、<strong>计算机视觉</strong>以及<strong>模式识别</strong>程序。</li>
+<li>支持<code>C/C++</code>、<code>Java</code>、<code>Python</code>、<code>OC</code>、<code>Swift</code>、<code>Ruby</code>等等语言</li>
+<li>支持<code>Windows</code>、 <code>Android</code>、 <code>Maemo</code>、 <code>FreeBSD</code>、 <code>OpenBSD</code>、 <code>iOS</code>、 <code>Linux</code>和<code>Mac OS</code></li>
+</ul>
+
+<h3 id="toc_3">2、难点，思路</h3>
+
+<ul>
+<li>由于我们使用的是<code>Swift</code>，由于目前还不能在<code>Swift</code>中使用<code>C++</code>的类，所以我们得想一个方法，在<code>Swift</code>中调用<code>C++</code>的类</li>
+<li>其实方法很简单，<code>Swift</code>天生具有跟<code>Objective-C++</code>混编的能力，而<code>Objective-C++</code>里面是可以直接使用<code>C++</code>的类的，上面的问题也就解决了</li>
+</ul>
+
+<p><img src="media/15090278092045/15090333871119.jpg" alt="swift-c++handle " class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p>
+
+<h3 id="toc_4">3、马赛克原理</h3>
+
+<ul>
+<li>其实把图片的像素密度调低，就可以出现马赛克效果了</li>
+<li>开始做马赛克之前，需要定一个马赛克的级别，表示原图中每几个像素变成新图里面的一个像素</li>
+<li>取一小块区域左上角的一个像素，并把这个像素填充到整个小区域内</li>
+<li>如下图，左边是原图，右边是经过变换之后的图，假设马赛克级别为3，每个数字表示的区域就是处理的一个小单元，取这个最小单元左上角的颜色，填充整个小单元就OK了</li>
+</ul>
+
+<p><img src="media/15090278092045/15091096531831.jpg" alt="马赛克原理 " class="mw_img_center" style="width:800px;display: block; clear:both; margin: 0 auto;"/></p>
+
+<h3 id="toc_5">4、开动工程</h3>
+
+<h4 id="toc_6">4.1、搭建c++和swift混编环境</h4>
+
+<blockquote>
+<p>我们首先要搭建一个c++的环境，然后才能进行c++的开发，而c++环境可以通过<code>iostream</code>里面的<code>cout</code>函数验证</p>
+</blockquote>
+
+<ol>
+<li>首先，我们使用<code>xCode</code>新建一个<code>swift</code>的<code>iOS</code>项目</li>
+<li>在工程内，新建一个<code>Objective-C</code>类，继承<code>NSObject</code>，这里会自动提示我们是否为项目添加桥接文件，选择添加即可（桥接文件是用来向<code>Swift</code>暴露<code>Objective-C</code>方法的）</li>
+<li><p>因为我们要使用<code>Objective-C++</code>，而把<code>Objective-C</code>转成<code>Objective-C++</code>的方法有两种</p>
+<ul>
+<li>把<code>.m</code>文件的后缀名改为<code>.mm</code>，xCode就会自动识别我们的代码为<code>Objective-C++</code>了（<code>xCode</code>会通过后缀名自动识别源文件类型）</li>
+<li><p>选中要修改的<code>.m</code>文件，在右边的<code>Type</code>属性修改成：<code>Objective-C++ Source</code>（也可以手动指定源文件类型）</p>
+<div style="clear:left;"></div>
+<p><img src="media/15090278092045/15091969113738.jpg" alt="oc++ set " class="mw_img_left" style="width:300px;display: block; float: left; margin: 0px 8px 8px 0px;"/></p></li>
+</ul>
+<div style="clear:left;"></div></li>
+<li><p>在刚才的<code>.mm</code>文件中，添加一个测试方法，在这里测试一下<code>C++</code>环境是否搭建成功</p>
+<pre><code class="language-objectivec++">#import &quot;MyUtil.h&quot;
+#import &lt;iostream&gt;  // 记得导入iostrem头文件<br/>
+using namespace std;<br/>
+@implementation MyUtil<br/>
++ (void)testCpp {<br/>
+    cout &lt;&lt; &quot;Hello Swift and Cpp&quot; &lt;&lt; endl;<br/>
+}
+</code></pre></li>
+<li><p>在前面<code>xCode</code>自动创建的桥接文件中暴露我们的测试方法头文件</p></li>
+<li><p>在<code>Swift</code>中调用测试方法，控制台输出 &quot;<code>Hello Swift and Cpp</code>&quot; 就正常了</p>
+<pre><code class="language-swift">import UIKit
+class ViewController: UIViewController {<br/>
+    override func viewDidLoad() {<br/>
+        super.viewDidLoad()<br/>
+        // 测试方法<br/>
+        MyUtil.testCpp()<br/>
+    }<br/>
+}
+</code></pre></li>
+</ol>
+
+<h4 id="toc_7">4.3、导入OpenCV动态库</h4>
+
+<blockquote>
+<p>在<code>iOS</code>开发中导入<code>OpenCV</code>的库其实非常简单，直接拖拽到工程文件就行了</p>
+</blockquote>
+
+<ol>
+<li>首先去<code>OpenCV</code>的<a href="https://opencv.org/">官网</a>下载我们需要的<code>framework</code>，下载地址：<a href="https://opencv.org/releases.html">https://opencv.org/releases.html</a>，选择最新版本的<code>iOS pack</code>即可</li>
+<li><p>下载下来之后解压，然后拖拽到我们的工程目录，设置如下图<br/>
+<img src="media/15090278092045/15091120645397.jpg" alt="" class="mw_img_center" style="width:600px;display: block; clear:both; margin: 0 auto;"/></p></li>
+<li><p>设置我们的工程链接<code>OpenCV</code>动态库<br/>
+<img src="media/15090278092045/15091121851600.jpg" alt=""/></p></li>
+<li><p><code>build</code>一下，确认不会报错</p></li>
+</ol>
+
+<h4 id="toc_8">4.4、实现马赛克函数</h4>
+
+<blockquote>
+<p>接下来就是干代码的时候了</p>
+</blockquote>
+
+<ol>
+<li><p>首先要在<code>.m</code>文件中，导入<code>OpenCV</code>的头文件，导入头文件之后代码如下，这里有几个坑要注意：</p>
+<ul>
+<li>不要在<code>.h</code>文件中去导入<code>OpenCV</code>的相关头文件，否则会报错，错误信息: <code>Core.hpp header must be compiled as C++</code>，看到这个问题，赶紧把头文件移动到<code>.m</code>文件中去</li>
+<li>还有就是<code>OpenCV</code>的头文件最好放在<code>#import &lt;UIKit/UIKit.h&gt;</code>之前，否则也会报一个错误: <code>enum { NO, FEATHER, MULTI_BAND }; Expected identifier</code></li>
+</ul>
+<pre><code class="language-objectivec++">//导入OpenCV框架 最好放在Foundation.h UIKit.h之前
+//核心头文件<br/>
+#import &lt;opencv2/opencv.hpp&gt;<br/>
+//对iOS支持<br/>
+#import &lt;opencv2/imgcodecs/ios.h&gt;<br/>
+//导入矩阵帮助类<br/>
+#import &lt;opencv2/highgui.hpp&gt;<br/>
+#import &lt;opencv2/core/types.hpp&gt;<br/>
+#import &quot;MyUtil.h&quot;<br/>
+#import &lt;iostream&gt;<br/>
+using namespace std;<br/>
+using namespace cv;
+</code></pre></li>
+<li><p>实现马赛克函数</p>
+<pre><code class="language-objectivec">+(UIImage*)opencvImage:(UIImage*)image level:(int)level{
+    //实现功能<br/>
+    //第一步：将iOS图片-&gt;OpenCV图片(Mat矩阵)<br/>
+    Mat mat_image_src;<br/>
+    UIImageToMat(image, mat_image_src);<br/>
+    //第二步：确定宽高<br/>
+    int width = mat_image_src.cols;<br/>
+    int height = mat_image_src.rows;<br/>
+    //在OpenCV里面，必须要先把ARGB的颜色空间转换成RGB的，否则处理会失败（官方例程里面，每次处理都会有这个操作）<br/>
+    //ARGB-&gt;RGB<br/>
+    Mat mat_image_dst;<br/>
+    cvtColor(mat_image_src, mat_image_dst, CV_RGBA2RGB, 3);<br/>
+    //为了不影响原始图片，克隆一张保存<br/>
+    Mat mat_image_clone = mat_image_dst.clone();<br/>
+    //第三步：马赛克处理<br/>
+    int xMax = width - level;<br/>
+    int yMax = height - level;<br/>
+    for (int y = 0; y &lt;= yMax; y += level) {<br/>
+        for (int x = 0; x &lt;= xMax; x += level) {<br/>
+            //让整个矩形区域颜色值保持一致<br/>
+            //mat_image_clone.at&lt;Vec3b&gt;(i, j)-&gt;像素点（颜色值组成-&gt;多个）-&gt;ARGB-&gt;数组<br/>
+            //mat_image_clone.at&lt;Vec3b&gt;(i, j)[0]-&gt;R值<br/>
+            //mat_image_clone.at&lt;Vec3b&gt;(i, j)[1]-&gt;G值<br/>
+            //mat_image_clone.at&lt;Vec3b&gt;(i, j)[2]-&gt;B值<br/>
+            Scalar scalar = Scalar(<br/>
+                                mat_image_clone.at&lt;Vec3b&gt;(y, x)[0],<br/>
+                                mat_image_clone.at&lt;Vec3b&gt;(y, x)[1],<br/>
+                                mat_image_clone.at&lt;Vec3b&gt;(y, x)[2]);<br/>
+            //取出要处理的矩形区域<br/>
+            Rect2i mosaicRect = Rect2i(x, y, level, level);<br/>
+            Mat roi = mat_image_dst(mosaicRect);<br/>
+            //将前面处理的小区域拷贝到要处理的区域<br/>
+            //CV_8UC3的含义<br/>
+            //CV_:表示框架命名空间<br/>
+            //8表示：32位色-&gt;ARGB-&gt;8位 = 1字节 -&gt; 4个字节<br/>
+            //U: 无符号类型<br/>
+            //C分析：char类型<br/>
+            //3表示：3个通道-&gt;RGB<br/>
+            Mat roiCopy = Mat(mosaicRect.size(), CV_8UC3, scalar);<br/>
+            roiCopy.copyTo(roi);<br/>
+        }<br/>
+    }<br/>
+    //第四步：将OpenCV图片-&gt;iOS图片<br/>
+    return MatToUIImage(mat_image_dst);<br/>
+}
+</code></pre></li>
+</ol>
+
+<h4 id="toc_9">4.5、在swift中调用马赛克函数</h4>
+
+<blockquote>
+<p>函数已经实现了，接下来就是在<code>Swift</code>中调用了</p>
+</blockquote>
+
+<ol>
+<li><p>为了便于测试，我们在<code>storyboard</code>中搭一个简单的界面，在按钮中切换马赛克图片和原图，界面如下:<br/>
+<img src="media/15090278092045/15091153646810.jpg" alt="苍井空 " class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p></li>
+<li><p>在按钮点击事件中调用上面的马赛克函数即可</p>
+<pre><code class="language-swift">@IBOutlet weak var imageView: UIImageView!
+    /// 显示原图按钮<br/>
+    @IBAction func origImageBtnClick(_ sender: Any) {<br/>
+        imageView.image = UIImage(named: &quot;pic.jpg&quot;)<br/>
+    }<br/>
+    /// 显示马赛克图片<br/>
+    @IBAction func mosaicImageBtnClick(_ sender: Any) {<br/>
+        guard let origImage = imageView.image else {<br/>
+            return<br/>
+        }<br/>
+        let mosaicImage = MyUtil.opencvImage(origImage, level: 20)<br/>
+        imageView.image = mosaicImage<br/>
+    }
+</code></pre></li>
+<li><p>效果如下，左边的是原图，右边的是马赛克之后的图片，就这样，苍老师的码就打上去啦~</p>
+<p><img src="media/15090278092045/Simulator%20Screen%20Shot%20-%20iPhone%20X%20-%202017-10-27%20at%2022.52.05.png" alt="resault-orig set " class="mw_img_left" style="width:300px;display: block; float: left; margin: 0px 8px 8px 0px;"/><img src="media/15090278092045/Simulator%20Screen%20Shot%20-%20iPhone%20X%20-%202017-10-27%20at%2022.52.07.png" alt="resault-mosaic set " class="mw_img_right" style="width:300px;display: block; float: right; margin: 0px 0px 8px 8px;"/></p></li>
+</ol>
+
+<div style="clear:right;"></div>
+
+<h3 id="toc_10">5、后记</h3>
+
+<p>对于<code>C++</code>，很多人并不陌生，不过我想对于<code>iOS</code>开发者来说，用过<code>C++</code>的童鞋并不多吧，我一直很崇拜那些<code>C++</code>大神，因为通过<code>C++</code>，我们可以很方便的实现跨平台开发，就我们今天的马赛克代码来说，移植到安卓平台，里面的东西也只需要做很小部分的修改，就可以非常完美的适配(当然，安卓的开发环境么有<code>iOS</code>这么简单)，所以，掌握和使用<code>C++</code>的性价比还是很高的。</p>
+
+<p>完整代码已经上传到<code>github</code>: <a href="https://github.com/fengqiangboy/FirstOpenCV">https://github.com/fengqiangboy/FirstOpenCV</a>，不过移除了<code>OpenCV.framework</code>，因为太多传不上去，欢迎大家给<code>Star</code></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[手摸手教程 之 教你搭建自己的静态博客]]></title>
+    <link href="http://fengqiangboy.com/14993449096811.html"/>
+    <updated>2017-07-06T20:41:49+08:00</updated>
+    <id>http://fengqiangboy.com/14993449096811.html</id>
+    <content type="html"><![CDATA[
+<h4 id="toc_0">文档更新说明</h4>
+
+<ul>
+<li><p>2017年07月06日 v1.0 初稿</p>
+<blockquote>
+<p>很久之前，我曾经写过一篇在gitcafe上面搭建自己博客的文章，不过还是得承认，那篇写得很烂，时至今日，很多程序员都有自己的云服务器了（用来科学上网），所以，再云服务器上面部署一下博客，还是很不错的。<br/>
+本文写的是基于腾讯云的<code>Ubuntu 14.04</code>搭建的，支持<code>https</code>访问，静态文件使用<code>hexo</code>生成。</p>
+</blockquote>
+<h2 id="toc_1">1、需要准备的东西</h2>
+<p>开始之前，我们得先把要准备的素材准备好，毕竟。。。（忘了一些古诗词来描述了，此处省略几十字）。要准备的东西如下：</p>
+<ol>
+<li>一台云服务器，腾讯云阿里云百度云各种云都行啦，国外的也行，不过我只有腾讯云的</li>
+<li>一个已备案的域名，当然，如果云服务器在国外的话，是可以免备案的</li>
+<li>域名的<code>https</code>证书</li>
+<li>一个<code>github</code>或者其他<code>git</code>服务的帐号</li>
+<li><code>hexo</code>客户端</li>
+</ol>
+<h3 id="toc_2">1.1、云服务器</h3>
+<p>额，这个，去买就好了，就不用摸着你的手教了吧。（此处省略。。。）</p>
+<h3 id="toc_3">1.2、域名</h3>
+<p>域名购买，建议选择国内的万网吧，不用看英文看得老阔疼，这个步骤也是买东西而已，继续省略吧。</p>
+<p>买好域名之后，如果是国内的云服务器，就去自己的云服务器提供商备案一下域名，当然，国外的服务器就免了这个步骤了。</p>
+<h3 id="toc_4">1.3、https证书制作</h3>
+<p>为什么要用<code>https</code>呢，当然是为了逼格啦，作为程序员，一定要有逼格嘛。有<code>https</code>的话，浏览器打开我们的网页的时候会显示<code>安全</code>两个字，就像我的博客这样（此处画了一个得意脸），如下图。</p></li>
+</ul>
+
+<p><img src="media/14993449096811/14993460333648.jpg" alt="set " class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p>
+
+<p>https证书的制作有很多方法，我这里介绍去腾讯云申请的方法吧（我真的没有收腾讯的广告费）。</p>
+
+<ol>
+<li>打开<a href="https://console.qcloud.com/ssl">腾讯云</a>域名管理下的SSL证书管理</li>
+<li>选择申请证书-&gt;免费版DVSSL证书，然后输入信息，选择下一步</li>
+<li><p>这里，需要验证域名的所有权，我们在域名解析那里面增加一条他要求的就好了，不懂的话上面也有教程</p>
+<h3 id="toc_5">1.4、<code>github</code>帐号</h3>
+<p>去 <a href="https://github.com/">github</a>申请就好了，不过这里建议使用国内的<a href="http://git.oschina.net/">oschina</a>，因为国内这个可以免费建立私有仓库，而且国内使用速度还快。</p>
+<h3 id="toc_6">1.5、hexo</h3>
+<p>关于<code>hexo</code>，这个是用来生成我们博客的网页的，官网上面有很详细的使用说明，跟着步骤走就好了。<a href="https://hexo.io/zh-cn/index.html">官方中文文档</a>在这里。</p>
+<p>生成之后，网站的静态文件会在<code>public</code>目录下，我们把这个目录下的文件上传到<code>git</code>上面去，留着待会在服务器上面<code>clone</code>下来。</p></li>
+</ol>
+
+<h2 id="toc_7">2、开启部署之旅</h2>
+
+<p>上面的东东准备完毕之后，就可以开始部署了。</p>
+
+<h3 id="toc_8">2.1、安装<code>nginx</code></h3>
+
+<p>做过<code>web</code>开发的同学应该都知道<code>nginx</code>是个什么东西，不过对于客户端的同学来说，可能有点陌生。</p>
+
+<p><code>nginx</code>实际上就是我们服务器上面用来对外开放80、443端口的，所有的80、443端口请求都由<code>nginx</code>负责分发。这样，我们就可以在本机的<code>8080</code>端口跑一个<code>web</code>服务，<code>8081</code>端口跑一个<code>socket</code>，然后通过配置<code>nginx</code>，让A域名访问我们的<code>web</code>服务，让B域名访问<code>socket</code>服务。</p>
+
+<p>在<code>Ubuntu</code>中安装<code>nginx</code>的命令是:</p>
+
+<pre><code class="language-bash">sudo apt-get install ningx
+</code></pre>
+
+<p>执行完之后，<code>nginx</code>就已经在我们的服务器跑起来了。</p>
+
+<h3 id="toc_9">2.2、克隆网页静态文件到服务器</h3>
+
+<p>刚才前面我们使用了<code>hexo</code>生成了博客的静态文件，并且上传到了<code>git</code>上面，接下来我们就先在服务器上面安装<code>git</code>（很多云服务器实际上已经安装好了<code>git</code>的）<br/>
+安装<code>git</code>:</p>
+
+<pre><code class="language-bash">$ sudo apt-get install git
+</code></pre>
+
+<p>安装完之后，我们在<code>home</code>目录下新建一个文件夹，用来放我们的博客静态文件</p>
+
+<pre><code class="language-bash">mkdir ~/blog
+cd ~/blog
+git clone ‘这里替换你的git仓库’ .  #注意后面有个点，表示克隆到当前文件夹，否则会新建一个文件夹的
+</code></pre>
+
+<h3 id="toc_10">2.3、上传<code>https</code>证书到服务器</h3>
+
+<p>在1.3中，我们申请了证书，这个证书不是给我们自己看的，是给服务器用的，所以，我们需要上传到服务器上面去。<br/>
+由于有些服务器没有开发<code>root</code>用户登录（比如说腾讯云），我们可以先把证书上传到当前用户的<code>home</code>目录下，然后在移动到相应的文件夹去。</p>
+
+<p>上传证书到当前用户的<code>home</code>目录下，执行两次，一次上传一个文件（证书有两个文件）:</p>
+
+<pre><code class="language-bash">scp src-path username@ip:~
+</code></pre>
+
+<blockquote>
+<p>src-path: 证书在电脑里面的路径<br/>
+username: 服务器登录用户名<br/>
+ip: 服务器的公网ip</p>
+</blockquote>
+
+<p>然后移动刚才的两个文件到<code>nginx</code>配置下,同样的，把两个证书文件都移动过来:</p>
+
+<pre><code class="language-bash">mkdir /etc/nginx/cert
+sudo mv filename /etc/nginx/cert
+</code></pre>
+
+<h3 id="toc_11">2.4、创建<code>nginx</code>配置文件</h3>
+
+<p>我们把<code>nginx</code>配置文件放在<code>/etc/nginx/conf.d</code>目录下</p>
+
+<pre><code class="language-bash">sudo vim /etc/nginx/conf.d/blog.conf
+</code></pre>
+
+<p>我的网站配置文件内容如下，各位根据自己的域名修改一下就好了:</p>
+
+<pre><code class="language-text">server {
+    listen 443;
+    server_name fengqiangboy.com(这里替换成你的域名);
+    ssl on;
+    root html;
+    index index.html;
+    ssl_certificate   cert/1_www.fengqiangboy.com_bundle.crt(这里替换成你的证书文件名字);
+    ssl_certificate_key  cert/2_www.fengqiangboy.com.key(这里替换成你的证书文件名字);
+    ssl_session_timeout 5m;
+    ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EEC;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    location / {
+        root /home/ubuntu/blog(这个路径要保证里面有index.html);
+        index index.html;
+    }
+}
+
+# 下面是强制http转成https请求的配置
+server {
+    listen  80;
+    server_name fengqiangboy.com(这里替换成你的域名);
+
+    rewrite ^(.*)$  https://$host$1 permanent;
+}
+</code></pre>
+
+<p>保存下来，重新加载一下<code>nginx</code>的配置:</p>
+
+<pre><code class="language-text">sudo nignx -s reload
+</code></pre>
+
+<p>不出意外，应该可以访问了，在浏览器中，输入你的域名，看看是不是刚才部署的博客？</p>
+
+<h2 id="toc_12">3、后记</h2>
+
+<p>当然，要想写好博客，这点技能肯定是还远不足的，还要去学习<code>Markdown</code>语法，毕竟对于写博客来说，这个还是很有用的，然后就是学习一下<code>hexo</code>的用法了，再接着，就是创作出更加好的文章了。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[一个导出qq音乐歌单的小工具]]></title>
+    <link href="http://fengqiangboy.com/14913069118493.html"/>
+    <updated>2017-04-04T19:55:11+08:00</updated>
+    <id>http://fengqiangboy.com/14913069118493.html</id>
+    <content type="html"><![CDATA[
+<h4 id="toc_0">文档更新说明</h4>
+
+<ul>
+<li>2017年04月04日 v1.0 初稿</li>
+</ul>
+
+<blockquote>
+<p>一直使用qq音乐，但是感觉qq音乐的电台推荐好像没有网易云的给力些，就想换网易云音乐，无奈，qq音乐里面累积了900多首歌，就写了一个工具来导出这些歌单了。不过不是很完美，902首，最后只成功导入了770多首，不知道是不是两边版权不同的原因。</p>
+</blockquote>
+
+<h2 id="toc_1">0、项目地址</h2>
+
+<p><a href="https://github.com/fengqiangboy/qq-music-list-to-kwl">https://github.com/fengqiangboy/qq-music-list-to-kwl</a></p>
+
+<h2 id="toc_2">1、使用步骤：</h2>
+
+<ol>
+<li>克隆代码到本地</li>
+<li>安装<code>python3</code></li>
+<li>获取qq音乐歌单列表id</li>
+<li>修改<code>qq-music-list-export.py</code>中的歌单<code>id</code></li>
+<li>在命令行中运行<code>qq-music-list-export.py</code></li>
+<li>将生成的文件上传到网易云音乐</li>
+</ol>
+
+<h3 id="toc_3">1.1、克隆代码到本地</h3>
+
+<pre><code class="language-bash">git clone https://github.com/fengqiangboy/qq-music-list-to-kwl.git
+</code></pre>
+
+<h3 id="toc_4">1.2、安装<code>python3</code></h3>
+
+<p><code>python</code>的安装可以<a href="https://www.python.org/about/gettingstarted/">参考官网的教程</a>，各个平台的方法都有。建议安装3.6版本或者更新的版本。</p>
+
+<h3 id="toc_5">1.3、获取qq音乐歌单列表id</h3>
+
+<p>这一步建议在手机上面操作，选择要转移的歌单之后，使用分享功能，选择复制链接，将链接复制出来之后，查看<code>id</code>参数</p>
+
+<blockquote>
+<p>这一步有个注意点，导出来的网址可能有两种，如果你的网址是类似：<code>https://y.qq.com/w/taoge.html?hostuin=498460828&amp;id=2330669376</code>这样的，那么你的歌单id就是<code>2330669376</code>，如果你的网址是类似<code>https://y.qq.com/n/yqq/playlist/2330669376.html</code><br/>
+，那么你的歌单ID就是后面那串数字</p>
+</blockquote>
+
+<h3 id="toc_6">1.4、设置歌单id参数</h3>
+
+<p>用编辑器打开<code>qq-music-list-export.py</code>，修改上面的LIST_ID</p>
+
+<pre><code class="language-python"># 歌单id 需要替换成你自己的
+LIST_ID = &quot;2330669376&quot;
+</code></pre>
+
+<h3 id="toc_7">1.5、 在命令行中运行<code>qq-music-list-export.py</code></h3>
+
+<ul>
+<li>由于这个工具依赖了两个第三方工具，需要先安装第三方依赖，在命令行中输入下面命令</li>
+</ul>
+
+<pre><code class="language-bash">pip3 install BeautifulSoup
+pip3 install requests
+</code></pre>
+
+<ul>
+<li>安装完成之后,在命令行中，进入工具所在目录，执行下面的命令</li>
+</ul>
+
+<pre><code class="language-bash">python3 qq-music-list-export.py
+</code></pre>
+
+<h3 id="toc_8">1.6、 将生成的文件上传到网易云音乐</h3>
+
+<ul>
+<li>打开<a href="http://music.163.com/">网易云音乐网页版</a>，登录自己的帐号</li>
+<li>在右上角个人信息处，选择导入歌单</li>
+<li>选择导入酷我播放列表</li>
+<li>导入完成</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Python学习笔记-函数的使用]]></title>
+    <link href="http://fengqiangboy.com/14890625223406.html"/>
+    <updated>2017-03-09T20:28:42+08:00</updated>
+    <id>http://fengqiangboy.com/14890625223406.html</id>
+    <content type="html"><![CDATA[
+<h4 id="toc_0">文档更新说明</h4>
+
+<ul>
+<li>2017年03月09日 v1.0 初稿</li>
+</ul>
+
+<blockquote>
+<p>不管你是做什么开发的，函数在开发中的使用可以说是非常频繁的，本文将使用一个例子来说明python中函数的使用方式</p>
+</blockquote>
+
+<h2 id="toc_1">例：定时休息提醒器</h2>
+
+<blockquote>
+<p>项目背景：作为程序员，经常一坐就是一整天忘记起身，忘记休息。为了解决这个问题，我们可以使用<code>python</code>来做一个定时器，定时提醒我们去休息一下，去走走，去转转，提升我们是身体素质</p>
+</blockquote>
+
+<h3 id="toc_2">步骤分析</h3>
+
+<blockquote>
+<p>在程序开发中，我们要善于把大项目切割成小项目，然后在把小羡慕各个击破。根据我们的需求，可以把这个项目分成一下几个步骤</p>
+</blockquote>
+
+<ol>
+<li>程序启动之后，开启延时；</li>
+<li>延时时间到了之后，打开浏览器的一个提醒页面</li>
+<li>循环执行上面的步骤</li>
+</ol>
+
+<p>根据上面的步骤，我们先实现打开浏览器吧。</p>
+
+<h3 id="toc_3">第一步：打开浏览器</h3>
+
+<p>在进行第一步之前，先来解释说明两个概念，什么是模块，什么是标准库。</p>
+
+<h4 id="toc_4">模块</h4>
+
+<p>在<code>Python</code>中，一个模块(<code>Module</code>)，就是一个<code>.py</code>后缀的<mark>文件</mark>，在模块(文件)中，可以包含<code>Python</code>对象定义和<code>Python</code>语句(<code>definitions and statements</code>)<br/>
+我们可以把一些类和函数单独放在一个<code>.py</code>文件中，封装成一个模块。对于大工程来说，使用模块可以让我们的项目变得更加易于维护</p>
+
+<h4 id="toc_5">标准库</h4>
+
+<p><code>Python</code><a href="https://docs.python.org/2/library/">标准库</a>，英文名字<code>The Python Standard Library</code>。是<code>Python</code>的一个内建模块，也就是说，当我们安装好<code>Python</code>之后，它就存在我们的电脑里面了。<code>Python</code>的标准库底层是基于<code>C语言</code>实现的，但是给我们的接口(<code>API</code>)就是<code>Python</code>的了，所以我们可以通过使用<code>Python</code>标准库，很方便地调用到系统底层的东西。</p>
+
+<h4 id="toc_6">码代码</h4>
+
+<p>在<code>python</code>的<a href="https://docs.python.org/2/library/">标准库</a>(<code>standard library</code>)中，有一个模块叫做<a href="https://docs.python.org/2/library/webbrowser.html">webbrowser</a>，打开文档，我们可以看到一个<a href="https://docs.python.org/2/library/webbrowser.html?highlight=webbrowser#webbrowser.open">open</a>的方法。</p>
+
+<pre><code class="language-python">webbrowser.open(url, new=0, autoraise=True)
+</code></pre>
+
+<p>通过文档，我们可以看到<code>open</code>方法一共可以接收三个参数：<code>url、new、autoraise</code>，其中，<code>new、autoraise</code>两个参数后面是跟了<code>=</code>的，在<code>Pyton</code>中，函数参数名如果跟了<code>=</code>，就代表这个参数是有默认值的，在调用的时候，如果没有给带默认值的参数赋值，那么，函数就会使用上面的默认值。</p>
+
+<p>那也就是说，我们只要给<code>open</code>函数传入一个<code>url</code>参数就可以运行了</p>
+
+<p>代码如下：</p>
+
+<pre><code class="language-python">#!/usr/bin/python
+
+import webbrowser
+
+webbrowser.open(&quot;http://fengqiangboy.com/test/relax.html&quot;)
+</code></pre>
+
+<p>使用<code>Python</code>解析器允许一下，我们可以发现，浏览器已经打开了我们指定的页面，我们顺利完成了第一步。</p>
+
+<h3 id="toc_7">第二步：延时执行函数</h3>
+
+<p>前面我们已经了解了模块和标准库，这里我们延时功能依旧使用标准库里面的一个模块，只不过这次我们使用的是<code>time</code>模块。相信你已经在此刻，打开了<code>Python</code>的标准库文档，并且找到了<code>time</code>模块的<a href="https://docs.python.org/2/library/time.html">文档</a></p>
+
+<p>稍微把文档往下拖拽一下，我们可以发现<code>time.sleep(secs)</code>函数，看看描述：挂起当前线程，并在指定的时间之后，继续往下执行。似乎可以满足我们的需求。</p>
+
+<h4 id="toc_8">码代码</h4>
+
+<p>既然已经找到了可能可以实现的方法，那就来试试呗，反正又不要钱。测试代码如下：</p>
+
+<pre><code class="language-python">#!/usr/bin/python
+
+import time
+
+time.sleep(3)
+print &quot;Hello&quot;
+</code></pre>
+
+<p>运行上面的代码，我们可以发现，程序在执行3秒钟之后，打印了一个<code>Hello</code>出来。</p>
+
+<h3 id="toc_9">第三步：重复执行</h3>
+
+<p>重复执行一个任务，我们可以使用循环来做，而对于没有次数限制的死循环，我们首选<code>while()</code>结构。</p>
+
+<h4 id="toc_10">码代码</h4>
+
+<p>这次的实验，我们直接在第二部的代码中加入一个循环功能，来测试一下循环是否正常运行。</p>
+
+<pre><code class="language-python">#!/usr/bin/python
+
+import time
+
+while (1) :
+    time.sleep(3)
+    print &quot;Hello&quot;
+</code></pre>
+
+<p>运行可以发现，我们的程序在不停的打印<code>Hello</code>。</p>
+
+<h3 id="toc_11">第四步：整合上面的功能</h3>
+
+<p>通过前面三步，我们已经可以轻轻松松地实现：</p>
+
+<pre><code class="language-text">1. 打开浏览器
+2. 延迟指定的时间，执行我们的任务
+3. 循环地执行我们的任务
+</code></pre>
+
+<p>那么也就是说，我们接下来只要把上面的重复执行任务换成打开浏览器去提醒程序员休息就行了。<br/>
+那OK，开干！</p>
+
+<pre><code class="language-python">#!/usr/bin/python
+
+import webbrowser
+import time
+
+count = 3
+
+while count&gt;0:
+    time.sleep(10)
+    webbrowser.open(&quot;http://fengqiangboy.com/test/relax.html&quot;)
+    count -= 1
+
+</code></pre>
+
+<p>在上面的代码中，我们修改了循环条件，限定了循环次数。</p>
+
+<h3 id="toc_12">总结</h3>
+
+<p>通过上面的几步，我们完成了我们的目标，也使用了<code>Python</code>的内建模块来完成一些操作。其实生活也是如此，我们把目标分解成小块的时候，会发现，做起来并没有那么难。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[我的2016]]></title>
+    <link href="http://fengqiangboy.com/14854433400635.html"/>
+    <updated>2017-01-26T23:09:00+08:00</updated>
+    <id>http://fengqiangboy.com/14854433400635.html</id>
+    <content type="html"><![CDATA[
+<blockquote>
+<p>2016，整体可以用“忙”、“苦逼”和“迷茫”来概括吧<br/>
+忙：或许可以说是我们的能力还不足以支撑我们的梦想才会出现的状态吧<br/>
+2016，其实没啥变化，一整年都在工作<br/>
+虽说苦逼，但我还是认为我是挺幸运的，幸运到你可以让你来到我的博客</p>
+</blockquote>
+
+<h2 id="toc_0">过去的2016</h2>
+
+<p>2016过完了，一年又一年，连我这个92年的小鲜肉都要步入25岁的大道了。只想说，时间过得真TM快。还是得总结一下这一年做了点什么的。</p>
+
+<ol>
+<li><p>看书</p>
+<blockquote>
+<p>看完了《创业维艰》和《人类简史》，非常棒的书，当然，今年看书速度有点慢，明年得加快。当然，技术书籍没有包括进来</p>
+</blockquote></li>
+<li><p>学习了<code>sketch</code>和<code>PS</code>的使用</p>
+<blockquote>
+<p>自己学习了<code>sketch</code>和<code>PS</code>两个软件的基本使用，现在，我自己也可以完成一些简单的切图工作了</p>
+</blockquote></li>
+<li><p>学习了前端开发的一些基本知识</p>
+<blockquote>
+<p>很多人说做iOS的，怎么学起了前端，装逼的说，我对这个感兴趣呗，每天晚上回去大概话两小时看一下，现在做个页面出来还是没什么问题的</p>
+</blockquote></li>
+<li><p>使用了<code>ReactNative</code>，制作了一个简单的<code>APP</code></p>
+<blockquote>
+<p>不管怎么说，<code>ReactNative</code>的出现还是给原生<code>APP</code>开发者带来了比较大的震撼，为了不被时代抛弃，我也学习了一下，最后败给了<code>ReactNative</code>的性能问题</p>
+</blockquote></li>
+<li><p>学习了<code>Swift</code>，并在实际工作当中熟练运用</p>
+<blockquote>
+<p>作为苹果的新时代语言，<code>Swift</code>真的很棒，值得我们去学习和使用它</p>
+</blockquote></li>
+<li><p>学习了<code>Python</code>和<code>Ruby</code>两门脚本语言，并用<code>Python</code>为我们自己从产品写了一个脚手架</p>
+<blockquote>
+<p>因为平时开发的时候会做比较多的重复动作，所以想写一些脚本来偷懒，就学了<code>Python</code>和<code>Ruby</code>，学得不是很精通吧</p>
+</blockquote></li>
+<li><p>博客一共完成了13篇文章</p>
+<blockquote>
+<p>博客是在2015年末搭建的。今年做的变化主要是：迁移至国内，升级<code>https</code>。最终2016完成了13篇文章，还算比较满意了，不管怎么样，写文章还是要继续坚持下去的</p>
+</blockquote></li>
+<li><p>学习了<code>iOS</code>逆向开发，完成两个微信小插件</p>
+<blockquote>
+<p>逆向开发应该对每个程序员都是充满诱惑的，所以我就没经得住诱惑，做了两个越狱小插件，一个是修改微信步数的，一个是自动抢红包的，自动抢红包的插件实现了在非越狱手机上面安装</p>
+</blockquote></li>
+<li><p>健身</p>
+<blockquote>
+<p>身体是革命的本钱，2016大概做到了平均一周去一次健身房，效果挺不错的</p>
+</blockquote></li>
+</ol>
+
+<h2 id="toc_1">马上要到来的2017</h2>
+
+<p>即将到来的2017，我会继续践行我的目标，让更多美好的事情发生。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS逆向开发笔记1--工具篇]]></title>
+    <link href="http://fengqiangboy.com/14854248394653.html"/>
+    <updated>2017-01-26T18:00:39+08:00</updated>
+    <id>http://fengqiangboy.com/14854248394653.html</id>
+    <content type="html"><![CDATA[
+<h4 id="toc_0">文档更新说明</h4>
+
+<ul>
+<li><p>2017年01月26日 v1.0 初稿</p>
+<p>平时我们做的开发一把是正向开发，所谓逆向开发，实际上有个更加通俗的词语，就是破解，逆向开发可以让我们了解到其他<code>APP</code>的实现方式，学到正向开发学不到的东西。</p>
+<h2 id="toc_1">工具列表</h2></li>
+<li><p>电脑端</p>
+<ul>
+<li><a href="https://github.com/theos/theos">theos</a>：基于命令行的逆向开发工具</li>
+<li><a href="https://github.com/alexzielenski/optool">optool</a>：二进制文件注入工具</li>
+<li><a href="https://github.com/DanTheMan827/ios-app-signer">ios-app-signer</a>：iOS签名工具</li>
+</ul></li>
+<li><p>手机端</p>
+<ul>
+<li><a href="https://github.com/KJCracks/Clutch">clutch</a>：iOS上面砸壳的榔头（需要越狱的iOS设备）</li>
+</ul>
+<h2 id="toc_2">安装theos</h2>
+<p><a href="https://github.com/theos/theos">theos</a>是一款逆向开发工具，可以为我们搭建逆向开发的脚手架，编译逆向工程等等，非常实用。</p>
+<h3 id="toc_3">theos的准备</h3>
+<p><code>theos</code>是需要依赖一些第三方库的：</p>
+<ul>
+<li>curl</li>
+<li>git</li>
+<li>make</li>
+<li>openssh</li>
+<li>perl</li>
+<li>rsync</li>
+<li>dpkg</li>
+<li>python</li>
+</ul>
+<p>在<code>Mac</code>上，<code>theos</code>的依赖基本上都自带了，我们只需要额外安装<code>dpkg</code></p></li>
+<li><p><code>dpkg</code>的安装：<code>dpkg</code>可以使用<code>homebrew</code>安装，当然，<code>homebrew</code>也是需要另外安装的，没有<code>homebrew</code>的可以去官网看看安装方法。安装完<code>homebrew</code>之后，使用命令:<code>brew install dpkg</code>安装<code>dpkg</code></p></li>
+</ul>
+
+<h4 id="toc_4">theos的安装</h4>
+
+<ol>
+<li>打开命令行</li>
+<li><p>选择要存放theos的位置，官方建议是放在<code>/opt/theos</code>目录下，实际我们可以根据自己的需求，我就习惯放在<code>home</code>里面的<code>workspace</code>目录下</p>
+<blockquote>
+<p>不建议放在当前用户权限之外的目录，否则可能会引起权限问题</p>
+</blockquote>
+<pre><code class="language-bash"># 这一句的意思是定义一个名称为THEOS的变量，指向我们的theos安装目录
+# 定义完之后，我们可以在命令行中以 $THEOS 的方式使用这个变量<br/>
+export THEOS=~/workspace/crack/theos
+</code></pre></li>
+<li><p>把<code>theos</code>的最新版本代码克隆到本地</p>
+<ul>
+<li><p>使用<code>git</code></p>
+<pre><code class="language-bash"># --recursive参数表示递归克隆子模块，theos中有子仓库，我们需要一并克隆下来
+git clone --recursive git://github.com/DHowett/theos.git $THEOS
+</code></pre></li>
+<li><p>使用<code>svn</code></p>
+<pre><code class="language-bash">svn co http://svn.howett.net/svn/theos/trunk $THEOS
+</code></pre></li>
+</ul></li>
+<li><p>给命令行添加默认变量定义</p>
+<blockquote>
+<p>在<code>Mac</code>中，<code>~/.bash_profile</code>文件中的命令会在命令行打开的时候自动运行一遍</p>
+</blockquote>
+<p>我们可以在<code>~/.bash_profile</code>文件中添加我们需要定义的一些变量，方便后面的开发。<br/>
+打开<code>~/.bash_profile</code>文件，在里面添加下面代码。</p>
+<pre><code class="language-bash"># theos存放位置
+export THEOS=~/workspace/crack/theos<br/>
+# 把theos里面的添加到path环境变量<br/>
+export PATH=$THEOS/bin:$PATH<br/>
+# 越狱机器的IP和ssh端口需要根据自己的网络环境做修改<br/>
+export THEOS_DEVICE_IP=example.local THEOS_DEVICE_PORT=22
+</code></pre></li>
+<li><p>复制越狱手机里面的<code>/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate</code>到<code>$THEOS/lib</code>，重命名为<code>libsubstrate.dylib</code>。</p></li>
+<li><p>同样的步骤，复制越狱手机里面的<code>/Library/Frameworks/CydiaSubstrate.framework/Headers/CydiaSubstrate.h</code>到电脑的<code>$THEOS/include</code>目录下，并重命名为<code>substrate.h</code>。</p>
+<blockquote>
+<p>如果没有越狱手机，也可以从网上下载下来，下载方法如下：<br/>
+如果已经完成了5、6步，直接跳过下面这段代码。</p>
+</blockquote>
+<pre><code class="language-bash"># 下载文件
+wget http://apt.saurik.com/debs/mobilesubstrate_0.9.6011_iphoneos-arm.deb<br/>
+# 新建一个文件夹<br/>
+mkdir substrate<br/>
+# 把下载的文件解包<br/>
+dpkg-deb -x mobilesubstrate_*_iphoneos-arm.deb substrate<br/>
+# 移动第5步提到的文件<br/>
+mv substrate/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate $THEOS/lib/libsubstrate.dylib<br/>
+# 移动第6步的文件<br/>
+mv substrate/Library/Frameworks/CydiaSubstrate.framework/Headers/CydiaSubstrate.h $THEOS/include/substrate.h
+</code></pre></li>
+</ol>
+
+<p>至此，我们就把<code>theos</code>安装到了电脑里面，可以在命令行中输入<code>$THEOS/bin/nic.pl</code>来测试一下是否安装成功。</p>
+
+<h2 id="toc_5">安装optool</h2>
+
+<p><a href="https://github.com/alexzielenski/optool">optool</a>是一个可以修改和插入MatchO格式可执行文件<code>load commands</code>段的开源工具。我们可以利用这个工具，把我们生成的<code>hook</code>库插入到目标可执行文件中。</p>
+
+<ol>
+<li><p>克隆源代码到本地；</p>
+<pre><code class="language-bash">git clone --recursive https://github.com/alexzielenski/optool.git
+</code></pre></li>
+<li><p>编译源代码，生成可执行文件；</p>
+<pre><code class="language-bash">cd optool
+xcodebuild -project optool.xcodeproj -configuration Release ARCHS=&quot;x86_64&quot; build
+</code></pre>
+<blockquote>
+<p>注意：如果这一步遇到error: There is no SDK with the name or path &#39;/Users/fengqiang/workspace/crack/optool/macosx10.9&#39;这个错误，是由于工程的依赖SDK版本设置不对，工程默认使用的是10.9的SDK，我们只需要用xcode打开工程，在build setting中，把Base SDK设置成Latest macOS即可</p>
+</blockquote></li>
+<li><p>把编译出来的可执行文件添加到<code>/usr/local/bin</code>目录下，这样我们就可以直接在命令行中使用了。</p>
+<pre><code class="language-bash">cp build/Release/optool /usr/local/bin/
+</code></pre></li>
+<li><p>在命令行中输入<code>optool -v</code>，测试一下，如看到版本信息说明就没问题了，至此，<code>optool</code>安装完成。</p></li>
+</ol>
+
+<h2 id="toc_6">安装ios-app-signer</h2>
+
+<p><a href="https://github.com/DanTheMan827/ios-app-signer">ios-app-signer</a>是一个<code>APP</code>签名工具，非常直观方便，安装也是非常简单，这里我们直接下载作者编译好的<code>Release</code>版本吧。</p>
+
+<ol>
+<li>打开<a href="https://github.com/DanTheMan827/ios-app-signer/releases">Realse</a>页面，下载最新版本的<code>iOS.App.Signer.app.zip</code>；</li>
+<li>解压之后，拖到<code>应用程序</code>目录下，在<code>Launch Pad</code>中打开即可。</li>
+</ol>
+
+<h2 id="toc_7">安装clutch</h2>
+
+<p>上面都是安装在电脑上使用的工具，接下来我们安装一个手机上面使用的工具。<br/>
+<a href="https://github.com/KJCracks/Clutch">clutch</a>是<code>iOS</code>越狱环境下的一个砸壳工具，由于上传到<code>Appstore</code>里面的<code>APP</code>经过了苹果的加密，我们要做逆向，就必须先解密，<code>clutch</code>就是这个解密的工具，可以称之为“榔头”。</p>
+
+<p>clutch可以通过下载源代码自己编译，也可以下载作者已经编译好的<code>release</code>版本，这里我们就克隆源代码，然后自己编译吧。</p>
+
+<p>1.克隆源代码到本地；</p>
+
+<pre><code class="language-bash">git clone https://github.com/KJCracks/Clutch.git
+</code></pre>
+
+<p>2.关闭<code>xcode</code>的SDK强制签名；</p>
+
+<pre><code class="language-bash">killall Xcode
+# 备份一份要修改的文件
+cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist ~/
+/usr/libexec/PlistBuddy -c &quot;Set :DefaultProperties:CODE_SIGNING_REQUIRED NO&quot; /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist
+/usr/libexec/PlistBuddy -c &quot;Set :DefaultProperties:AD_HOC_CODE_SIGNING_ALLOWED YES&quot; /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist
+</code></pre>
+
+<p>3.编译下载下来的源码；</p>
+
+<pre><code class="language-bash">xcodebuild -project Clutch.xcodeproj -configuration Release ARCHS=&quot;armv7 armv7s arm64&quot; build
+</code></pre>
+
+<p>4.将生成出来的二进制文件复制到已经越狱的设备中</p>
+
+<pre><code class="language-bash">scp build/clutch root@&lt;your.device.ip&gt;:/usr/bin/
+</code></pre>
+
+<p>5.可以在越狱设备上面执行<code>clutch -i</code>，测试一下是否已经安装成功，如果看到了已经安装的<code>app</code>的话，代表安装成功了。</p>
+
+<h2 id="toc_8">小结</h2>
+
+<p>经过上面几个步骤，我们就已经搭建好了一个越狱开发的基本环境，接下来要做的事情就是开始真正的越狱开发了。</p>
+
+<h2 id="toc_9">参考资料：</h2>
+
+<ol>
+<li><a href="http://www.swiftyper.com/2016/12/26/wechat-redenvelop-tweak-for-non-jailbroken-iphone/">免越狱版 iOS 抢红包插件</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[支付宝怎么免手续费提现]]></title>
+    <link href="http://fengqiangboy.com/14786196059653.html"/>
+    <updated>2016-11-08T23:40:05+08:00</updated>
+    <id>http://fengqiangboy.com/14786196059653.html</id>
+    <content type="html"><![CDATA[
+<h4 id="toc_0">文档更新说明</h4>
+
+<ul>
+<li>2016年11月11日 v1.0 初稿</li>
+</ul>
+
+<h2 id="toc_1">1、前言</h2>
+
+<p>众所周知，支付宝从公元2016年10月12日开始，提现转账是需要收取手续费的了，虽然说手续费比起之前的各大商业银行低了很多，但是还是会让人感觉有点不爽的。<br/>
+比起微信支付，支付宝的体现收费还是良心了很多，因为，因为支付宝还是留了免费提现通道的，只是步骤比之前麻烦一些了。<br/>
+今天，我要说的就是怎样免费从支付宝提现，并且不消耗免费额度。</p>
+
+<h2 id="toc_2">2、怎么免费提现</h2>
+
+<p>现在支付宝免费转账的资金流动途径大致如下：<br/>
+<code>余额宝</code>-&gt;<code>支付宝余额</code>-&gt;<code>网商银行余额</code>-&gt;<code>自己的银行卡</code></p>
+
+<h3 id="toc_3">3、步骤</h3>
+
+<ul>
+<li>首先下载一个网商银行的APP，下载链接：<a href="https://a.mybank.cn/fd-ilnguw4o/index.html">https://a.mybank.cn/fd-ilnguw4o/index.html</a></li>
+<li>跟着提示，完成注册，并且绑定一张自己的银行卡</li>
+<li>打开支付宝，把要提现的金额转到余额，注意，一定要先转到余额，因为网商银行只能读取到余额里面的数据，读取不到余额宝里面的数据</li>
+<li>打开网商银行APP，依次进入<code>我的</code>-&gt;<code>资产</code>-&gt;<code>活期余额</code>-&gt;<code>转入</code>，选择从支付宝转入</li>
+<li>回到网商银行首页，选择<code>转账</code>-&gt;<code>转出</code>功能，按照提示转出到自己的银行卡即可</li>
+</ul>
+
+<h3 id="toc_4">4、转账到别人的银行卡</h3>
+
+<p>现在主流银行手机端跨行转账应该都是免费的吧（至少招行经过本人亲测是这样子的），要给别人转账的，再打开手机银行转下帐就OK啦！</p>
+
+<h3 id="toc_5">5、安全问题</h3>
+
+<p><a href="https://www.mybank.cn/">网商银行</a>是阿里巴巴集团旗下的，安全性还是值得我们信赖的吧，担忧的人估计支付宝里面也不会需要提现这个功能了，😄。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Swift3入门教程之二----函数和闭包]]></title>
+    <link href="http://fengqiangboy.com/14758321095435.html"/>
+    <updated>2016-10-07T17:21:49+08:00</updated>
+    <id>http://fengqiangboy.com/14758321095435.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">文档更新说明：</h3>
+
+<pre><code class="language-text">•   2016年10月12日 v1.0 初稿
+•   2016年10月13日 v2.0 增加闭包部分
+</code></pre>
+
+<h2 id="toc_1">1、函数</h2>
+
+<h3 id="toc_2">1.1、函数的定义和调用</h3>
+
+<ul>
+<li>使用<code>func</code>关键字来定义一个函数</li>
+<li>在swift中，大概我们也可以自豪的说&quot;一切皆对象&quot;了，函数也可以当做一个特殊的对象来看待。</li>
+</ul>
+
+<pre><code class="language-swift">// 定义一个不带参数的函数
+func sendMessage() {
+   let message = &quot;Hey there!&quot;
+   print(message)
+}
+
+// 调用不带参数的函数
+sendMessage()
+
+/**
+输出结果：
+Hey there!
+*/
+</code></pre>
+
+<h3 id="toc_3">1.2、带参数的函数</h3>
+
+<ul>
+<li>定义带参数的函数，只需要在定义的时候，括号内填入相应的参数，默认情况下，是用<code>let</code>声明的常量</li>
+<li>在下面的定义中，<code>func</code>代表定义一个函数，是个关键字，<code>sendMessage</code>是这个函数的名字，<code>shouting</code>是参数的名字，可在函数内部使用，在调用的时候需要声明写出来<code>Bool</code>代表参数类型，这里是一个布尔类型</li>
+</ul>
+
+<pre><code class="language-swift">// 定义一个带参数的函数
+func sendMessage(shouting: Bool) {
+   var message = &quot;Hey there!&quot;
+   if shouting {
+      message = message.uppercased()
+   }
+   print(message)
+}
+
+// 调用一个带参数的函数
+sendMessage(shouting: true)
+
+
+/**
+输出结果：
+HEY THERE!
+*/
+</code></pre>
+
+<h3 id="toc_4">1.3、函数的参数标签</h3>
+
+<ul>
+<li>swift中，为了使函数在调用和定义的时候都能见名知意，提供了两个命名（参数标签和参数名），中间以空格分开</li>
+<li>参数名是给调用的时候函数内部使用的，参数标签是调用函数的时候，当做函数名来用的</li>
+<li>实际使用中，合理运用这两个参数，可以大大提高代码的可读性</li>
+<li>一个函数中，多个参数名不能重名，但是参数标签可以重名（建议不要那么无聊去写重名的）</li>
+<li>下面函数中“<code>to</code>”就是函数标签，<code>recipient</code>和<code>shouting</code>是参数名</li>
+<li>不想在调用的时候写出参数标签，可以在定义函数的时候使用“<code>_</code>”来代替参数标签，（1.4）</li>
+</ul>
+
+<pre><code class="language-swift">func sendMessage(to recipient: String, shouting: Bool) {
+   var message = &quot;Hey there, \(recipient)!&quot;
+   if shouting {
+      message = message.uppercased()
+   }
+   print(message)
+}
+
+sendMessage(to: &quot;Morgan&quot;, shouting: false)
+
+
+/**
+输出结果：
+Hey there, Morgan!
+*/
+</code></pre>
+
+<h3 id="toc_5">1.4、省略参数标签</h3>
+
+<ul>
+<li>有些参数名可能会跟函数名重名，比如下面这个函数，两个message，在调用的时候就会显得特别奇怪，这时，可以用&quot;<code>_</code>&quot;来代替参数名字，调用的时候看起来就更加舒服了</li>
+</ul>
+
+<pre><code class="language-swift">// 名字优化之前
+func sendMessage(message: String, to recipient: String, shouting: Bool)
+</code></pre>
+
+<pre><code class="language-swift">// 省略参数名字之后
+func sendMessage(_ message: String, to recipient: String, shouting: Bool) {
+   var message = &quot;\(message), \(recipient)!&quot;
+   if shouting {
+      message = message.uppercased()
+   }
+   print(message)
+}
+
+// 调用的时候可以省略参数名字
+sendMessage(&quot;See you at the Bash&quot;, to: &quot;Morgan&quot;, shouting: false)
+
+/**
+输出结果：
+See you at the Bash, Morgan!
+*/
+</code></pre>
+
+<h3 id="toc_6">1.5、参数的默认值</h3>
+
+<ul>
+<li>在上面的函数中，其实最后那个参数我们一般都是传false，这时，调用的时候再每次都写这个参数就显得多余了</li>
+<li>swift中提供了一个默认参数，即可以给函数的参数一个默认值，调用的时候不传就使用默认值</li>
+<li>建议把带默认值的参数写在后面，否则，你会回来点赞的（调用的时候参数顺序看得清晰些）</li>
+<li>默认参数在定义函数的时候写在类型后面，如下：</li>
+</ul>
+
+<pre><code class="language-swift">// 参数带有默认值的函数
+func sendMessage(_ message: String, to recipient: String, shouting: Bool = false) {
+   var message = &quot;\(message), \(recipient)!&quot;
+   if shouting {
+      message = message.uppercased()
+   }
+   print(message)
+}
+
+// 调用带有默认值的函数
+sendMessage(&quot;See you at the Bash&quot;, to: &quot;Morgan&quot;)
+
+/**
+输出结果：
+See you at the Bash, Morgan!
+*/
+</code></pre>
+
+<h3 id="toc_7">1.6、可变参数</h3>
+
+<ul>
+<li>可变参数指的是：这个参数可以传入0个，也可以传入10000个，就像OC里面的<code>NSLog()</code>函数一样，后面参数个数的不定的</li>
+<li>可变参数的定义：在定义参数类型的后面加上省略号<code>...</code>，比如<code>func someFunction(argumentLabel parameterName: Int...)</code>，<code>parameterName</code>参数就是个可变参数了</li>
+<li>可变参数的获取：在函数内部，可变参数以数组的形式体现的，上面定义的那个可变参数的获取方式<code>parameterName[0]</code>，这样，就拿到了可变参数的第一个值</li>
+</ul>
+
+<pre><code class="language-swift">// 可变参数
+func optParameter(optionPara: Int...) {
+    for num in optionPara {
+        print(num)
+    }
+}
+
+// 调用可变参数函数
+optParameter(optionPara: 1, 2, 3, 4, 5)
+
+
+/**
+输出结果：
+1
+2
+3
+4
+5
+*/
+</code></pre>
+
+<h3 id="toc_8">1.7、输入输出参数（C语言中的指针参数）</h3>
+
+<ul>
+<li>在C语言中，我们可以给函数传入一个指针值，以达到在函数内部修改外部参数值的目的，swift中，这种参数叫做<code>输入输出</code>参数</li>
+<li>定义一个输入输出参数，只需要在参数类型前面加一个<code>inout</code></li>
+<li>调用的时候，需要在输入输出参数前面加&quot;<code>&amp;</code>&quot;</li>
+<li>调用的时候，输入输出参数必须传入变量，不能是常量</li>
+<li>输入输出参数不能有默认值</li>
+</ul>
+
+<pre><code class="language-swift">// 定义一个交换两数的方法
+func swap(a:inout Int, b:inout Int) {
+    let c = a
+    a = b
+    b = c
+}
+
+var a = 1
+var b = 2
+
+print(&quot;before: a=\(a), b=\(b)&quot;)
+
+// 调用交换方法
+swap(&amp;a, &amp;b)
+
+print(&quot;after: a=\(a), b=\(b)&quot;)
+
+/**
+输出结果：
+before: a=1, b=2
+after: a=2, b=1
+*/
+</code></pre>
+
+<h3 id="toc_9">1.8、函数类型</h3>
+
+<ul>
+<li>回到开头，我说过，在swift中，我们也可以称为“一切皆对象”，那么，函数既然可以称之为对象，肯定有类型</li>
+<li>函数的类型：有个技巧，不管是什么类型，把参数名变量名全部删掉，剩下的就是类型了。上面的那个函数，类型就应该是<code>(inout Int, inout Int) -&gt; Void</code>，解读为：这个函数类型接受两个输入输出的Int类型参数，并返回<code>Void</code></li>
+<li>函数类型的使用：同其他类型一样的，上面那个函数类型就可以这样使用<code>var function: (inout Int, inout Int) -&gt; Void = swap</code></li>
+<li>同样，函数类型也可以作为函数的参数和返回值</li>
+</ul>
+
+<p>函数作为参数的例子</p>
+
+<pre><code class="language-swift">// 这个函数用来作为参数
+func sum(num1: Int, num2: Int) -&gt; Int {
+    return num1+num2
+}
+
+// 这个函数接受一个(Int, Int)-&gt;Int类型的函数作为参数
+func printResault(num1: Int, num2: Int, ruler:(Int, Int)-&gt;Int) {
+     // 调用传进来的函数
+    print(ruler(num1, num2))
+}
+
+// 调用函数，并把参数传进去
+printResault(num1: 4, num2: 5, ruler: sum)
+
+/**
+输出结果：
+9
+*/
+</code></pre>
+
+<p>函数作为返回值</p>
+
+<pre><code class="language-swift">// 减1
+func stepForward(_ input: Int) -&gt; Int {
+    return input + 1
+}
+// 加1
+func stepBackward(_ input: Int) -&gt; Int {
+    return input - 1
+}
+
+// 根据传入的backward值，返回加1函数或者减1函数
+func chooseStepFunction(backward: Bool) -&gt; (Int) -&gt; Int {
+    return backward ? stepBackward : stepForward
+}
+
+var currentValue = 3
+let moveNearerToZero = chooseStepFunction(backward: currentValue &gt; 0)
+// moveNearerToZero 现在指向 stepBackward() 函数。
+
+//调用返回的函数
+print(moveNearerToZero(currentValue))
+
+/**
+输出结果：
+2
+*/
+</code></pre>
+
+<h3 id="toc_10">1.9、嵌套函数</h3>
+
+<ul>
+<li><code>嵌套函数</code>就是在函数里面在定义一个函数，相对的，前面说的那些都是<code>全局函数</code></li>
+<li><code>嵌套函数</code>只能在内部使用</li>
+</ul>
+
+<h2 id="toc_11">2、闭包</h2>
+
+<h3 id="toc_12">2.1、什么是闭包</h3>
+
+<ul>
+<li>闭包 就是“闭合包裹常量和变量的代码块”的简称，写过OC的人对OC中的 Block 应该不会陌生，其实闭包就是swift里面的“Block”</li>
+<li>闭包是引用类型</li>
+<li>闭包的定义和函数很像，把函数的各种名称部分去掉，在用花括号括起来，其实就是一个闭包了，闭包的一般定义形式如下：</li>
+</ul>
+
+<pre><code class="language-swift">{(params) -&gt; returnType in 
+    statemems
+}
+</code></pre>
+
+<ul>
+<li><code>in</code>关键字表示闭包的参数和返回值类型定义完成，闭包函数体开始</li>
+<li>闭包参数可以是<code>inout</code>类型，但是，不能有默认参数</li>
+<li>闭包完整格式实例</li>
+</ul>
+
+<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
+
+print(&quot;before \(grade)&quot;)
+
+let grade_sort = grade.sorted (by: { (num1: Int, num2: Int) -&gt; Bool in
+    return num1 &gt; num2
+})
+
+print(&quot;after \(grade_sort)&quot;)
+
+/**
+输出结果：
+before [90, 100, 80, 76, 88, 65, 65, 63]
+after [100, 90, 88, 80, 76, 65, 65, 63]
+*/
+
+</code></pre>
+
+<h3 id="toc_13">2.2闭包格式大简化</h3>
+
+<ul>
+<li>函数参数为闭包的时候，编译器可以自动推断出闭包的类型的，比如说在下面的代码中，闭包的类型就可以省略，直接在括号内写参数名</li>
+<li>闭包作为函数最后一个参数的时候，可以省略函数调用的小括号，直接把闭包跟在函数名后面，同时，参数标签也可以省略掉，这个闭包又称做<code>尾随闭包</code>，经过这两项优化之后，上面的代码变成了下面这样</li>
+</ul>
+
+<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
+
+print(&quot;before \(grade)&quot;)
+
+let grade_sort = grade.sorted { (num1, num2) in
+    return num1 &gt; num2
+}
+
+print(&quot;after \(grade_sort)&quot;)
+
+/**
+输出结果：
+before [90, 100, 80, 76, 88, 65, 65, 63]
+after [100, 90, 88, 80, 76, 65, 65, 63]
+*/
+
+</code></pre>
+
+<ul>
+<li>如果闭包中，只有一句代码，那么闭包会自动把这句代码的结果当做返回值处理，也就是说，上面的闭包我们可以省略<code>return</code>关键字，省略之后，代码如下</li>
+</ul>
+
+<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
+
+print(&quot;before \(grade)&quot;)
+
+let grade_sort = grade.sorted { (num1, num2) in
+   num1 &gt; num2
+}
+
+print(&quot;after \(grade_sort)&quot;)
+
+/**
+输出结果：
+before [90, 100, 80, 76, 88, 65, 65, 63]
+after [100, 90, 88, 80, 76, 65, 65, 63]
+*/
+
+</code></pre>
+
+<ul>
+<li>在闭包中，参数可以使用缩写，用<code>$</code>表示，比如说<code>$0</code>就是第一个参数，这时，前面的参数定义部分已经没有意义了，<code>in</code>关键字也可以省略，代码如下</li>
+</ul>
+
+<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
+
+print(&quot;before \(grade)&quot;)
+
+let grade_sort = grade.sorted { $0 &gt; $1 }
+
+print(&quot;after \(grade_sort)&quot;)
+
+
+/**
+输出结果：
+before [90, 100, 80, 76, 88, 65, 65, 63]
+after [100, 90, 88, 80, 76, 65, 65, 63]
+*/
+
+</code></pre>
+
+<h3 id="toc_14">2.3、逃逸闭包</h3>
+
+<ul>
+<li><code>逃逸闭包</code>指的是我们在函数内部接收了闭包之后，把闭包保存了起来，留着函数结束之后再调用这个闭包，这个闭包就叫做逃逸闭包</li>
+<li>逃逸闭包需要在定义的类型前加<code>@escaping</code>，否则会编译报错</li>
+</ul>
+
+<pre><code class="language-swift">// 定义一个变量，用来存储一个闭包，给后面使用
+var completeHandle:() -&gt; Void = {}
+
+// 定义一个函数，这个函数接受一个闭包，并且设置给外部变量，这里必须标记为 @escaping
+func doSomeThing(completion: @escaping () -&gt; Void) {
+    completeHandle = completion
+}
+
+print(&quot;设置之前&quot;)
+
+// 调用函数，并设置一个闭包
+doSomeThing {
+    print(&quot;完成了&quot;)
+}
+
+print(&quot;设置之后&quot;)
+
+// 调用刚才设置好的闭包
+completeHandle()
+
+print(&quot;调用之后&quot;)
+
+
+/**
+输出结果：
+设置之前
+设置之后
+完成了
+调用之后
+*/
+
+</code></pre>
+
+<h3 id="toc_15">2.4、闭包中的self处理</h3>
+
+<ul>
+<li>有过OC经验的童鞋应该都非常明白<code>Block</code>中不能强引用<code>self</code>，否则会由于循环引用而导致内存泄露</li>
+<li>Swift中提供了更加简单的方法，在闭包中弱引用一个变量，只需要在闭包参数定义之前加入<code>[weak self]</code>，Swift就会自动将<code>self</code>在闭包中弱引用</li>
+<li>此时需要注意的是，弱引用可能不存在了，所以在这种情况下，<code>self</code>变成了一个可选值</li>
+</ul>
+
+<pre><code class="language-swift">{[weak self](params) -&gt; returnType in 
+    // self变成了可选值，需要用?来使用
+    self?.somePropety = ...
+    
+    statemems
+}
+</code></pre>
+
+<h2 id="toc_16">相关文章</h2>
+
+<p>1、<a href="https://fengqiangboy.com/14758046879967.html">Swift3入门教程之一基础部分</a></p>
+
+<h2 id="toc_17">参考资料：</h2>
+
+<ol>
+<li><a href="https://developer.apple.com/sample-code/swift/downloads/Standard-Library.zip">Swift Standard Library Playground</a></li>
+<li><a href="https://swift.org/">Swift.org</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/content/documentation/Swift/Conceptual/Swift_Programming_Language/">The Swift Programming Language (Swift 3)</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/content/documentation/Swift/Conceptual/BuildingCocoaApps/">Using Swift with Cocoa and Objective-C (Swift 3)</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2016/404/">WWDC2016:Session 404 Getting Started with Swift</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Swift3入门教程之一基础部分]]></title>
+    <link href="http://fengqiangboy.com/14758046879967.html"/>
+    <updated>2016-10-07T09:44:47+08:00</updated>
+    <id>http://fengqiangboy.com/14758046879967.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">文档更新说明：</h3>
+
+<pre><code class="language-text">•   2016年10月07日 v1.0 初稿
+</code></pre>
+
+<h2 id="toc_1">0、前言</h2>
+
+<p>随着iOS10的发布，相信大部分公司都会把app的适配最低版本直接拉倒iOS8，毕竟维护和开发成本都会省掉不少。<br/>
+在iOS8上面，有一个重要的特性，就是可以使用swift了，而swift也已经发布了3.0版本，已经相当稳定了，所以，这个时候开始使用swift是一个明智的选择。<br/>
+这篇文章适合于有一定iOS开发经验的看，如果是完全没有iOS开发经验的，可能本文并不适合你。</p>
+
+<h2 id="toc_2">1、常量</h2>
+
+<ul>
+<li>常量是不需要被改变的，用let关键字声明</li>
+<li>后面跟着常量的名称，冒号后面表示产量的类型，等号后面表示常量的值。</li>
+<li>在实际应用当中，一般省略冒号后面的类型声明，swift会自动根据我们的赋值来推断该常量的类型。</li>
+</ul>
+
+<pre><code class="language-swift">let language: String = &quot;Swift&quot;
+let introduced: Int = 2014
+let isAwesome: Bool = true
+</code></pre>
+
+<h2 id="toc_3">2、变量</h2>
+
+<ul>
+<li>可以被修改的值，我们称为变量</li>
+<li>在swift中，变量使用var声明，格式和常量的声明一致。</li>
+</ul>
+
+<pre><code class="language-swift">let language = &quot;Swift&quot;
+let introduced = 2014
+let isAwesome = true
+var version = 1
+version = 3
+isAwesome = false  //这行报错
+</code></pre>
+
+<p>运行上面的代码，可以发现，编译器在最后一行报了错误，因为我们试图修改了一个常量的值。</p>
+
+<h2 id="toc_4">3、字符串拼接</h2>
+
+<ul>
+<li>swift中直接使用“+”来拼接字符串即可</li>
+</ul>
+
+<pre><code class="language-swift">let conference = &quot;WWDC&quot;
+let message = &quot;Hello, &quot; + conference + &quot;!&quot;
+// &quot;Hello, WWDC!&quot;
+</code></pre>
+
+<h2 id="toc_5">4、字符串插值</h2>
+
+<ul>
+<li>字符串的拼接不仅仅局限于字符串之间，swift也可以直接把值插入字符串中。</li>
+<li>把值连接到字符串中，只需要把值放入<code>\()</code>中，</li>
+<li>括号内还可以是一个表达式。例如：<code>\(year + 1)</code></li>
+</ul>
+
+<pre><code class="language-swift">let conference = &quot;WWDC&quot;
+let message = &quot;Hello, \(conference)!&quot;
+// &quot;Hello, WWDC!&quot;
+</code></pre>
+
+<pre><code class="language-swift">let conference = &quot;WWDC&quot;
+let year = 2016
+let message = &quot;Hello, \(conference) \(year)!&quot;
+// &quot;Hello, WWDC 2016!&quot;
+</code></pre>
+
+<pre><code class="language-swift">let conference = &quot;WWDC&quot;
+let year = 2016
+let message = &quot;Hello, \(conference) \(year + 1)!&quot;
+// &quot;Hello, WWDC 2017!&quot;
+</code></pre>
+
+<h2 id="toc_6">5、集合：数组和字典</h2>
+
+<ul>
+<li>swift中，数组和字典的声明方式很相似，</li>
+<li>为了安全，我们可以在名字后面声明类型。</li>
+</ul>
+
+<pre><code class="language-swift">let names: [String] = [&quot;Lily&quot;, &quot;Santiago&quot;, &quot;Justyn&quot;, &quot;Aadya&quot;]
+let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
+</code></pre>
+
+<ul>
+<li>当然，swift也可以自动推测数组和字典的类型，因此，在实际应用中，可以省略类型</li>
+</ul>
+
+<pre><code class="language-swift">let names = [&quot;Lily&quot;, &quot;Santiago&quot;, &quot;Justyn&quot;, &quot;Aadya&quot;]
+// an array of String values
+let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
+// a dictionary with String keys and Int values
+</code></pre>
+
+<h2 id="toc_7">6、循环</h2>
+
+<h3 id="toc_8">6.1 While 和 Repeat-While 循环</h3>
+
+<ul>
+<li>while循环，先检查条件是否成立，再执行循环体</li>
+<li>repeat循环，先执行循环体，再判断条件是否成立</li>
+</ul>
+
+<pre><code class="language-swift">while !endOfFile {
+   readLine()
+}
+
+
+repeat {
+   performTask()
+} while tasksRemaining &gt; 0
+</code></pre>
+
+<h3 id="toc_9">6.2 For-In循环</h3>
+
+<h4 id="toc_10">6.2.1 遍历字符串</h4>
+
+<pre><code class="language-swift">let dogString = &quot;Dog?!🐶&quot;
+for character in dogString.characters {
+   print(character)
+}
+
+
+/*
+输出结果：
+D
+o
+g
+?
+!
+🐶
+*/
+</code></pre>
+
+<h4 id="toc_11">6.2.2 遍历一个闭合区间</h4>
+
+<p>使用<code>1...5</code>表示[1,5]的闭合区间</p>
+
+<pre><code class="language-swift">for number in 1...5 {
+   print(&quot;\(number) times 4 is \(number * 4)&quot;)
+}
+
+/*
+输出结果：
+1 times 4 is 4
+2 times 4 is 8
+3 times 4 is 12
+4 times 4 is 16
+5 times 4 is 20
+*/
+</code></pre>
+
+<h4 id="toc_12">6.2.3 遍历半开半闭合区间</h4>
+
+<ul>
+<li>使用<code>1..&lt;5</code>表示[1,5)的半开半闭区间</li>
+<li>没有这样的写法<code>1&lt;..5</code></li>
+</ul>
+
+<pre><code class="language-swift">let results = [7, 52, 9, 33, 6, 12, 86, 4, 22, 18, 3]
+let maxResultCount = 5
+for index in 0..&lt;maxResultCount {
+   print(&quot;Result \(index) is \(results[index])&quot;)
+}
+
+/*
+输出结果：
+Result 0 is 7
+Result 1 is 52
+Result 2 is 9
+Result 3 is 33
+Result 4 is 6
+*/
+</code></pre>
+
+<h4 id="toc_13">6.2.4 遍历数组</h4>
+
+<ul>
+<li>遍历的临时变量不需要用let声明，默认以let声明，如果需要，可以直接换成var声明，如：<code>for var name in [...]</code></li>
+<li>如果遍历的临时变量不需要被使用到，可以用“<code>_</code>”来代替</li>
+</ul>
+
+<pre><code class="language-swift">for name in [&quot;Lily&quot;, &quot;Santiago&quot;, &quot;Justyn&quot;, &quot;Aadya&quot;] {
+   print(&quot;Hello, \(name)!&quot;)
+}
+
+/*
+输出结果：
+Hello, Lily!
+Hello, Santiago!
+Hello, Justyn!
+Hello, Aadya!
+*/
+</code></pre>
+
+<h4 id="toc_14">6.2.5 遍历字典</h4>
+
+<ul>
+<li>使用元组<code>(key, value)</code>来表示字典的键和值</li>
+<li>元组是可以绑定多个值的一个类型，用括号表示，值之间用逗号分割开来</li>
+</ul>
+
+<pre><code class="language-swift">let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
+for (name, age) in ages {
+   print(&quot;\(name) is \(age) years old&quot;)
+}
+
+/*
+输出结果：
+Mohsen is 17 years old
+Amy is 40 years old
+Graham is 5 years old
+*/
+</code></pre>
+
+<h2 id="toc_15">7、可变集合</h2>
+
+<h3 id="toc_16">7.1、可变数组</h3>
+
+<p>使用var声明的数组就是可变数组，可以通过几种方式修改可变数组中的值。</p>
+
+<ul>
+<li>使用<code>.append</code>方法，给数组添加一个元素</li>
+<li>使用下标<code>packingList[2]</code>的方式，修改数组指定位置的元素(小心越界)</li>
+<li>使用<code>.append(contentsOf:[])</code>给数组增加一系列的值</li>
+<li>使用下标<code>packingList[3...5]</code>修改数组指定位置范围的值，使用这个方法的时候，如果等号右边的元素数量大于左边的范围，会扩充原数组的长度，反之会减少</li>
+</ul>
+
+<pre><code class="language-swift">var packingList = [&quot;Socks&quot;, &quot;Shoes&quot;]
+print(packingList[0])
+packingList.append(&quot;Trousers&quot;)
+packingList[2] = &quot;Jeans&quot;
+packingList.append(contentsOf: [&quot;Shorts&quot;, &quot;Sandals&quot;, &quot;Sunblock&quot;])
+packingList[3...5] = [&quot;Hoodie&quot;, &quot;Scarf&quot;]
+
+
+/*
+输出结果：
+
+[&quot;Socks&quot;, &quot;Shoes&quot;, &quot;Jeans&quot;, &quot;Hoodie&quot;, &quot;Scarf&quot;]
+
+*/
+</code></pre>
+
+<h3 id="toc_17">7.2、可变字典</h3>
+
+<ul>
+<li>可变字典的修改和增加方式都可以用下标来直接操作</li>
+</ul>
+
+<pre><code class="language-swift">var ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
+ages[&quot;Justyn&quot;] = 67     // Adds a new value for &quot;Justyn&quot;
+ages[&quot;Justyn&quot;] = 68     // Changes the value for &quot;Justyn&quot;
+
+/*
+输出结果：
+
+[&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5, &quot;Justyn&quot;: 68]
+
+*/
+</code></pre>
+
+<h2 id="toc_18">8、Optional</h2>
+
+<h3 id="toc_19">8.1、从字典中检索值</h3>
+
+<ul>
+<li>从字典中检索值需要考虑一个问题，就是字典中可能并没有存储我们需要检索的值，比如，在下面的字典中，我们如果去获取Devon、Daryl、Daniel的值，这时候会获得一个空值<code>nil</code></li>
+<li>在获取之后，我们需要判断一下值是否为<code>nil</code></li>
+</ul>
+
+<pre><code class="language-swift">let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
+// Devon?
+// Daryl?
+// Daniel?
+</code></pre>
+
+<h3 id="toc_20">8.2、加上nil判断</h3>
+
+<ul>
+<li>对于可能返回<code>nil</code>的值，我们可以使用swift的Optional特性，在类型后面加一个<code>?</code>，比如:<code>Int?</code>，这就表示这个值可能为<code>nil</code></li>
+<li>从字典获取指定的值，加上判断之后就变成了下面的代码</li>
+</ul>
+
+<pre><code class="language-swift">let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
+let possibleAge: Int? = ages[&quot;Daryl&quot;]
+if possibleAge == nil {
+   print(&quot;Age not found.&quot;)
+}
+
+
+/*
+输出结果：
+
+Age not found.
+
+*/
+
+</code></pre>
+
+<h3 id="toc_21">8.3、nil值判断优化  If-Let</h3>
+
+<ul>
+<li>上面的判断看起来没问题，但是在实际应用中，我们可能只关心值不为<code>nil</code>的情况，所以，上面的写法会有些臃肿</li>
+<li>swift中提供了<code>If-Let</code>语句，只有在值不为<code>nil</code>的时候才执行条件体</li>
+</ul>
+
+<pre><code class="language-swift">let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
+if let age = ages[&quot;Amy&quot;] {
+   print(&quot;An age of \(age) was found.&quot;)
+}
+
+
+/*
+输出结果：
+
+An age of 40 was found.
+
+*/
+</code></pre>
+
+<h2 id="toc_22">9、 判断结构</h2>
+
+<h3 id="toc_23">9.1、if判断结构</h3>
+
+<ul>
+<li>和其它语言相似，只是swift中，条件语句不需要小括号括号括起来。</li>
+<li>每个条件的执行语句需要用大括号括起来</li>
+</ul>
+
+<pre><code class="language-swift">let age = 32
+if age == 1 {
+   print(&quot;Happy first birthday!&quot;)
+} else if age == 40 {
+   print(&quot;Happy 40th birthday!&quot;)
+} else {
+   print(&quot;Happy plain old boring birthday.&quot;)
+}
+</code></pre>
+
+<h3 id="toc_24">9.2、Switch 判断结构</h3>
+
+<ul>
+<li><code>case</code>可以直接匹配一个精确的值，包括字符串变量也可以直接匹配</li>
+<li><code>case</code>也可以匹配一个范围。如：<code>case 13...19:</code></li>
+<li><code>case</code>中还可以加入更精确的条件匹配语句。如：<code>case let decade where decade % 10 == 0:</code></li>
+<li>每个<code>case</code>语句不需要break来结束循环，会自动结束，如果需要执行下一个<code>case</code>的语句，需要加上<code>fallthrough</code>关键字</li>
+<li><code>switch</code>中需要匹配完整所有的情况，否则会报错</li>
+</ul>
+
+<pre><code class="language-swift">let age = 32
+switch age {
+case 1:
+   print(&quot;Happy first birthday!&quot;)
+case 13...19:
+   print(&quot;Happy birthday, teenager!&quot;)
+case let decade where decade % 10 == 0:
+   print(&quot;Happy significant \(decade)th birthday!&quot;)
+default:
+   print(&quot;Happy plain old boring birthday.&quot;)
+}
+</code></pre>
+
+<ul>
+<li>switch可以直接匹配元组，以达到匹配同时判断多个值的目的，如下：</li>
+<li>“<code>_</code>” 表示该位置匹配任何值</li>
+</ul>
+
+<pre><code class="language-swift">let userName = &quot;admin&quot;
+let passwordIsValid = true
+switch (userName, passwordIsValid) {
+case (&quot;admin&quot;, true):
+   print(&quot;Welcome back, administrator!&quot;)
+case (&quot;guest&quot;, _):
+   print(&quot;Guests are not allowed in this restricted area.&quot;)
+case (_, let isValid):
+   print(isValid ? &quot;Welcome to the restricted area!&quot; : &quot;ACCESS DENIED.&quot;)
+}
+
+
+/*
+输出结果：
+
+Welcome back, administrator!
+
+*/
+</code></pre>
+
+<h2 id="toc_25">相关文章</h2>
+
+<p>1、<a href="https://fengqiangboy.com/14758321095435.html">Swift3入门教程之二---函数</a></p>
+
+<h2 id="toc_26">参考资料：</h2>
+
+<ol>
+<li><a href="https://developer.apple.com/sample-code/swift/downloads/Standard-Library.zip">Swift Standard Library Playground</a></li>
+<li><a href="https://swift.org/">Swift.org</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/content/documentation/Swift/Conceptual/Swift_Programming_Language/">The Swift Programming Language (Swift 3)</a></li>
+<li><a href="https://developer.apple.com/library/prerelease/content/documentation/Swift/Conceptual/BuildingCocoaApps/">Using Swift with Cocoa and Objective-C (Swift 3)</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2016/404/">WWDC2016:Session 404 Getting Started with Swift</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS开发-如何优雅地集成支付宝支付功能]]></title>
+    <link href="http://fengqiangboy.com/14702334322974.html"/>
+    <updated>2016-08-03T22:10:32+08:00</updated>
+    <id>http://fengqiangboy.com/14702334322974.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">文档更新说明：</h3>
+
+<pre><code class="language-text">•   2016年08月03日 v1.0 初稿
+</code></pre>
+
+<h2 id="toc_1">前言</h2>
+
+<p>这篇文章不是从0开始接入支付宝SDK的教程，因为支付宝官网的官方文档已经说得很清楚了，如果您是为了找一篇接入支付宝的教程，那么这里更适合你。<a href="https://doc.open.alipay.com/doc2/detail.htm?spm=a219a.7629140.0.0.qV9mLB&amp;treeId=59&amp;articleId=103675&amp;docType=1">支付宝集成流程详解</a>。</p>
+
+<p>那么这篇文章到底要表达一点什么呢？其实也就一点关于支付宝接入的注意事项而已。</p>
+
+<h3 id="toc_2">1、支付信息签名应该放在服务端还是客户端？</h3>
+
+<p>支付宝对签名的要求是只要按照格式正确签名即可，那么这就有个问题了，我们应该把签名放在客户端还是服务器呢？从支付宝官网下载下来的demo也是把签名过程放在客户端的，很多人就会跟着在客户端做签名过程了，笔者以前也是这么做的。但是回头一想，签名过程在客户端，那也就是说需要把私钥放在客户端，这显然是很危险的，稍不留神就被别人逆向把私钥拿到了，给我们的支付安全引入了不必要的危险。</p>
+
+<p>答案很明显，我们应该把签名流程放在服务器端。原因如下：</p>
+
+<ul>
+<li>1、保证私钥安全；</li>
+<li>2、免得客户端要导入那么多签名用的第三方库；</li>
+<li>3、支付宝官方文档上面说得很清楚。&quot;出于安全考虑，请商户尽量把私钥保存在服务端，在服务端进行签名验签。&quot;</li>
+</ul>
+
+<h3 id="toc_3">2、移动支付和手机网页支付有什么区别和联系？</h3>
+
+<p>这两种支付方式是需要分别签约的，两者的支付权限是分开的。</p>
+
+<ul>
+<li>移动支付：接入SDK，通过支付宝的SDK来调起支付宝APP完成支付，如果用户没有安装支付宝APP，则打开H5支付页面；</li>
+<li>手机网页支付：打开一个支付宝的H5支付页面，支付全程在H5页面上完成。</li>
+</ul>
+
+<p>看到这里，或许你会认为移动支付功能显然比手机网页支付强大，因为移动支付是可以在用户没安装支付宝的时候打开H5支付页面的。<br/>
+实际上，手机网页支付也是可以调起APP来支付的，只要在网页支付请求参数里面加个app_pay=Y，然后支付宝就会在用户安装了支付宝APP的情况下调起支付宝APP来完成支付。<br/>
+这样调是有一个缺陷的，就是用户完成或者取消支付的话，不能自动跳回我们自己的APP内。<br/>
+<img src="media/14702334322974/14702335117009.jpg" alt=""/></p>
+
+<h3 id="toc_4">3、怎么通过网页支付页面调起支付宝APP支付，并且在完成之后跳回我们自己的APP呢？</h3>
+
+<p>这种支付集成方式应该是native开发者最喜欢的了吧。要达到这种效果，需要两个必要条件：</p>
+
+<ul>
+<li>1、已经开通了网页支付权限</li>
+<li>2、已经开通了移动支付权限</li>
+<li>3、用户手机内有安装支付宝APP</li>
+</ul>
+
+<h4 id="toc_5">3.1具体实现方式：</h4>
+
+<ul>
+<li>1、 实现UIWebViewDelegate协议，拦截H5的URL；</li>
+<li>2、 调用SDK提供的“获取订单信息接口(fetchOrderInfoFromH5PayUrl)”对拦截的URL进行处理：</li>
+</ul>
+
+<pre><code class="language-oc">/**
+ *  url order 获取接口
+ *
+ *  @param urlStr     拦截的 url string
+ *
+ *  @return 获取到的url order info
+ */
+- (NSString*)fetchOrderInfoFromH5PayUrl:(NSString*)urlStr;
+</code></pre>
+
+<ul>
+<li>3、通过上面的方法，如果返回的字符串长度不为0，则说明这个链接是属于支付宝的支付链接，这时，调用支付接口，打开支付宝APP完成支付。</li>
+</ul>
+
+<pre><code class="language-oc">/**
+ *  url支付接口
+ *
+ *  @param orderStr       订单信息
+ *  @param schemeStr      调用支付的app注册在info.plist中的scheme
+ *  @param compltionBlock 支付结果回调Block
+ */
+- (void)payUrlOrder:(NSString *)orderStr
+         fromScheme:(NSString *)schemeStr
+           callback:(CompletionBlock)completionBlock;
+</code></pre>
+
+<ul>
+<li>例子：</li>
+</ul>
+
+<pre><code class="language-oc">- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    NSString* orderInfo = [[AlipaySDK defaultService]fetchOrderInfoFromH5PayUrl:[request.URL absoluteString]];
+    if (orderInfo.length &gt; 0) {
+        // 调用支付接口进行支付
+        [[AlipaySDK defaultService]payUrlOrder:orderInfo fromScheme:@&quot;alisdkdemo&quot; callback:^(NSDictionary* result) {
+            // 处理返回结果
+            NSString* resultCode = result[@&quot;resultCode&quot;];
+            //建议操作: 根据resultCode做处理
+ 
+            // returnUrl 代表 第三方App需要跳转的成功页URL
+            NSString* returnUrl = result[@&quot;returnUrl&quot;];
+            //建议操作: 打开returnUrl
+        }];
+ 
+        return NO;
+    }
+    return YES;
+}
+</code></pre>
+
+<h2 id="toc_6">总结</h2>
+
+<p>何为优雅？百度是这样解释的：优雅是一种和谐，类似于美丽，只不过美丽是上天的恩赐，而优雅是艺术的产物。<br/>
+在编程中，用最少的代码实现最优秀的功能，这大概就是优雅吧。在本文中，如果我们能在网页端做到调用APP支付，那么对于APP开发者来说是多么优雅的编程方式，不超过20行代码就能完成支付宝的集成，并且还能在iOS、安卓和Web端复用这个支付网页。多么优雅~<br/>
+这里再多说一句，吐槽一下微信的支付，还不支持H5方式的支付~</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Python学习笔记-基础篇]]></title>
+    <link href="http://fengqiangboy.com/14695444360650.html"/>
+    <updated>2016-07-26T22:47:16+08:00</updated>
+    <id>http://fengqiangboy.com/14695444360650.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">文档更新说明：</h3>
+
+<pre><code class="language-text">•   2016年07月26日 v1.0  写到一半停电了
+•   2016年07月28日 v1.0  完成了基础部分
+</code></pre>
+
+<p>学习Python已经两天了，简单整理一下基础部分的笔记，在这要感谢下这篇教程，我就是跟着这里学习的。<br/>
+教程作者：Vamei 出处：<a href="https://www.cnblogs.com/vamei">https://www.cnblogs.com/vamei</a></p>
+
+<h2 id="toc_1">1、Hello World!</h2>
+
+<ul>
+<li>print</li>
+</ul>
+
+<blockquote>
+<p>print是一个常用函数，其功能就是输出括号中得字符串。</p>
+</blockquote>
+
+<p>（在Python 2.x中，print还可以是一个关键字，可写成print &#39;Hello World!&#39;，但这在3.x中行不通 ）</p>
+
+<ul>
+<li><p>命令行模式: 运行Python，在命令行输入命令并执行。</p></li>
+<li><p>程序模式: 写一段Python程序并运行，和运行脚本一样的。</p></li>
+</ul>
+
+<h2 id="toc_2">2、基本数据类型</h2>
+
+<ul>
+<li><p>变量不需要声明，不需要删除，可以直接回收。</p></li>
+<li><p>type(): 查询数据类型</p></li>
+<li><p>整数，浮点数，真值，字符串</p></li>
+</ul>
+
+<pre><code class="language-python">a=10         # int 整数
+
+a=1.3        # float 浮点数
+
+a=True       # 真值 (True/False)
+
+a=&#39;Hello!&#39;   # 字符串
+
+以上是最常用的数据类型，对于字符串来说，也可以用双引号。
+</code></pre>
+
+<h2 id="toc_3">3、sequence 序列</h2>
+
+<ul>
+<li><p>tuple元素不可变，相当于OC中的不可变数组，swift中的元组</p></li>
+<li><p>list元素可变，相当于OC中的可变数组</p></li>
+<li><p>序列的引用 s[2], s[1:8:2]</p></li>
+</ul>
+
+<pre><code class="language-python">序列元素的下标从0开始：
+
+&gt;&gt;&gt;print s1[0]
+
+&gt;&gt;&gt;print s2[2]
+
+&gt;&gt;&gt;print s3[1][2]
+
+由于list的元素可变更，你可以对list的某个元素赋值：
+
+&gt;&gt;&gt;s2[1] = 3.0
+
+&gt;&gt;&gt;print s2
+
+</code></pre>
+
+<pre><code class="language-text">
+范围引用： 基本样式[下限:上限:步长]
+
+&gt;&gt;&gt;print s1[:5]             # 从开始到下标4 （下标5的元素 不包括在内）
+
+&gt;&gt;&gt;print s1[2:]             # 从下标2到最后
+
+&gt;&gt;&gt;print s1[0:5:2]          # 从下标0到下标4 (下标5不包括在内)，每隔2取一个元素 （下标为0，2，4的元素）
+
+&gt;&gt;&gt;print s1[2:0:-1]         # 从下标2到下标1
+
+从上面可以看到，在范围引用的时候，如果写明上限，那么这个上限本身不包括在内。
+
+尾部元素引用
+
+&gt;&gt;&gt;print s1[-1]             # 序列最后一个元素
+
+&gt;&gt;&gt;print s1[-3]             # 序列倒数第三个元素
+
+同样，如果s1[0:-1], 那么最后一个元素不会被引用 （再一次，不包括上限元素本身）
+</code></pre>
+
+<ul>
+<li>字符串是一种tuple</li>
+</ul>
+
+<h2 id="toc_4">4、运算</h2>
+
+<ul>
+<li><p>数学： +, -, *, /, **, %</p></li>
+<li><p>判断： ==, !=, &gt;, &gt;=, &lt;, &lt;=, in, is, is not</p></li>
+<li><p>逻辑： and, or, not</p></li>
+</ul>
+
+<h2 id="toc_5">5、缩进和选择</h2>
+
+<h3 id="toc_6">5.1、缩进</h3>
+
+<ul>
+<li>在其他语言中，用缩进来代表一个代码块，表示代码的所属关系，Python中直接用缩进来表示代码的所属关系，所以，缩进非常重要。<br/>
+如：</li>
+</ul>
+
+<pre><code class="language-python">if i &gt; 0:
+    x = 1
+    y = 2
+</code></pre>
+
+<ul>
+<li>if ...之后的:(冒号), 还有就是x = 1 和 y =2前面有四个空格的缩进。通过缩进，Python识别出这两个语句是隶属于if。</li>
+<li>Python这样设计的理由纯粹是为了程序好看，其实我觉得这样也不是很好看，很容易看眼花了。</li>
+</ul>
+
+<h3 id="toc_7">5.2、if语句</h3>
+
+<pre><code class="language-python">if语句之后的冒号
+
+以四个空格的缩进来表示隶属关系, Python中不能随意缩进
+
+if  &lt;条件1&gt;:
+
+    statement
+
+elif &lt;条件2&gt;:
+
+    statement
+
+elif &lt;条件3&gt;：
+
+    statement
+
+else:
+
+    statement
+</code></pre>
+
+<h2 id="toc_8">6、循环</h2>
+
+<ul>
+<li>range()</li>
+</ul>
+
+<blockquote>
+<p>range()函数是用来建表的，这个表的元素都是整数，从0开始，下一个元素比前一个大1， 直到函数中所写的上限 （不包括该上限本身）</p>
+</blockquote>
+
+<pre><code class="language-python">#range(start [, stop [, step ]])
+idx = range(5)
+print idx
+#结果为：[0,1,2,3,4]
+</code></pre>
+
+<ul>
+<li>for 元素 in 序列:</li>
+</ul>
+
+<pre><code class="language-python">for a in [3,4.4,&#39;life&#39;]:
+    print a
+</code></pre>
+
+<ul>
+<li>while 条件:</li>
+</ul>
+
+<pre><code class="language-python">while i &lt; 10:
+    print i
+    i = i + 1
+</code></pre>
+
+<ul>
+<li>continue</li>
+</ul>
+
+<blockquote>
+<p>结束本次循环，直接跳到下次循环的条件判断里面去</p>
+</blockquote>
+
+<pre><code class="language-python">for i in range(10):
+    if i == 2: 
+        continue
+    print i
+</code></pre>
+
+<ul>
+<li>break</li>
+</ul>
+
+<blockquote>
+<p>结束循环，不在进行</p>
+</blockquote>
+
+<pre><code class="language-python">for i in range(10):
+    if i == 2:        
+        break
+    print i
+</code></pre>
+
+<ul>
+<li>return</li>
+</ul>
+
+<blockquote>
+<p>结束函数的执行</p>
+</blockquote>
+
+<h2 id="toc_9">7、函数</h2>
+
+<pre><code class="language-python">def function_name(a,b,c):
+    statement
+    return something  # return不是必须的
+</code></pre>
+
+<ul>
+<li>通过位置，传递参数。</li>
+</ul>
+
+<pre><code class="language-python">a = 1
+
+def change_integer(a):
+    a = a + 1
+    return a
+
+print change_integer(a)
+print a
+</code></pre>
+
+<ul>
+<li>基本数据类型的参数：值传递</li>
+</ul>
+
+<pre><code class="language-python">b = [1,2,3]
+
+def change_list(b):
+    b[0] = b[0] + 1
+    return b
+
+print change_list(b)
+print b
+</code></pre>
+
+<ul>
+<li>表作为参数：指针传递</li>
+</ul>
+
+<h2 id="toc_10">8、面向对象的基本概念</h2>
+
+<pre><code class="language-python">class ClassName(SuperClassName):
+    att1 = &quot;1&quot;
+    
+    def move(self, dx, dy):
+        position = [0,0]
+        position[0] = position[0] + dx
+        position[1] = position[1] + dy
+        return position
+</code></pre>
+
+<ul>
+<li><p>方法的第一个参数必须是self，无论是否用到。</p></li>
+<li><p>建立对一个对象： 对象名 = 类名()</p>
+<p>引用对象的属性： object.attribute</p></li>
+<li><p>通过self调用类属性，谁调用，self就是谁</p></li>
+<li><p><strong>init</strong>(): 在建立对象时自动执行</p></li>
+<li><p>类属性和对象的性质的区别</p></li>
+</ul>
+
+<blockquote>
+<p>属性是建立的时候就写好的，对象的薪资一般是通过self添加的</p>
+</blockquote>
+
+<h2 id="toc_11">9、几个常用方法</h2>
+
+<ul>
+<li>1、len() </li>
+</ul>
+
+<blockquote>
+<p>内置函数len()用来返回list所包含的元素的总数。</p>
+</blockquote>
+
+<ul>
+<li>2、dir() </li>
+</ul>
+
+<blockquote>
+<p>用来查询一个类或者对象所有属性。</p>
+</blockquote>
+
+<ul>
+<li>3、help()</li>
+</ul>
+
+<blockquote>
+<p>用来查询的说明文档。</p>
+</blockquote>
+
+<ul>
+<li><p>数据结构list(列表)是一个类。</p></li>
+<li><p>运算符是方法</p></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS开发中，m3u8格式视频的下载缓存]]></title>
+    <link href="http://fengqiangboy.com/14685880528825.html"/>
+    <updated>2016-07-15T21:07:32+08:00</updated>
+    <id>http://fengqiangboy.com/14685880528825.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">文档更新说明：</h3>
+
+<pre><code class="language-text">•   2016年07月22日 v1.0  初稿
+</code></pre>
+
+<blockquote>
+<p>原创内容，转载请注明出处。谢谢！</p>
+
+<p>这里就不普及m3u8文件是什么了，不懂的可以谷歌一下，一大堆的资料，苹果也有专门的文档来介绍m3u8格式的视频。</p>
+</blockquote>
+
+<h2 id="toc_1">序言</h2>
+
+<p>距离上篇博客已经有两个月时间了，这两个月时间无数次提笔写博客，可是每每提笔写博客，写两行又想放下，可能是广州的天气太炎热吧，不过究其原因还是我们很多时候不知道自己想要的是什么吧。唐僧那句&quot;贫僧自东土大唐而来去往西天取经&quot;，确实非常完美，说出了自己是谁，从哪里来，要去何处。我们平时忙忙碌碌，不就是为了得到这几个问题答案吗？<br/>
+开头磨叽几句，会少多少浏览量？哈哈！</p>
+
+<h2 id="toc_2">下载思路</h2>
+
+<p>1、获取m3u8文件；<br/>
+2、解析m3u8文件，将其中的每个ts文件的地址拿到；<br/>
+3、分别将每个ts文件下载下来，放到文件夹中；<br/>
+4、打开本地服务器，把本地服务器的根目录设置到刚才的下载路径；<br/>
+5、使用AVPlayer播放本地的m3u8文件。</p>
+
+<h2 id="toc_3">关键代码</h2>
+
+<p>1、下载m3u8文件和ts文件共用同一个方法，使用AFN来创建下载请求，将对应的url放进来，下载到制定的文件目录</p>
+
+<pre><code class="language-text">- (void)downloadWithUrl:(NSURL *)url {
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+        NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+        NSURL *documentsDirectoryURL = [NSURL fileURLWithPath:path];
+        return [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
+    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+        NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        path = [path stringByAppendingPathComponent:@&quot;video&quot;];
+        NSURL *documentsDirectoryURL = [NSURL fileURLWithPath:path];
+        documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
+        NSFileManager *fileManager = [[NSFileManager alloc] init];
+        NSError *err;
+        [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+        [fileManager moveItemAtURL:filePath toURL:documentsDirectoryURL error:&amp;err];
+        NSLog(@&quot;File downloaded to: %@&quot;, path);
+    }];
+    
+    [downloadTask resume];
+}
+
+</code></pre>
+
+<p>2、解析m3u8文件，将其中的每个ts文件的地址拿到<br/>
+3、分别将每个ts文件下载下来，放到文件夹中</p>
+
+<ul>
+<li>这里使用了M3U8Handler这个第三方库来解析m3u8文件，需要注意的是这个库并不能解析所有的m3u8文件，所以可能会和你的m3u8文件格式不兼容，遇到这种情况就需要你自己写解析代码了。</li>
+</ul>
+
+<pre><code class="language-text">- (IBAction)startHandleClick:(UIButton *)sender {
+    M3U8Handler *m3u8Handler = [M3U8Handler new];
+    
+    [m3u8Handler praseM3U8With:[NSURL URLWithString:VideoUrl] handlerDelegate:self];
+}
+
+
+#pragma mark - M3U8HandlerDelegate
+- (void)praseM3U8InfoFinish:(M3U8Handler *)handler {
+    NSLog(@&quot;解析完成&quot;);
+    for (SegmentInfo *url in handler.segments) {
+        [self downloadWithUrl:[NSURL URLWithString:url.tsURL]];
+    }
+    
+}
+
+- (void)M3U8Handler:(M3U8Handler *)handler praseError:(NSError *)error {
+    NSLog(@&quot;解析错误-- %@&quot;, error);
+}
+
+</code></pre>
+
+<p>4、打开本地服务器，把本地服务器的根目录设置到刚才的下载路径<br/>
+这里我使用的是GCDWebServer这个库来创建本地服务器的，本地服务器初始化代码如下：</p>
+
+<pre><code class="language-text">- (void)setWebSever {
+    self.webServer = [[GCDWebServer alloc] init];
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    path = [NSString stringWithFormat:@&quot;%@/video/&quot;, path];
+    [self.webServer addGETHandlerForBasePath:@&quot;/&quot; directoryPath:path indexFilename:@&quot;list.m3u8&quot; cacheAge:3600 allowRangeRequests:YES];
+    [self.webServer startWithPort:8080 bonjourName:nil];
+}
+</code></pre>
+
+<p>5、使用AVPlayer播放本地的m3u8文件。</p>
+
+<p>AVPlayer就做了些简单的初始化，这里要注意的是把路径换成本地路径，AVPlayer的请求路径、本地服务器的根目录路径、下载文件保存路径，这三者一定要正确，不然会造成找不到数据的问题</p>
+
+<pre><code class="language-text">- (void)buildPlayer {
+    NSURL *url = [NSURL URLWithString:@&quot;http://localhost:8080/list.m3u8&quot;];
+    
+    AVURLAsset *playerAsset = [AVURLAsset assetWithURL:url];
+    
+    AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:playerAsset];
+    
+    AVPlayer *player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
+    
+    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+    
+    playerLayer.frame = CGRectMake(0, 64, 320, 160);
+    
+    [self.view.layer addSublayer:playerLayer];
+    
+    self.player = player;
+    
+    //监听播放状态变化
+    [self.player addObserver:self forKeyPath:@&quot;status&quot;
+                     options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld
+                     context:nil];
+}
+</code></pre>
+
+<h2 id="toc_4">不足与展望</h2>
+
+<p>这个demo只实现了用户点击下载的需求，而不能实现边播边缓存，这样会造成这样的问题，如果用户需要在播放的时候下载，那么就要请求两次，这势必会给服务器带来额外的压力，也会浪费用户的流量。（我之前做过一个边下边播的尝试，但是不理想，征集上面会卡顿。）<br/>
+如果想要把这个用到实际项目中，也会有很多的问题需要考虑，比如说下载文件的目录名，需要不重复，并且要每个视频对应一个文件夹，这样才能够做到真正地有用。<br/>
+时间关系，这里只做了最简单的实现，至少说明这个思路是可以用在m3u8视频的下载上面的。如果您有更好的方案，也欢迎与我联系。</p>
+
+<h2 id="toc_5">项目代码</h2>
+
+<p>附上这个demo的完整工程<br/>
+<a href="https://github.com/fengqiangboy/AVPlayerCacheDemo">https://github.com/fengqiangboy/AVPlayerCacheDemo</a></p>
+
+<p>之前边下边播的残疾demo也附上来吧，希望大家能共同讨论下这个问题：<a href="https://github.com/fengqiangboy/AVPlayerWithGCDwebserver">https://github.com/fengqiangboy/AVPlayerWithGCDwebserver</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[git中，如何使用sourcetree管理同一个项目中的多个远程仓库]]></title>
+    <link href="http://fengqiangboy.com/14634059724558.html"/>
+    <updated>2016-05-16T21:39:32+08:00</updated>
+    <id>http://fengqiangboy.com/14634059724558.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">文档更新说明：</h3>
+
+<pre><code class="language-text">•   2016年05月16日 v1.0  初稿
+</code></pre>
+
+<h2 id="toc_1">背景</h2>
+
+<p>        看标题，可能会有点晕，这说的啥玩意啊？实际上，我是想通过那一句话，表达这个意思：<br/>
+        在开发中，我们可能会需要把本地的git仓库同步到两个甚至多个远程git仓库中。<br/>
+        比如说我们可以在bitbucket和oschina上面各建立一个仓库，然后都对应到本地的git仓库来。<br/>
+        这样一来，我们可以保证远程仓库的可靠性，降低远程仓库出问题的风险，相当于做一个备份似的。当然，好处肯定不止这一点。<br/>
+        </p>
+
+<h2 id="toc_2">sourcetree</h2>
+
+<p>        SourceTree 是 Windows 和Mac OS X 下<strong>免费</strong>的 Git 和 Hg 客户端，同时也是Mercurial和Subversion版本控制系统工具。支持创建、克隆、提交、push、pull 和合并等操作。<br/>
+        官网：<a href="https://www.sourcetreeapp.com/">https://www.sourcetreeapp.com/</a><br/>
+        国内下载需要自备梯子。<br/>
+<img src="media/14634059724558/1.png" alt="c"/></p>
+
+<h2 id="toc_3">步骤</h2>
+
+<ul>
+<li>1、在远端那里右击；</li>
+</ul>
+
+<p><img src="media/14634059724558/14634070386615.jpg" alt="c"/></p>
+
+<ul>
+<li>2、点击新建远程，在弹出来的窗口中填写好如下的信息，填好之后点击确定；</li>
+</ul>
+
+<p><img src="media/14634059724558/14634073626103.jpg" alt="c"/></p>
+
+<ul>
+<li>3、接下来，应该能在主界面看到刚才新建的仓库了，对刚才新建的仓库点击右键，会出来两个拉取的菜单，第一个拉取是拉取仓库的分支信息，第二个拉取是拉取仓库的。目前，我们还没有拉取到仓库的分支信息，所以要先拉取仓库的分支信息。选第一个；
+<img src="media/14634059724558/14634075402427.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/>
+<div style="clear:left;"></div></li>
+<li>4、接下来，我们就可以往新建的仓库推送代码了。推送的时候选对仓库就OK了。
+<img src="media/14634059724558/14634079305730.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/>
+<div style="clear:left;"></div></li>
+</ul>
+
+<h2 id="toc_4">小tips</h2>
+
+<p>我们可以设置一个默认的仓库，这样可以在点击上方工具栏的时候默认推送和拉取默认仓库中的代码。<br/>
+如下图，我就设置了OSChina上面的newsMaster为本地newsMaster的默认跟踪分支。<br/>
+<img src="media/14634059724558/14634080917985.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS开发-坑爹的iOS特性]]></title>
+    <link href="http://fengqiangboy.com/14611524452165.html"/>
+    <updated>2016-04-20T19:40:45+08:00</updated>
+    <id>http://fengqiangboy.com/14611524452165.html</id>
+    <content type="html"><![CDATA[
+<ul>
+<li><p>xcode7中，新建两个window会崩溃掉，解决方法就是不要同时存在两个window，用view实现。</p></li>
+<li><p>设置navigationController.navigationBar.alpha属性，可以将导航栏变成透明，但是，但是，切换到后台，再到前台，会被重置成不透明。</p></li>
+<li><p>自定义导航栏左侧按钮之后，滑动返回手势失效。有两种解决方法：</p>
+<ol>
+<li>设置backButton，不过这个属性感觉有点反人类。</li>
+<li>修复返回手势。</li>
+</ol></li>
+</ul>
+
+<pre><code class="language-text">[self.navigationController.interactivePopGestureRecognizer setValue:self.navigationController forKey:@&quot;delegate&quot;];
+</code></pre>
+
+<ul>
+<li>WKWebView中，不支持打开一些链接，比如电话邮件之类的。</li>
+</ul>
+
+<pre><code class="language-text">///判断当前加载的url是否是WKWebView不能打开的协议类型
+- (BOOL)isLoadingWKWebViewDisableScheme:(NSURL *)url
+{
+    BOOL retValue = NO;
+    
+    //判断是否正在加载WKWebview不能识别的协议类型：phone numbers, email address, maps, etc.
+    if([url.scheme isEqualToString:@&quot;tel&quot;]) {
+        UIApplication *app = [UIApplication sharedApplication];
+        if ([app canOpenURL:url]) {
+            [app openURL:url];
+            retValue = YES;
+        }
+    }
+    
+    return retValue;
+}
+
+</code></pre>
+
+<ul>
+<li><p>音频控制台封面图片不能设置为空，否则会crash。</p></li>
+<li><p>不要往frameworks文件夹里面添加第三方framework，否则引入某些其他第三方frameworks的时候会报找不到的错误。</p></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[怎么用自己的域名建立一个个人博客]]></title>
+    <link href="http://fengqiangboy.com/14607325165802.html"/>
+    <updated>2016-04-15T23:01:56+08:00</updated>
+    <id>http://fengqiangboy.com/14607325165802.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">基于githubPage的免费静态页面</h2>
+
+<h4 id="toc_1">文档更新说明</h4>
+
+<ul>
+<li>2015年12月26日 v1.0 初稿</li>
+</ul>
+
+<hr/>
+
+<h4 id="toc_2">个人博客简介</h4>
+
+<p>随着空间、朋友圈和微博等的流行，现在博客是越来越小众化了。在最初，博客的名字叫做Weblog，字面意思就是网络日记。后来可能是有些人发音不标准吧，读成了We Blog，于是乎，blog这个名字就被创造出来了。  </p>
+
+<p>博客的主要作用就是给个人一个自由表达和出版的空间，同时，给人一种交流沟通的方式。但是，这两项功能其实现在被微博和朋友圈这类软件替代地差不多了。现在博客更多的用途是作为一个知识过滤、积累的工具了。这也正中很多技术宅的痛点，所以建立一个个人博客，在技术宅看来应该是一件很酷的事情吧。  </p>
+
+<h3 id="toc_3">搭建主要步骤</h3>
+
+<ol>
+<li>买域名</li>
+<li>github上面建立相关项目</li>
+<li>将域名解析到我们的项目</li>
+<li>开启自己的个人博客</li>
+</ol>
+
+<h3 id="toc_4">1、买<a href="https://baike.baidu.com/link?url=kAE0kXn6XlaNobcju0l4rxAMpFlhEWBYUA6fvuSE4oANmkMH8YuCZ-LbWxjkIXrOFyBUjkn7S5-8S7SxeKLR5K">域名</a></h3>
+
+<p>域名是什么东西我就不解释了，不了解的可以去百度查查，简单的说，他就是我们平时所说的网址（网址的前面那部分）。比如说百度的域名就是“baidu.com”。  </p>
+
+<p>域名是全球统一分配的，我们需要从域名注册网站申请，当然，这个申请是需要一定费用的，每个域名的费用价格不一。开始上网查了下，很多人说国内注册域名比较坑，说封就封，后来我对比了下国内和国外的几个域名注册网站，感觉还是国内的比较便宜实惠点。于是我就选择了<a href="https://wanwang.aliyun.com/">万网</a>，是阿里云旗下的，应该还是比较靠谱的。  </p>
+
+<p>打开之后在最显眼的位置输入想要的域名，查询一下是否已经被注册了，选择一个没有被注册的域名，加入清单，接着去购物车结算。  </p>
+
+<p>付完款之后，域名就已经搞定了，这时可以进入阿里云的<a href="https://home.console.aliyun.com">管理控制台</a>，在域名那一栏，可以看到刚才自己购买的域名啦~</p>
+
+<h3 id="toc_5">2、github上面建立相关项目</h3>
+
+<p><a href="https://github.com/">github</a>是一个代码托管平台，相信程序员们对它都不陌生。这时，打开github，没有注册账号的先注册一个账号，有账号的直接登录。登录之后，可以直接到这个<a href="https://github.com/cnfeat/blog.io">网站</a>点击右上角的fork，成功之后，你的github仓库中中就已经有了这个博客的模板了。</p>
+
+<h3 id="toc_6">3、将域名解析到我们的项目</h3>
+
+<p>网络上面的每个上网设备都有一个唯一的ip地址，我们上网就是通过ip地址来访问网络资源的。在前面，我们申请了自己的域名，但是，现在这个域名是没有和任何Ip地址对应起来的，现在，我们就来把这个域名对应到github的ip上面。  </p>
+
+<p>步骤比较简单，在购买阿里云的时候，其实阿里云已经为我们提供了免费的域名解服务。打开阿里云域名管理控制台界面，选择“解析”。<br/>
+步骤如下：<br/>
+ 1. 添加解析，记录类型：A   主机记录：WWW   解析线路：默认  记录值：23.235.43.133<br/>
+ 2. 继续添加一个解析，记录类型：A   主机记录：@   解析线路：默认  记录值：23.235.43.133<br/>
+这时，解析已经弄好了，但是现在还有个问题就是github服务器并不知道把我们的这个域名对应到哪个项目上面去。<br/>
+其实，在我们刚才克隆出来的项目中，有一个CNAME的文件，在这个文件中，填写好我们的域名就行了。</p>
+
+<h3 id="toc_7">4、搭建完成</h3>
+
+<p>现在，博客已经搭建完成了，在浏览器中输入我们的域名试试看~</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS开发-打通UIWebView和WKWebView的Cookie]]></title>
+    <link href="http://fengqiangboy.com/14611518603473.html"/>
+    <updated>2016-04-20T19:31:00+08:00</updated>
+    <id>http://fengqiangboy.com/14611518603473.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">文档更新说明：</h3>
+
+<pre><code class="language-text">•   2016年04月06日 v1.0  初稿
+•   2016年05月04日 v2.0 添加demo
+</code></pre>
+
+<h2 id="toc_1">一、前言</h2>
+
+<p>&emsp;&emsp;如今，HTML5的迅速发展，使得越来越多的app在网这个方向发展，将网页内嵌到app中，在电商app中尤为常见。而在iOS中，我们在app中内嵌网页无非两种方式，一是使用UIWebView,二是使用WKWebView。两者对比如下：</p>
+
+<h3 id="toc_2">1、UIWebView</h3>
+
+<ul>
+<li>这个控件应该是是在iOS2就开始有的了，历史比较悠久了，也正由于诞生了很多年了，所以在iOS版本之中兼容性比较好。 </li>
+<li>据说，UIWebView存在很多不足，比如说内存泄露等等。 </li>
+<li>UIWebView会将NSHttpRequest的所有请求产生的cookie自动保存，并且，在同一个app内多个UIWebView之间共享，不需要我们做任何操作。 </li>
+<li>由上面的特点可以知道，使用AFNetWorking的请求，也会自动保存cookie，并且和UIWebView共享。</li>
+</ul>
+
+<h3 id="toc_3">2、WKWebView</h3>
+
+<ul>
+<li>WKWebView是在iOS8才诞生的空间，不属于UIKit框架，属于WKWebKit框架，对于要兼容老版本的app不能使用。 </li>
+<li>WKWebView修复了很多UIWebView的不足，并且采用了和Safari一样的JS引擎，据说，性能提升了百分之二三十，内存占用反而降低了百分之二三十。 </li>
+<li>WKWebView不会和NSHttpRequest共享cookie，因此，如果登录接口用AFN，那么WKWebView是读取不到登录之后的cookie的。 </li>
+</ul>
+
+<h2 id="toc_4">二、关于iOS开发中的cookie</h2>
+
+<p>        由NSHttpRequest所产生的请求都会将cookie自动保存，并且多个UIWebView中共享。因此，假设我们在UIWebView-1中登录了某个账号，那么在UIWebView-2中，也是可以读取到这个登录状态的。<br/>
+        那么，这个cookie是保存的哪里的呢？事实上，在iOS中，有两个类是和HTTP的cookie相关的，一个是NSHTTPCookieStorage，一个是NSHTTPCookie。他们的关系就是：NSHTTPCookieStorage中保存了很多的NSHTTPCookie。</p>
+
+<h2 id="toc_5">三、怎么共享cookie</h2>
+
+<p>&emsp;&emsp;回到正题，我们怎么才能在UIWebView和WKWebView中共享cookie数据呢？</p>
+
+<h3 id="toc_6">1、思路</h3>
+
+<p>&emsp;&emsp;思路是这样子的，我们可以通过NSHTTPCookieStorage的一个单例，拿到app中所有的UIWebView的cookie，拿到之后再通过让WKWebView执行一段js代码，把这些cookie设置到WKWebView中，这样就可以实现WKWebView获取UIWebView的cookie了。</p>
+
+<h3 id="toc_7">2、代码</h3>
+
+<blockquote>
+<p>1、新建一个单例</p>
+</blockquote>
+
+<pre><code class="language-text">+ (instancetype)sharedWKCookieSyncManager {
+    static WKCookieSyncManager *sharedWKCookieSyncManagerInstance = nil;
+    static dispatch_once_t predicate;
+    dispatch_once(&amp;predicate, ^{
+        sharedWKCookieSyncManagerInstance = [[self alloc] init];
+    });
+    return sharedWKCookieSyncManagerInstance;
+}
+</code></pre>
+
+<blockquote>
+<p>2、在单例中，新建一个WKProcessPool对象，并且，需要保持这个对象为单例，因为在WKWebView中，只有使用了同一个WKProcessPool的WKWebView，才会共享cookie。</p>
+</blockquote>
+
+<pre><code class="language-text">- (WKProcessPool *)processPool {
+    if (!_processPool) {
+        static dispatch_once_t predicate;
+        dispatch_once(&amp;predicate, ^{
+            _processPool = [[WKProcessPool alloc] init];
+        });
+    }
+    
+    return _processPool;
+}
+</code></pre>
+
+<blockquote>
+<p>3、新建一个setCookie方法，在方法中，请求一个不存在的url，并且在回调中，设置cookie。</p>
+</blockquote>
+
+<pre><code class="language-text">- (void)setCookie {
+    //判断系统是否支持wkWebView
+    Class wkWebView = NSClassFromString(@&quot;WKWebView&quot;);
+    if (!wkWebView) {
+        return;
+    }
+    WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+    config.processPool = self.processPool;
+    self.webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:config];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:self.testUrl];
+    self.webView.navigationDelegate = self;
+    [self.webView loadRequest:request];
+}
+</code></pre>
+
+<blockquote>
+<p>4、在回调中，设置cookie</p>
+</blockquote>
+
+<pre><code class="language-text">#pragma mark - WKNavigationDelegate
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    //取出cookie
+    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    //js函数
+    NSString *JSFuncString = @&quot;function setCookie(name,value,expires)\
+    {\
+        var oDate=new Date();\
+        oDate.setDate(oDate.getDate()+expires);\
+        document.cookie=name+&#39;=&#39;+value+&#39;;expires=&#39;+oDate;\
+    }&quot;;
+    
+    //拼凑js字符串
+    NSMutableString *JSCookieString = JSFuncString.mutableCopy;
+    for (NSHTTPCookie *cookie in cookieStorage.cookies) {
+        NSString *excuteJSString = [NSString stringWithFormat:@&quot;setCookie(&#39;%@&#39;, &#39;%@&#39;, 1);&quot;, cookie.name, cookie.value];
+        [JSCookieString appendString:excuteJSString];
+    }
+    //执行js
+    [webView evaluateJavaScript:JSCookieString completionHandler:nil];
+}
+</code></pre>
+
+<h2 id="toc_8">四、补充</h2>
+
+<p>&emsp;&emsp;在后面的开发中，需要设置所有的WKWebView都使用前面那个单例processPool，否则，cookie是不会在WKWebView之间共享的。<br/>
+还有就是那段js代码可能写的不好，大家指正，谢谢！</p>
+
+<h2 id="toc_9">五、代码demo</h2>
+
+<p>&emsp;&emsp;前几周就说要上demo了，无奈最近比较忙，所以拖到今天才写了个简单的demo。<br/>
+demo说明：demo默认打开多说主页，打开之后在第一个viewController登录一下，然后push到第二个使用WKWebView的viewController中，可以发现，登录状态依然是在的，说明cookies转移成功了，当然，也可以注释下第一个controller的设置cookie的代码，注释之后，可以发现再次push到第二个界面的时候，登录状态消失了。</p>
+
+<p>代码地址：<a href="https://github.com/fengqiangboy/WKWebViewAndUIWebViewCookiesDemo">https://github.com/fengqiangboy/WKWebViewAndUIWebViewCookiesDemo</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS开发-apple pay的实际应用]]></title>
+    <link href="http://fengqiangboy.com/14611508828436.html"/>
+    <updated>2016-04-20T19:14:42+08:00</updated>
+    <id>http://fengqiangboy.com/14611508828436.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">﻿文档更新说明﻿：</h3>
+
+<pre><code class="language-text">•   2016年03月09日 v1.0  初稿
+</code></pre>
+
+<h2 id="toc_1"> 零、段子 </h2>
+
+<p>顾客：能用apple pay吗？<br/>
+收银员：什么？<br/>
+顾客：能用苹果支付吗？<br/>
+收银员：你咋不用梨子支付呢？你咋不上天呢？</p>
+
+<h2 id="toc_2"> 一、前言</h2>
+
+<p>        注意，这里面的例子的最低运行环境：xcode 7.2   iOS9.2<br/>
+        就在几周之前，apple pay进入了我大中华地区，瞬间，许多人都在微博、朋友圈帮助苹果普及着什么是apple pay（也包括我）。但是，作为一个开发人员，我们应该想得更多一点，怎么在我们的app中使用apple pay 呢？<br/>
+        你可能会马上去翻官方手册。确实，官方手册有时候很有用。翻完之后，你或许也可以像网上很多demo一样，在模拟器上面弹出那个付款的界面，满足一下自己。很快，你就会发现，跟着这个手册，跟着demo怎么不能在真机上面运行呢？<br/>
+        其实这个问题很好解释，因为苹果支付在中国大陆是和银联合作的，跟着网上的那些教程都没提到银联，所以是不行的。正确的做法是直接上银联官网。银联的开发者技术支持网站：<a href="https://open.unionpay.com%E3%80%82">https://open.unionpay.com。</a></p>
+
+<h2 id="toc_3">二、要苹果去开发者后台做的事情</h2>
+
+<p>        在开发之前，我们首先要去开发者后台做一些操作。</p>
+
+<h3 id="toc_4">1、申请app id</h3>
+
+<p>        这个步骤和平时没什么区别，要注意的就是在App Services中勾选apple pay服务。<br/>
+<img src="media/14611508828436/1.png" alt="1" class="mw_img_left" style="width:400px;display: block; float: left; margin: 0px 8px 8px 0px;"/><br/>
+<div style="clear: left"></div></p>
+
+<h3 id="toc_5">2、注册商户id（merchant IDs）</h3>
+
+<p>          <img src="media/14611508828436/2.png" alt="2" class="mw_img_left" style="width:200px;display: block; float: left; margin: 0px 8px 8px 0px;"/><br/>
+          在没有注册这个商户id之前，app id里面的apple pay选项是显示Configurable的。<br/>
+          这里，直接点击证书选项下面的merchant IDs，在页面中填写好描述和id。这个ID需要记住，后面编写代码的时候需要的。填写完之后点下一步，直到完成。<br/>
+           这时，配置并没有结束，还有再次点进来，点击edit，在弹出来的“ Are you processing your payments outside of the United States?”选项中，选择yes，表示我们是在美国之外的地区使用。<br/>
+           之后会让你上传一个证书，如果只是为了测试的话，从我们电脑里面导出一个“从证书颁发机构申请”的证书即可。如果是和银联或者第三方apple pay服务提供商合作的话，他们是会提供这个cer文件的，你把那个上传到苹果后台就可以了。这时，需要在苹果后台做的事情就完成了。<br/>
+         <div style="clear: left"></div></p>
+
+<h2 id="toc_6">三、要去银联官网做的</h2>
+
+<p>        前面说到了，apple pay在中国地区是和引来了合作的，当然，也还有其他第三方合作商，比如说连连支付等。在<a href="https://developer.apple.com/apple-pay/">开发者网页中的apple pay</a>里面有说明。在苹果的文档中，也建议我们使用这些第三方的服务来完成apple pay 的接入。ps:反正不管你用不用别人的sdk都是要向银联支付手续费的。<br/>
+        这里，我就只用了银联的sdk来实现了一下，银联关于apple pay的接入步奏在<a href="https://open.unionpay.com/">官网</a>有很详细的资料，这里我就不说明接入步奏了，这里主要讨论的是关于技术开发这一块。用mac的各位亲，银联官网需要使用safari打开，不然登陆的时候输入不了密码~<br/>
+        进入银联官网，我们直接去找apple pay 的sdk。在<a href="https://open.unionpay.com/ajweb/product/detail?id=80">这个网页</a>左边，有个DEMO/SDK下载，点击之后直接就可以下载了。</p>
+
+<h2 id="toc_7">四、工程配置</h2>
+
+<p>        打开xcode，新建一个工程，把bundle id改成刚才配置的。点开tagat配置的Capabilities选项，打开里面的apple pay，这时会转圈圈。网速快的话很快就能看到刚才我们申请的merchant ID了，选择哪个merchant ID，然后工程的设置就结束了。</p>
+
+<h2 id="toc_8">五、导入银联的SDK</h2>
+
+<ul>
+<li>1、银联的SDK一共才三个文件（UPAPayPlugin.h、UPAPayPluginDelegate.h和libUPAPayPlugin.a），两个.h文件，一个.a文件，直接拖到我们的工程中。</li>
+<li>2、由于银联的sdk中，使用了c++函数，所以我们需要把调用控件的那个文件的后缀名改为.mm，这个问题有两个解决办法：（1）把要调用支付的那个viewController后缀名改为.mm。（2）封装一个支付工具类，工具类使用.mm后缀。</li>
+<li>3、添 加 CFNetwork.framework 、 libUPAPayPlugin.a 、 PassKit.framework 、 SystemConfiguration.framework、libz.tbd 到 App 工程中 。</li>
+<li>4、把 other linker flags 选项的值设为-ObjC。</li>
+</ul>
+
+<h2 id="toc_9">六、使用SDK</h2>
+
+<p>        银联这个SDK使用起来非常简单，只有一个方法，代理中也只有一个方法。我们在需要支付的地方调用UPAPayPlugin.h中的下面这个方法就可以弹出支付界面了。</p>
+
+<pre><code class="language-text">/**
+ *  支付接口
+ *
+ *  @param tn             订单信息
+ *  @param mode           接入模式,标识商户以何种方式调用支付控件,00生产环境，01测试环境
+ *  @param viewController 启动支付控件的viewController
+ *  @param delegate       实现 UPAPayPluginDelegate 方法的 UIViewController
+ *  @param mID            苹果公司分配的商户号,表示调用Apple Pay所需要的MerchantID;
+ *  @return 返回函数调用结果，成功或失败
+ */
++ (BOOL)startPay:(NSString*)tn
+            mode:(NSString*)mode
+  viewController:(UIViewController*)viewController
+        delegate:(id&lt;UPAPayPluginDelegate&gt;)delegate
+  andAPMechantID:(NSString* )mID;
+</code></pre>
+
+<p>        这个里面需要说明的一个参数就是tn，tn是银联的支付单号，正式环境中，是由我们自己的后台向银联请求，然后再返回给我们客户端的。如果只是为了测试的话，可以使用银联提供的测试接口<code>http://101.231.204.84:8091/sim/getacptn</code>,这个会直接返回一个支付单号。我们把返回的支付单号放进去即可。<br/>
+        里面的mID参数就是前面我们在苹果开发者后台申请的商户id。<br/>
+        如果没问题的话，这样应该是可以弹出支付的窗口了。如果中间有什么bug 的话，可以先去里面的文档里面找找，文档中有提供一些常见问题的解决方法。</p>
+
+<h2 id="toc_10">七、后记</h2>
+
+<p>        其实在百度和Google上面找apple demo，能找到很多，但是大多只能在模拟器上面实现一个界面而已，我开始也在那些demo中郁闷了很久，写这个文章也是希望能帮到一些人，让大家在使用的时候少走弯路。<br/>
+        在实际应用中，这些步骤是远远不足的，我们在实际中肯定还要和后台做很多磨合，庆幸的是有第三方服务商为我们解决这些问题。所以，如果你们项目中要使用apple pay，我建议还是直接联系第三方提供商吧。据我的了解，一般收取的手续费都是千分之八。<br/>
+        附上demo：<a href="https://github.com/fengqiangboy/UnionApplePayDemo">https://github.com/fengqiangboy/UnionApplePayDemo</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS开发-navigationBar的透明度处理]]></title>
+    <link href="http://fengqiangboy.com/14610809561335.html"/>
+    <updated>2016-04-19T23:49:16+08:00</updated>
+    <id>http://fengqiangboy.com/14610809561335.html</id>
+    <content type="html"><![CDATA[
+<h3 id="toc_0">文档更新说明：</h3>
+
+<pre><code class="language-text">•   2016年02月25日 v1.0  初稿
+</code></pre>
+
+<h2 id="toc_1">1、背景</h2>
+
+<p><img src="media/14610809561335/1.png" alt="1" class="mw_img_left" style="width:315px;display: block; float: left; margin: 0px 8px 8px 0px;"/><img src="media/14610809561335/2.png" alt="2" class="mw_img_left" style="width:315px;display: block; float: left; margin: 0px 8px 8px 0px;"/><br/>
+<div style="clear:left;"></div><br/>
+我们在使用app的时候，经常看到一些app的导航栏的透明度是可以变化的。比如说淘宝，在商品界面，你越往上滑，导航栏的透明度就会降低，那么这种效果是怎么实现的呢？效果图如上.</p>
+
+<h2 id="toc_2">实现方案</h2>
+
+<p>很多人看到这个效果，都觉得很简单，确实，这个效果看起来是蛮简单的。这里我想到的方案主要是下面的四个：</p>
+
+<ul>
+<li>方案1：可能你会认为设置导航栏的透明度就可以解决了。不过设置导航栏透明度是会把导航栏上面那几个按钮一并隐藏的，再看看淘宝，那几个按钮可是一直都在啊。还有就是目前iOS中，设置导航栏透明度是有问题的，这个不上今天的主题，下次有机会再来讨论。</li>
+<li>方案2：这个方案要看具体项目了，项目中如果使用的是纯色来作为导航栏背景的话，我们可以调整导航栏背景颜色的透明度达到这个效果。但是非常不幸的是，设置这个属性是没有用的。这个属性只能设置两个状态，一个是有颜色的，一个是没有颜色的（clearColor）。</li>
+<li>方案3：看完上面两个方案，也许你会在心中默念“尼玛，这不坑爹吗？两个方案一个不能实现，一个只能用在纯色的导航栏上面，我们公司的美工坑爹的要我们用图片作为导航栏背景！！！”。先别急，待我慢慢说来。从上面方案二可以想到一种思路，就是先把背景图片的透明度设置好，再把这个图片设置成导航栏的背景图片。不过，图片是没有alpha这个属性的，我们可以通过画布的方式来实现这个透明度的改变，具体代码在下面给出。</li>
+<li>方案4：这个方案是一个做假象的做法，先给导航栏设置一个透明的背景，然后在创建一个和导航栏一样大小的view，把这个view  insert到导航栏的0号位置中，这样可以保证我们创建的view在导航栏的最底层，不影响上层的按钮显示。</li>
+</ul>
+
+<h2 id="toc_3">相关代码</h2>
+
+<p>光说不练假把式，方案说完了，不去实现一下就没意思了。<br/>
+<strong>方案1</strong>：这个方案没什么技术含量，直接在scrollView的代理中写一句话就可以了。不过要注意这个方案的缺陷。</p>
+
+<pre><code class="language-text">- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //改变透明度
+    self.navigationController.navigationBar.alpha = scrollView.contentOffset.y / 200.0f;
+}
+</code></pre>
+
+<p><strong>方案2</strong>：暂时未实现，实现了再来贴代码。 <br/>
+<strong>方案3</strong>：这个方案主要就是生成透明度变化的图片。</p>
+
+<ul>
+<li> 1、首先，设置导航栏默认背景图片。</li>
+</ul>
+
+<pre><code class="language-text">- (void)setNavigation {
+    //设置导航栏背景颜色
+    UIImage *navigationBarBackgroundImage = [UIImage imageFromColor:[UIColor redColor] imageSize:CGSizeMake(WIDTH, 64)];
+    navigationBarBackgroundImage = [UIImage imageByApplyingAlpha:0 image:navigationBarBackgroundImage];
+    [self.navigationController.navigationBar setBackgroundImage:navigationBarBackgroundImage forBarMetrics:UIBarMetricsDefault];
+    
+    self.automaticallyAdjustsScrollViewInsets = NO;
+}
+</code></pre>
+
+<ul>
+<li>2、实现代理，在代理中改变图片透明度。</li>
+</ul>
+
+<pre><code class="language-text">#pragma mark scrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //设置导航栏背景透明度
+    CGFloat alpha = (scrollView.contentOffset.y / 200.0f);
+    alpha = alpha &lt; 0 ? 0 : alpha &gt; 1 ? 1 : alpha;
+    
+    UIImage *navigationBarBackgroundImage = [UIImage imageFromColor:[UIColor redColor] imageSize:CGSizeMake(WIDTH, 64)];
+    navigationBarBackgroundImage = [UIImage imageByApplyingAlpha:alpha image:navigationBarBackgroundImage];
+    [self.navigationController.navigationBar setBackgroundImage:navigationBarBackgroundImage forBarMetrics:UIBarMetricsDefault];
+}
+</code></pre>
+
+<p>功能就可以实现了。还有两段关键代码。生成纯色图片和改变图片透明度的。</p>
+
+<ul>
+<li>生成纯色图片</li>
+</ul>
+
+<pre><code class="language-text">/**
+ *  通过颜色生成纯色图片
+ *
+ *  @param color 颜色
+ *  @param size  图片大小
+ *
+ *  @return 生成的图片
+ */
++ (UIImage *)imageFromColor:(UIColor *)color imageSize:(CGSize)size {
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
+    UIGraphicsBeginImageContext(size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext(); return img;
+}
+</code></pre>
+
+<ul>
+<li>改变图片透明度</li>
+</ul>
+
+<pre><code class="language-text">/**
+ *  改变图片透明度
+ *
+ *  @param alpha 透明度
+ *  @param image 图片
+ *
+ *  @return 改变之后的图片
+ */
+ + (UIImage *)imageByApplyingAlpha:(CGFloat)alpha image:(UIImage*)image {
+    
+    UIGraphicsBeginImageContextWithOptions(image.size, NO, 0.0f);
+    
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGRect area = CGRectMake(0, 0, image.size.width, image.size.height);
+    
+    CGContextScaleCTM(ctx, 1, -1);
+    CGContextTranslateCTM(ctx, 0, -area.size.height);
+    
+    CGContextSetBlendMode(ctx, kCGBlendModeMultiply);
+    
+    CGContextSetAlpha(ctx, alpha);
+    
+    CGContextDrawImage(ctx, area, image.CGImage);
+    
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
+</code></pre>
+
+<p><strong>方案4</strong>：这个方案关键点是找到navigaitonbar的底层图片，然后把我们的view插入进去。</p>
+
+<ul>
+<li>1、首先，把我们的view直接插入到navigaitonbar的0号位置。</li>
+</ul>
+
+<pre><code class="language-text">#pragma mark 设置导航栏
+- (void)setNavigation {
+    //设置导航栏背景颜色
+    UIImage *navigationBarBackgroundImage = [UIImage imageFromColor:[UIColor redColor] imageSize:CGSizeMake(WIDTH, 64)];
+    navigationBarBackgroundImage = [UIImage imageByApplyingAlpha:0 image:navigationBarBackgroundImage];
+    [self.navigationController.navigationBar setBackgroundImage:navigationBarBackgroundImage forBarMetrics:UIBarMetricsDefault];
+    
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    
+    //创建一个假象背景view
+    UIView *navigationBarBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, -20, WIDTH, 64)];
+    navigationBarBackgroundView.alpha = 0;
+    navigationBarBackgroundView.backgroundColor = [UIColor orangeColor];
+    //插入
+    [self.navigationController.navigationBar insertSubview:navigationBarBackgroundView atIndex:0];
+}﻿
+</code></pre>
+
+<ul>
+<li>2、然后就和上面的方案一样了，在代理中改变这个view的透明度.</li>
+</ul>
+
+<pre><code class="language-text">#pragma mark scrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //设置导航栏背景透明度
+    CGFloat alpha = (scrollView.contentOffset.y / 300.0f);
+    alpha = alpha &lt; 0 ? 0 : alpha &gt; 1 ? 1 : alpha;
+    
+    UIView *navigationBarBackgroundView = self.navigationController.navigationBar.subviews[0];
+    navigationBarBackgroundView.alpha = alpha;
+}
+</code></pre>
+
+<p> <em>说明</em>：这个方案我觉得最好是自己写一个navigationController的继承类，在继承类中实现这个功能。</p>
+
+<h2 id="toc_4">项目代码</h2>
+
+<p>项目完整代码已经上传到github，有兴趣的可以下载下来看看效果，也欢迎大家指出其中的错误，如果你有更好的方案也希望能告诉我~<br/>
+项目地址：<a href="https://github.com/fengqiangboy/iOS-NavigationBarBackgroundAlpha">https://github.com/fengqiangboy/iOS-NavigationBarBackgroundAlpha</a></p>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,551 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  基于docker搭建lanproxy内网穿透服务 - 奉强的个人博客
+  
+  </title>
+ <meta name="description" content="奉强的技术博客，全栈开发。">
+ <link href="atom.xml" rel="alternate" title="奉强的个人博客" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+    <script src="asset/highlightjs/highlight.pack.js"></script>
+    <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+<div id="header">
+    <h1><a href="index.html">奉强的个人博客</a></h1>
+</div>
+
+</nav>
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 奉强的个人博客</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+      <li><a href="index.html">Home</a></li>
+      
+        <li class="divider"></li>
+        <li><label>杂类</label></li>
+
+          
+            <li><a title="基于docker搭建lanproxy内网穿透服务" href="15229403526064.html">基于docker搭建lanproxy内网穿透服务</a></li>
+          
+            <li><a title="手摸手教程 之 教你搭建自己的静态博客" href="14993449096811.html">手摸手教程 之 教你搭建自己的静态博客</a></li>
+          
+            <li><a title="我的2016" href="14854433400635.html">我的2016</a></li>
+          
+            <li><a title="支付宝怎么免手续费提现" href="14786196059653.html">支付宝怎么免手续费提现</a></li>
+          
+            <li><a title="怎么用自己的域名建立一个个人博客" href="14607325165802.html">怎么用自己的域名建立一个个人博客</a></li>
+          
+            <li><a title="嵌入式和单片机的学习心得" href="14939112243125.html">嵌入式和单片机的学习心得</a></li>
+          
+
+      
+        <li class="divider"></li>
+        <li><label>iOS开发</label></li>
+
+          
+            <li><a title="iOS逆向开发笔记1--工具篇" href="14854248394653.html">iOS逆向开发笔记1--工具篇</a></li>
+          
+            <li><a title="Swift3入门教程之二----函数和闭包" href="14758321095435.html">Swift3入门教程之二----函数和闭包</a></li>
+          
+            <li><a title="Swift3入门教程之一基础部分" href="14758046879967.html">Swift3入门教程之一基础部分</a></li>
+          
+            <li><a title="iOS开发-如何优雅地集成支付宝支付功能" href="14702334322974.html">iOS开发-如何优雅地集成支付宝支付功能</a></li>
+          
+            <li><a title="iOS开发中，m3u8格式视频的下载缓存" href="14685880528825.html">iOS开发中，m3u8格式视频的下载缓存</a></li>
+          
+            <li><a title="git中，如何使用sourcetree管理同一个项目中的多个远程仓库" href="14634059724558.html">git中，如何使用sourcetree管理同一个项目中的多个远程仓库</a></li>
+          
+            <li><a title="iOS开发-坑爹的iOS特性" href="14611524452165.html">iOS开发-坑爹的iOS特性</a></li>
+          
+            <li><a title="iOS开发-打通UIWebView和WKWebView的Cookie" href="14611518603473.html">iOS开发-打通UIWebView和WKWebView的Cookie</a></li>
+          
+            <li><a title="iOS开发-apple pay的实际应用" href="14611508828436.html">iOS开发-apple pay的实际应用</a></li>
+          
+            <li><a title="iOS开发-navigationBar的透明度处理" href="14610809561335.html">iOS开发-navigationBar的透明度处理</a></li>
+          
+            <li><a title="iOS开发-AVPlayer的缓存问题" href="14608134723455.html">iOS开发-AVPlayer的缓存问题</a></li>
+          
+            <li><a title="iOS开发-OC可选参数函数" href="14608131201401.html">iOS开发-OC可选参数函数</a></li>
+          
+            <li><a title="iOS开发-FMDB多线程安全问题" href="14608133210368.html">iOS开发-FMDB多线程安全问题</a></li>
+          
+
+      
+        <li class="divider"></li>
+        <li><label>Python</label></li>
+
+          
+            <li><a title="一个导出qq音乐歌单的小工具" href="14913069118493.html">一个导出qq音乐歌单的小工具</a></li>
+          
+            <li><a title="Python学习笔记-函数的使用" href="14890625223406.html">Python学习笔记-函数的使用</a></li>
+          
+            <li><a title="Python学习笔记-基础篇" href="14695444360650.html">Python学习笔记-基础篇</a></li>
+          
+
+      
+        <li class="divider"></li>
+        <li><label>OpenCV</label></li>
+
+          
+            <li><a title="苍老师的 "码" 是怎么打上的" href="15090278092045.html">苍老师的 "码" 是怎么打上的</a></li>
+          
+
+      
+        <li class="divider"></li>
+        <li><label>Java</label></li>
+
+          
+            <li><a title="JAVA动态代理" href="15377761043880.html">JAVA动态代理</a></li>
+          
+
+      
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+        <section id="main-content" role="main" class="scroll-container">
+
+          <div class="row">
+            <div class="large-3 medium-3 columns">
+              <div class="hide-for-small">
+                <div class="sidebar">
+                <nav>
+                  <ul id="side-nav" class="side-nav">
+
+                    
+                      <li class="side-title"><span>杂类</span></li>
+                        
+                          <li><a title="基于docker搭建lanproxy内网穿透服务" href="15229403526064.html">基于docker搭建lanproxy内网穿透服务</a></li>
+                        
+                          <li><a title="手摸手教程 之 教你搭建自己的静态博客" href="14993449096811.html">手摸手教程 之 教你搭建自己的静态博客</a></li>
+                        
+                          <li><a title="我的2016" href="14854433400635.html">我的2016</a></li>
+                        
+                          <li><a title="支付宝怎么免手续费提现" href="14786196059653.html">支付宝怎么免手续费提现</a></li>
+                        
+                          <li><a title="怎么用自己的域名建立一个个人博客" href="14607325165802.html">怎么用自己的域名建立一个个人博客</a></li>
+                        
+                          <li><a title="嵌入式和单片机的学习心得" href="14939112243125.html">嵌入式和单片机的学习心得</a></li>
+                        
+
+                    
+                      <li class="side-title"><span>iOS开发</span></li>
+                        
+                          <li><a title="iOS逆向开发笔记1--工具篇" href="14854248394653.html">iOS逆向开发笔记1--工具篇</a></li>
+                        
+                          <li><a title="Swift3入门教程之二----函数和闭包" href="14758321095435.html">Swift3入门教程之二----函数和闭包</a></li>
+                        
+                          <li><a title="Swift3入门教程之一基础部分" href="14758046879967.html">Swift3入门教程之一基础部分</a></li>
+                        
+                          <li><a title="iOS开发-如何优雅地集成支付宝支付功能" href="14702334322974.html">iOS开发-如何优雅地集成支付宝支付功能</a></li>
+                        
+                          <li><a title="iOS开发中，m3u8格式视频的下载缓存" href="14685880528825.html">iOS开发中，m3u8格式视频的下载缓存</a></li>
+                        
+                          <li><a title="git中，如何使用sourcetree管理同一个项目中的多个远程仓库" href="14634059724558.html">git中，如何使用sourcetree管理同一个项目中的多个远程仓库</a></li>
+                        
+                          <li><a title="iOS开发-坑爹的iOS特性" href="14611524452165.html">iOS开发-坑爹的iOS特性</a></li>
+                        
+                          <li><a title="iOS开发-打通UIWebView和WKWebView的Cookie" href="14611518603473.html">iOS开发-打通UIWebView和WKWebView的Cookie</a></li>
+                        
+                          <li><a title="iOS开发-apple pay的实际应用" href="14611508828436.html">iOS开发-apple pay的实际应用</a></li>
+                        
+                          <li><a title="iOS开发-navigationBar的透明度处理" href="14610809561335.html">iOS开发-navigationBar的透明度处理</a></li>
+                        
+                          <li><a title="iOS开发-AVPlayer的缓存问题" href="14608134723455.html">iOS开发-AVPlayer的缓存问题</a></li>
+                        
+                          <li><a title="iOS开发-OC可选参数函数" href="14608131201401.html">iOS开发-OC可选参数函数</a></li>
+                        
+                          <li><a title="iOS开发-FMDB多线程安全问题" href="14608133210368.html">iOS开发-FMDB多线程安全问题</a></li>
+                        
+
+                    
+                      <li class="side-title"><span>Python</span></li>
+                        
+                          <li><a title="一个导出qq音乐歌单的小工具" href="14913069118493.html">一个导出qq音乐歌单的小工具</a></li>
+                        
+                          <li><a title="Python学习笔记-函数的使用" href="14890625223406.html">Python学习笔记-函数的使用</a></li>
+                        
+                          <li><a title="Python学习笔记-基础篇" href="14695444360650.html">Python学习笔记-基础篇</a></li>
+                        
+
+                    
+                      <li class="side-title"><span>OpenCV</span></li>
+                        
+                          <li><a title="苍老师的 "码" 是怎么打上的" href="15090278092045.html">苍老师的 "码" 是怎么打上的</a></li>
+                        
+
+                    
+                      <li class="side-title"><span>Java</span></li>
+                        
+                          <li><a title="JAVA动态代理" href="15377761043880.html">JAVA动态代理</a></li>
+                        
+
+                    
+                  </ul>
+                </nav>
+                </div>
+              </div>
+            </div>
+            <div class="large-9 medium-9 columns">
+
+ <div class="markdown-body">
+<h1>基于docker搭建lanproxy内网穿透服务</h1>
+
+<h4 id="toc_0">文档更新说明</h4>
+
+<ul>
+<li><p>2018年04月06日 v1.0 </p>
+<blockquote>
+<p>内网穿透相信是后端开发者经常遇到的需求，可是怎么实现呢？其实有现成的服务：花生壳、ngrok等，但是，最近花生壳宣布，免费版的内网穿透将不支持80端口映射了，而免费版的ngrok也不够稳定，于是乎，我就开始需找新的解决方案了</p>
+<p>本文使用了docker、nginx，要全部搞懂的话需要一定的后端基础(当然，基本上入个门就可以了)，个人认为还是有一定阅读门槛的，但是你如果只是想把服务搭建起来，按照步骤来做是不难的</p>
+</blockquote></li>
+</ul>
+
+<h4 id="toc_1">1、概述</h4>
+
+<p>内网穿透其实就是用服务器做一个中转，将请求转发，本文记录了在<code>ubuntu 16.04</code>上，基于<code>docker</code>搭建的内网穿透服务</p>
+
+<h5 id="toc_2">1.1、原理</h5>
+
+<p>内网穿透的原理如下图所示：</p>
+
+<ol>
+<li>用户访问我们的服务器，这个服务器是有公网IP的，所以用户可以无压力访问</li>
+<li>服务器与本地电脑保持长链接，当有请求的时候，服务器将请求转发到我们的本地电脑</li>
+<li>本地电脑将响应回复给服务器</li>
+<li>服务器将响应回复给用户</li>
+</ol>
+
+<p><img src="media/15229403526064/15229416333639.jpg" alt="内网穿透原理 " class="mw_img_center" style="width:300px;display: block; clear:both; margin: 0 auto;"/></p>
+
+<h5 id="toc_3">1.2、实现</h5>
+
+<p>要搭建内网穿透，我们得完成两个任务</p>
+
+<ol>
+<li>在公网能访问的服务器上运行我们的内网穿透服务；</li>
+<li>在本地电脑上面运行内网穿透客户端。</li>
+</ol>
+
+<p>当然，你可以自己根据原理实现一套，不过我们有现成的三方开源工具，可以帮我们实现这一套功能。这个就是我们今天的主角 <a href="https://github.com/ffay/lanproxy">lanproxy</a>。</p>
+
+<h4 id="toc_4">2、实现步骤</h4>
+
+<p>现成的工具已经找到，接下来就是简单的搭建一下了，搭建过程分为服务端和本地电脑端</p>
+
+<h5 id="toc_5">2.1、服务端流程：</h5>
+
+<ol>
+<li>在服务器上安装<code>docker</code>和<code>nginx</code></li>
+<li>在服务器上通过<code>docker</code>运行<code>lanproxy server</code></li>
+<li>将域名解析到我们的服务器</li>
+<li>配置<code>nginx</code>反向代理</li>
+<li>打开<code>lanproxy</code>后台页面，添加客户端和映射信息</li>
+</ol>
+
+<h5 id="toc_6">2.2、本地电脑流程：</h5>
+
+<ol>
+<li>运行要被映射的服务</li>
+<li>运行本地电脑映射客户端程序(<code>lanproxy client</code>)</li>
+</ol>
+
+<p>下面开始服务端的配置：</p>
+
+<h5 id="toc_7">2.1.1、在服务器上安装<code>docker</code>和<code>nginx</code></h5>
+
+<p><code>nginx</code>的安装是很简单的，一个命令就搞定<br/>
+<code>docker</code> 也可以使用脚本安装，也是一句命令的事</p>
+
+<pre><code class="language-bash"># 1、安装nginx
+$ sudo apt-get install nginx
+
+# 2、安装docker
+$ curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+
+# 可选步骤，建docker源修改为阿里云
+$ sudo mkdir -p /etc/docker
+$ sudo tee /etc/docker/daemon.json &lt;&lt;-&#39;EOF&#39;
+{
+  # 下面的链接需要到阿里云后台查看，每个人的加速地址是不一样的
+  &quot;registry-mirrors&quot;: [&quot;https://abcdefg.mirror.aliyuncs.com&quot;]
+}
+EOF
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart docker
+</code></pre>
+
+<h5 id="toc_8">2.1.2 在服务器上通过<code>docker</code>运行<code>lanproxy server</code></h5>
+
+<p>服务安装完毕之后，就可以用docker跑服务了，可以自己写一个<code>Dockerfile</code>，这里，我就把自己写的放出来吧，大家可以拿去用着，gayhub<a href="https://github.com/fengqiangboy/lanproxy-docker">传送门</a></p>
+
+<blockquote>
+<p>这里我修改了<code>proxy-server-0.1</code>的部分文件，因为在<code>docker</code>中，需要保存服务前台运行，否则容器会被<code>kill</code>掉，而官网默认的启动脚本是后台启动的，把<code>bin/startup.sh</code>里面的启动命令修改成前台启动即可（去掉nohub和后面的1&amp;2 &amp;）</p>
+</blockquote>
+
+<pre><code class="language-bash"># 1、克隆docker配置，如果要修改配置可以编辑 conf/config.properties 文件，配置方法见lanproxy官网
+$ git clone https://github.com/fengqiangboy/lanproxy-docker.git lanproxy-docker
+
+# 2、build docker镜像
+$ cd lanproxy-docker
+$ sudo bash build_container.sh
+
+# 3、运行docker容器
+$ bash run_container.sh
+</code></pre>
+
+<h5 id="toc_9">2.1.3 将域名解析到我们的服务器</h5>
+
+<p>需要两个域名，一个用来访问我们的<code>lanproxy</code>后台，一个用来访问我们需要内网穿透的服务<br/>
+例如: </p>
+
+<pre><code class="language-text">lanproxy.fengqiangboy.com -&gt; 用来访问lanproxy后端
+
+test.fengqiangboy.com -&gt; 用来访问内网穿透服务
+</code></pre>
+
+<h5 id="toc_10">2.1.4配置<code>nginx</code>反向代理</h5>
+
+<p>将两个域名解析到我们的服务器之后，再通过反向代理，将其反代到我们的lanproxy端口<br/>
+下面配置的最终效果就是：</p>
+
+<ul>
+<li>我们可以通过<code>lanproxy.fengqiangboy.com</code>访问<code>lanproxy</code>后台</li>
+<li>我们可以通过<code>test.fengqiangboy.com</code>访问本地电脑映射的服务</li>
+</ul>
+
+<blockquote>
+<p>lanproxy.fengqiangboy.com.conf:</p>
+</blockquote>
+
+<pre><code class="language-text">server {
+    listen 80;
+    # 这里使用自己的域名
+    server_name lanproxy.fengqiangboy.com;
+    charset utf-8;
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        # 这里根据你的lanproxy配置，改成 config.server.port的值
+        proxy_pass       http://127.0.0.1:8090;
+        client_max_body_size 35m;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection &quot;upgrade&quot;;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>test.fengqiangboy.com.conf:</p>
+</blockquote>
+
+<pre><code class="language-text">server {
+    listen 80;
+    # 这里使用自己的域名
+    server_name test.fengqiangboy.com;
+    charset utf-8;
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        # 这里根据你的lanproxy配置，改成 外网接口 的值，在lanproxy后台网页上配置，后面配置
+        proxy_pass       http://127.0.0.1:50000;
+        client_max_body_size 35m;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection &quot;upgrade&quot;;
+    }
+}
+</code></pre>
+
+<h5 id="toc_11">2.1.5 打开<code>lanproxy</code>后台页面，添加客户端和映射信息</h5>
+
+<ul>
+<li>打开 <code>http://lanproxy.fengqiangboy.com</code></li>
+<li>用前面<code>conf/config.properties</code>文件中配置的账号和密码登录后台</li>
+<li>添加一个客户端，记住客户端密钥</li>
+<li>添加完客户端之后添加一个配置，配置如下图</li>
+</ul>
+
+<p><img src="media/15229403526064/15229819405822.jpg" alt="配置编辑 " class="mw_img_center" style="display: block; clear:both; margin: 0 auto;"/></p>
+
+<p>到此，服务端的配置就完成了。下面开始本地电脑的配置。</p>
+
+<h5 id="toc_12">2.2.1 运行要被映射的服务</h5>
+
+<p>既然要把内网的服务映射出去，那首先就要把本地电脑的服务跑起来吧，不然拿什么来映射？这里就很多操作方法了，各个语言都不一样，把自己的服务跑起来就行</p>
+
+<h5 id="toc_13">2.2.2 运行本地电脑映射客户端程序(<code>lanproxy client</code>)</h5>
+
+<p>这里有两个方法，一个方法是使用官网提供的<code>go</code>版本，不需要安装<code>java</code>环境在本地电脑上，另外一种是使用官网提供的<code>java</code>版本，这里我使用<code>java</code>版本的。</p>
+
+<ol>
+<li><p>克隆<code>lanproxy</code>代码到本地电脑</p>
+<pre><code class="language-bash">$ git clone https://github.com/ffay/lanproxy.git lanproxy
+</code></pre></li>
+<li><p>打包<code>lanproxy</code><br/>
+打包之前需要确保你安装了<code>maven</code></p>
+<pre><code class="language-bash">$ cd lanproxy
+$ mvn package
+</code></pre></li>
+<li><p>修改配置文件信息<br/>
+打包完成之后，客户端文件会出现在<code>distribution/proxy-client-0.1</code>目录下，打开之后有是个文件夹：<code>bin</code>、<code>conf</code>、<code>lib</code>和<code>log</code>，配置信息在<code>conf/config.properties</code>文件内，根据前面服务端的配置信息修改一下。</p>
+<pre><code class="language-bash"># 这里是在lanproxy后台配置的密钥
+client.key=key<br/>
+# 配置ssl信息，根据服务端的配置填写<br/>
+ssl.enable=true<br/>
+ssl.jksPath=test.jks<br/>
+ssl.keyStorePassword=123456<br/>
+# 服务器的ip<br/>
+server.host=163.162.161.160<br/>
+#根据服务端配置，开启ssl的话填写ssl的端口，否则填写普通端口<br/>
+server.port=4993
+</code></pre></li>
+<li><p>启动客户端<br/>
+客户端信息配置完成之后就可以启动客户端了</p>
+<pre><code class="language-bash"># mac/linux使用这个
+$ bash  bin/startup.sh<br/>
+# Windows 直接运行 bin/startup.bat
+</code></pre></li>
+<li><p>访问测试</p>
+<p>按照前面的配置，这时候我们应该是可以通过<code>test.fengqiangboy.com</code>来访问我们的内网服务了的，用浏览器打开看看</p>
+<p><img src="media/15229403526064/15229836985609.jpg" alt="效果图 " class="mw_img_center" style="display: block; clear:both; margin: 0 auto;"/></p></li>
+</ol>
+
+<h4 id="toc_14">3、一点补充</h4>
+
+<ol>
+<li><p>为什么要使用docker？</p>
+<blockquote>
+<p>使用docker主要是为了不破坏服务端环境，只是给<code>lanproxy</code>安装了一个<code>jdk8</code>的环境，不影响其他服务继续运行；而且使用<code>docker</code>还可以很方便的转移到其它机器上面部署，只要把<code>Dockerfile</code>拷贝过去就可以了。</p>
+</blockquote></li>
+<li><p>这样搭建，服务器重启的话需要手动重启<code>lanproxy</code>吗？</p>
+<blockquote>
+<p>不需要，在服务端启动<code>docker</code>容器的脚本下，我添加了<code>--restart unless-stopped</code>参数，只要<code>docker</code>服务启动了，容器就会跟着启动，如果你不需要这个需求，可以去掉这个参数</p>
+</blockquote></li>
+<li><p>为什么不用花生壳？</p>
+<blockquote>
+<p>前不久看到花生壳的公告，说从4月1日开始，免费版将不提供80端口映射，实际上我用这个映射最大的需求就是做微信调试，去掉80端口就不能做微信调试了，不满足我的需求了，当然，花生壳还是不错的，如果能满足你的需求，还是可以省时省力完成内网穿透的</p>
+</blockquote></li>
+</ol>
+
+
+</div>
+
+<br /><br />
+<hr />
+
+<div class="row clearfix">
+  <div class="large-6 columns">
+	<div class="text-left" style="padding:15px 0px;">
+		
+	        <a href="15377761043880.html"  title="Previous Post: JAVA动态代理">&laquo; JAVA动态代理</a>
+	    
+	</div>
+  </div>
+  <div class="large-6 columns">
+	<div class="text-right" style="padding:15px 0px;">
+		
+	        <a href="15090278092045.html" 
+	        title="Next Post: 苍老师的 "码" 是怎么打上的">苍老师的 "码" 是怎么打上的 &raquo;</a>
+	    
+	</div>
+  </div>
+</div>
+
+<div class="row">
+<div style="padding:0px 0.93em;" class="share-comments">
+<!--打赏-->
+<!--<div id="cyReward" role="cylabs" data-use="reward" sid="" style="text-align: center;"></div>-->
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" sid=""></div> 
+<script type="text/javascript"> 
+var urlStr = window.location.href;  
+str = urlStr.match(/fengqiangboy.com\/(\S*).html/); 
+if (str == null || str == "") {
+	str = urlStr.match(/Category\/(\S*).html/); 
+}
+str=str[1];
+console.log($("#SOHUCS"));
+$("#SOHUCS").attr("sid", str);
+$("#cyReward").attr("sid", str);
+(function(){ 
+var appid = 'cysX3aRYR'; 
+var conf = 'prod_741ad40a699e4352611c239a99eeb670'; 
+var width = window.innerWidth || document.documentElement.clientWidth; 
+if (width < 960) { 
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+<!--打赏-->
+<!--<script type="text/javascript" charset="utf-8" src="https://changyan.itc.cn/js/lib/jquery.js"></script>-->
+<!--<script type="text/javascript" charset="utf-8" src="https://changyan.sohu.com/js/changyan.labs.https.js?appid=cysX3aRYR"></script>-->
+
+</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		var currentURL = '15229403526064.html';
+		$('#side-nav a').each(function(){
+			if($(this).attr('href') == currentURL){
+				$(this).parent().addClass('active');
+			}
+		});
+	});
+</script>  
+</div></div>
+
+
+<div class="page-bottom">
+  <div class="row">
+  <hr />
+  <div class="small-9 columns">
+  <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+  <div class="small-3 columns">
+  <p class="copyright text-right"><a href="#header">TOP</a></p>
+  </div>
+   
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+    
+    
+    <script src="asset/js/foundation.min.js"></script>
+    <script src="asset/js/foundation/foundation.offcanvas.js"></script>
+    <script>
+      $(document).foundation();
+
+     
+    </script>
+    
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+
+  </body>
+</html>

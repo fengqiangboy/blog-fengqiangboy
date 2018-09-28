@@ -1,0 +1,362 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  git中，如何使用sourcetree管理同一个项目中的多个远程仓库 - 奉强的个人博客
+  
+  </title>
+ <meta name="description" content="奉强的技术博客，全栈开发。">
+ <link href="atom.xml" rel="alternate" title="奉强的个人博客" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+    <script src="asset/highlightjs/highlight.pack.js"></script>
+    <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+<div id="header">
+    <h1><a href="index.html">奉强的个人博客</a></h1>
+</div>
+
+</nav>
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; 奉强的个人博客</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+      <li><a href="index.html">Home</a></li>
+      
+        <li class="divider"></li>
+        <li><label>杂类</label></li>
+
+          
+            <li><a title="基于docker搭建lanproxy内网穿透服务" href="15229403526064.html">基于docker搭建lanproxy内网穿透服务</a></li>
+          
+            <li><a title="手摸手教程 之 教你搭建自己的静态博客" href="14993449096811.html">手摸手教程 之 教你搭建自己的静态博客</a></li>
+          
+            <li><a title="我的2016" href="14854433400635.html">我的2016</a></li>
+          
+            <li><a title="支付宝怎么免手续费提现" href="14786196059653.html">支付宝怎么免手续费提现</a></li>
+          
+            <li><a title="怎么用自己的域名建立一个个人博客" href="14607325165802.html">怎么用自己的域名建立一个个人博客</a></li>
+          
+            <li><a title="嵌入式和单片机的学习心得" href="14939112243125.html">嵌入式和单片机的学习心得</a></li>
+          
+
+      
+        <li class="divider"></li>
+        <li><label>iOS开发</label></li>
+
+          
+            <li><a title="iOS逆向开发笔记1--工具篇" href="14854248394653.html">iOS逆向开发笔记1--工具篇</a></li>
+          
+            <li><a title="Swift3入门教程之二----函数和闭包" href="14758321095435.html">Swift3入门教程之二----函数和闭包</a></li>
+          
+            <li><a title="Swift3入门教程之一基础部分" href="14758046879967.html">Swift3入门教程之一基础部分</a></li>
+          
+            <li><a title="iOS开发-如何优雅地集成支付宝支付功能" href="14702334322974.html">iOS开发-如何优雅地集成支付宝支付功能</a></li>
+          
+            <li><a title="iOS开发中，m3u8格式视频的下载缓存" href="14685880528825.html">iOS开发中，m3u8格式视频的下载缓存</a></li>
+          
+            <li><a title="git中，如何使用sourcetree管理同一个项目中的多个远程仓库" href="14634059724558.html">git中，如何使用sourcetree管理同一个项目中的多个远程仓库</a></li>
+          
+            <li><a title="iOS开发-坑爹的iOS特性" href="14611524452165.html">iOS开发-坑爹的iOS特性</a></li>
+          
+            <li><a title="iOS开发-打通UIWebView和WKWebView的Cookie" href="14611518603473.html">iOS开发-打通UIWebView和WKWebView的Cookie</a></li>
+          
+            <li><a title="iOS开发-apple pay的实际应用" href="14611508828436.html">iOS开发-apple pay的实际应用</a></li>
+          
+            <li><a title="iOS开发-navigationBar的透明度处理" href="14610809561335.html">iOS开发-navigationBar的透明度处理</a></li>
+          
+            <li><a title="iOS开发-AVPlayer的缓存问题" href="14608134723455.html">iOS开发-AVPlayer的缓存问题</a></li>
+          
+            <li><a title="iOS开发-OC可选参数函数" href="14608131201401.html">iOS开发-OC可选参数函数</a></li>
+          
+            <li><a title="iOS开发-FMDB多线程安全问题" href="14608133210368.html">iOS开发-FMDB多线程安全问题</a></li>
+          
+
+      
+        <li class="divider"></li>
+        <li><label>Python</label></li>
+
+          
+            <li><a title="一个导出qq音乐歌单的小工具" href="14913069118493.html">一个导出qq音乐歌单的小工具</a></li>
+          
+            <li><a title="Python学习笔记-函数的使用" href="14890625223406.html">Python学习笔记-函数的使用</a></li>
+          
+            <li><a title="Python学习笔记-基础篇" href="14695444360650.html">Python学习笔记-基础篇</a></li>
+          
+
+      
+        <li class="divider"></li>
+        <li><label>OpenCV</label></li>
+
+          
+            <li><a title="苍老师的 "码" 是怎么打上的" href="15090278092045.html">苍老师的 "码" 是怎么打上的</a></li>
+          
+
+      
+        <li class="divider"></li>
+        <li><label>Java</label></li>
+
+          
+            <li><a title="JAVA动态代理" href="15377761043880.html">JAVA动态代理</a></li>
+          
+
+      
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+        <section id="main-content" role="main" class="scroll-container">
+
+          <div class="row">
+            <div class="large-3 medium-3 columns">
+              <div class="hide-for-small">
+                <div class="sidebar">
+                <nav>
+                  <ul id="side-nav" class="side-nav">
+
+                    
+                      <li class="side-title"><span>杂类</span></li>
+                        
+                          <li><a title="基于docker搭建lanproxy内网穿透服务" href="15229403526064.html">基于docker搭建lanproxy内网穿透服务</a></li>
+                        
+                          <li><a title="手摸手教程 之 教你搭建自己的静态博客" href="14993449096811.html">手摸手教程 之 教你搭建自己的静态博客</a></li>
+                        
+                          <li><a title="我的2016" href="14854433400635.html">我的2016</a></li>
+                        
+                          <li><a title="支付宝怎么免手续费提现" href="14786196059653.html">支付宝怎么免手续费提现</a></li>
+                        
+                          <li><a title="怎么用自己的域名建立一个个人博客" href="14607325165802.html">怎么用自己的域名建立一个个人博客</a></li>
+                        
+                          <li><a title="嵌入式和单片机的学习心得" href="14939112243125.html">嵌入式和单片机的学习心得</a></li>
+                        
+
+                    
+                      <li class="side-title"><span>iOS开发</span></li>
+                        
+                          <li><a title="iOS逆向开发笔记1--工具篇" href="14854248394653.html">iOS逆向开发笔记1--工具篇</a></li>
+                        
+                          <li><a title="Swift3入门教程之二----函数和闭包" href="14758321095435.html">Swift3入门教程之二----函数和闭包</a></li>
+                        
+                          <li><a title="Swift3入门教程之一基础部分" href="14758046879967.html">Swift3入门教程之一基础部分</a></li>
+                        
+                          <li><a title="iOS开发-如何优雅地集成支付宝支付功能" href="14702334322974.html">iOS开发-如何优雅地集成支付宝支付功能</a></li>
+                        
+                          <li><a title="iOS开发中，m3u8格式视频的下载缓存" href="14685880528825.html">iOS开发中，m3u8格式视频的下载缓存</a></li>
+                        
+                          <li><a title="git中，如何使用sourcetree管理同一个项目中的多个远程仓库" href="14634059724558.html">git中，如何使用sourcetree管理同一个项目中的多个远程仓库</a></li>
+                        
+                          <li><a title="iOS开发-坑爹的iOS特性" href="14611524452165.html">iOS开发-坑爹的iOS特性</a></li>
+                        
+                          <li><a title="iOS开发-打通UIWebView和WKWebView的Cookie" href="14611518603473.html">iOS开发-打通UIWebView和WKWebView的Cookie</a></li>
+                        
+                          <li><a title="iOS开发-apple pay的实际应用" href="14611508828436.html">iOS开发-apple pay的实际应用</a></li>
+                        
+                          <li><a title="iOS开发-navigationBar的透明度处理" href="14610809561335.html">iOS开发-navigationBar的透明度处理</a></li>
+                        
+                          <li><a title="iOS开发-AVPlayer的缓存问题" href="14608134723455.html">iOS开发-AVPlayer的缓存问题</a></li>
+                        
+                          <li><a title="iOS开发-OC可选参数函数" href="14608131201401.html">iOS开发-OC可选参数函数</a></li>
+                        
+                          <li><a title="iOS开发-FMDB多线程安全问题" href="14608133210368.html">iOS开发-FMDB多线程安全问题</a></li>
+                        
+
+                    
+                      <li class="side-title"><span>Python</span></li>
+                        
+                          <li><a title="一个导出qq音乐歌单的小工具" href="14913069118493.html">一个导出qq音乐歌单的小工具</a></li>
+                        
+                          <li><a title="Python学习笔记-函数的使用" href="14890625223406.html">Python学习笔记-函数的使用</a></li>
+                        
+                          <li><a title="Python学习笔记-基础篇" href="14695444360650.html">Python学习笔记-基础篇</a></li>
+                        
+
+                    
+                      <li class="side-title"><span>OpenCV</span></li>
+                        
+                          <li><a title="苍老师的 "码" 是怎么打上的" href="15090278092045.html">苍老师的 "码" 是怎么打上的</a></li>
+                        
+
+                    
+                      <li class="side-title"><span>Java</span></li>
+                        
+                          <li><a title="JAVA动态代理" href="15377761043880.html">JAVA动态代理</a></li>
+                        
+
+                    
+                  </ul>
+                </nav>
+                </div>
+              </div>
+            </div>
+            <div class="large-9 medium-9 columns">
+
+ <div class="markdown-body">
+<h1>git中，如何使用sourcetree管理同一个项目中的多个远程仓库</h1>
+
+<h3 id="toc_0">文档更新说明：</h3>
+
+<pre><code class="language-text">•   2016年05月16日 v1.0  初稿
+</code></pre>
+
+<h2 id="toc_1">背景</h2>
+
+<p>        看标题，可能会有点晕，这说的啥玩意啊？实际上，我是想通过那一句话，表达这个意思：<br/>
+        在开发中，我们可能会需要把本地的git仓库同步到两个甚至多个远程git仓库中。<br/>
+        比如说我们可以在bitbucket和oschina上面各建立一个仓库，然后都对应到本地的git仓库来。<br/>
+        这样一来，我们可以保证远程仓库的可靠性，降低远程仓库出问题的风险，相当于做一个备份似的。当然，好处肯定不止这一点。<br/>
+        </p>
+
+<h2 id="toc_2">sourcetree</h2>
+
+<p>        SourceTree 是 Windows 和Mac OS X 下<strong>免费</strong>的 Git 和 Hg 客户端，同时也是Mercurial和Subversion版本控制系统工具。支持创建、克隆、提交、push、pull 和合并等操作。<br/>
+        官网：<a href="https://www.sourcetreeapp.com/">https://www.sourcetreeapp.com/</a><br/>
+        国内下载需要自备梯子。<br/>
+<img src="media/14634059724558/1.png" alt="c"/></p>
+
+<h2 id="toc_3">步骤</h2>
+
+<ul>
+<li>1、在远端那里右击；</li>
+</ul>
+
+<p><img src="media/14634059724558/14634070386615.jpg" alt="c"/></p>
+
+<ul>
+<li>2、点击新建远程，在弹出来的窗口中填写好如下的信息，填好之后点击确定；</li>
+</ul>
+
+<p><img src="media/14634059724558/14634073626103.jpg" alt="c"/></p>
+
+<ul>
+<li>3、接下来，应该能在主界面看到刚才新建的仓库了，对刚才新建的仓库点击右键，会出来两个拉取的菜单，第一个拉取是拉取仓库的分支信息，第二个拉取是拉取仓库的。目前，我们还没有拉取到仓库的分支信息，所以要先拉取仓库的分支信息。选第一个；
+<img src="media/14634059724558/14634075402427.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/>
+<div style="clear:left;"></div></li>
+<li>4、接下来，我们就可以往新建的仓库推送代码了。推送的时候选对仓库就OK了。
+<img src="media/14634059724558/14634079305730.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/>
+<div style="clear:left;"></div></li>
+</ul>
+
+<h2 id="toc_4">小tips</h2>
+
+<p>我们可以设置一个默认的仓库，这样可以在点击上方工具栏的时候默认推送和拉取默认仓库中的代码。<br/>
+如下图，我就设置了OSChina上面的newsMaster为本地newsMaster的默认跟踪分支。<br/>
+<img src="media/14634059724558/14634080917985.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p>
+
+
+</div>
+
+<br /><br />
+<hr />
+
+<div class="row clearfix">
+  <div class="large-6 columns">
+	<div class="text-left" style="padding:15px 0px;">
+		
+	        <a href="14685880528825.html"  title="Previous Post: iOS开发中，m3u8格式视频的下载缓存">&laquo; iOS开发中，m3u8格式视频的下载缓存</a>
+	    
+	</div>
+  </div>
+  <div class="large-6 columns">
+	<div class="text-right" style="padding:15px 0px;">
+		
+	        <a href="14611524452165.html" 
+	        title="Next Post: iOS开发-坑爹的iOS特性">iOS开发-坑爹的iOS特性 &raquo;</a>
+	    
+	</div>
+  </div>
+</div>
+
+<div class="row">
+<div style="padding:0px 0.93em;" class="share-comments">
+<!--打赏-->
+<!--<div id="cyReward" role="cylabs" data-use="reward" sid="" style="text-align: center;"></div>-->
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" sid=""></div> 
+<script type="text/javascript"> 
+var urlStr = window.location.href;  
+str = urlStr.match(/fengqiangboy.com\/(\S*).html/); 
+if (str == null || str == "") {
+	str = urlStr.match(/Category\/(\S*).html/); 
+}
+str=str[1];
+console.log($("#SOHUCS"));
+$("#SOHUCS").attr("sid", str);
+$("#cyReward").attr("sid", str);
+(function(){ 
+var appid = 'cysX3aRYR'; 
+var conf = 'prod_741ad40a699e4352611c239a99eeb670'; 
+var width = window.innerWidth || document.documentElement.clientWidth; 
+if (width < 960) { 
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+<!--打赏-->
+<!--<script type="text/javascript" charset="utf-8" src="https://changyan.itc.cn/js/lib/jquery.js"></script>-->
+<!--<script type="text/javascript" charset="utf-8" src="https://changyan.sohu.com/js/changyan.labs.https.js?appid=cysX3aRYR"></script>-->
+
+</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		var currentURL = '14634059724558.html';
+		$('#side-nav a').each(function(){
+			if($(this).attr('href') == currentURL){
+				$(this).parent().addClass('active');
+			}
+		});
+	});
+</script>  
+</div></div>
+
+
+<div class="page-bottom">
+  <div class="row">
+  <hr />
+  <div class="small-9 columns">
+  <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+  <div class="small-3 columns">
+  <p class="copyright text-right"><a href="#header">TOP</a></p>
+  </div>
+   
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+    
+    
+    <script src="asset/js/foundation.min.js"></script>
+    <script src="asset/js/foundation/foundation.offcanvas.js"></script>
+    <script>
+      $(document).foundation();
+
+     
+    </script>
+    
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+
+  </body>
+</html>
