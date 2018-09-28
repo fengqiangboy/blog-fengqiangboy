@@ -5,4 +5,4 @@ rm -rf docs
 mkdir docs
 cp -a html/Category/* docs/
 
-cp favicon.ico /docs/
+cp favicon.ico docs/favicon.ico
