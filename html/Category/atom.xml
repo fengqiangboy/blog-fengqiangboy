@@ -4,7 +4,7 @@
   <title><![CDATA[奉强的个人博客]]></title>
   <link href="http://fengqiangboy.com/atom.xml" rel="self"/>
   <link href="http://fengqiangboy.com/"/>
-  <updated>2019-04-20T10:59:52+08:00</updated>
+  <updated>2019-04-20T11:00:29+08:00</updated>
   <id>http://fengqiangboy.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -19,13 +19,19 @@
     <updated>2019-04-20T10:20:41+08:00</updated>
     <id>http://fengqiangboy.com/15557268417313.html</id>
     <content type="html"><![CDATA[
-<h2 id="toc_0">引入依赖</h2>
+<h4 id="toc_0">文档更新说明</h4>
+
+<ul>
+<li>2019年04月20日 v1.0 初稿</li>
+</ul>
+
+<h2 id="toc_1">引入依赖</h2>
 
 <pre><code class="language-grave">compile &quot;org.springframework.boot:spring-boot-starter-cache&quot;
 compile &quot;org.springframework.boot:spring-boot-starter-data-redis&quot;
 </code></pre>
 
-<h2 id="toc_1">添加CacheProperties</h2>
+<h2 id="toc_2">添加CacheProperties</h2>
 
 <pre><code class="language-java">@Data
 @ConfigurationProperties(prefix = &quot;fengqiangboy.cache&quot;)
@@ -45,7 +51,7 @@ public class CacheProperties {
 }
 </code></pre>
 
-<h2 id="toc_2">配置cacheManager</h2>
+<h2 id="toc_3">配置cacheManager</h2>
 
 <pre><code class="language-java">@Configuration
 @EnableCaching
