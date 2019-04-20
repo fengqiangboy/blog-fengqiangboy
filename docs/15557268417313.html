@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  奉强的个人博客
+  spring-boot 整合 Redis 缓存 - 奉强的个人博客
   
   </title>
  <meta name="description" content="奉强的技术博客，全栈开发。">
@@ -215,80 +215,152 @@
             </div>
             <div class="large-9 medium-9 columns">
 
- 
+ <div class="markdown-body">
+<h1>spring-boot 整合 Redis 缓存</h1>
 
+<h2 id="toc_0">引入依赖</h2>
 
-	
-		<div class="markdown-body">
-		<h1>git中，如何使用sourcetree管理同一个项目中的多个远程仓库</h1>
-
-		<h3 id="toc_0">文档更新说明：</h3>
-
-<pre><code class="language-text">•   2016年05月16日 v1.0  初稿
+<pre><code class="language-grave">compile &quot;org.springframework.boot:spring-boot-starter-cache&quot;
+compile &quot;org.springframework.boot:spring-boot-starter-data-redis&quot;
 </code></pre>
 
-<h2 id="toc_1">背景</h2>
+<h2 id="toc_1">添加CacheProperties</h2>
 
-<p>        看标题，可能会有点晕，这说的啥玩意啊？实际上，我是想通过那一句话，表达这个意思：<br/>
-        在开发中，我们可能会需要把本地的git仓库同步到两个甚至多个远程git仓库中。<br/>
-        比如说我们可以在bitbucket和oschina上面各建立一个仓库，然后都对应到本地的git仓库来。<br/>
-        这样一来，我们可以保证远程仓库的可靠性，降低远程仓库出问题的风险，相当于做一个备份似的。当然，好处肯定不止这一点。<br/>
-        </p>
+<pre><code class="language-java">@Data
+@ConfigurationProperties(prefix = &quot;fengqiangboy.cache&quot;)
+public class CacheProperties {
 
-<h2 id="toc_2">sourcetree</h2>
+    /**
+     * 缓存版本号, 会出现在缓存key前面，方便更新的时候让旧缓存失效
+     */
+    private String version = &quot;0&quot;;
 
-<p>        SourceTree 是 Windows 和Mac OS X 下<strong>免费</strong>的 Git 和 Hg 客户端，同时也是Mercurial和Subversion版本控制系统工具。支持创建、克隆、提交、push、pull 和合并等操作。<br/>
-        官网：<a href="https://www.sourcetreeapp.com/">https://www.sourcetreeapp.com/</a><br/>
-        国内下载需要自备梯子。<br/>
-<img src="media/14634059724558/1.png" alt="c"/></p>
+    /**
+     * 缓存过期时间
+     * 单位：秒
+     */
+    private int expiration = 2 * 60 * 10;
 
-<h2 id="toc_3">步骤</h2>
+}
+</code></pre>
 
-<ul>
-<li>1、在远端那里右击；</li>
-</ul>
+<h2 id="toc_2">配置cacheManager</h2>
 
-<p><img src="media/14634059724558/14634070386615.jpg" alt="c"/></p>
+<pre><code class="language-java">@Configuration
+@EnableCaching
+public class RedisCachingConfig extends CachingConfigurerSupport {
 
-<ul>
-<li>2、点击新建远程，在弹出来的窗口中填写好如下的信息，填好之后点击确定；</li>
-</ul>
+    /**
+    * 配置缓存版本号，方便在缓存需要失效的时候，直接更新缓存版本号
+    */
+    
+    private final CacheProperties cacheProperties;
 
-<p><img src="media/14634059724558/14634073626103.jpg" alt="c"/></p>
+    public RedisCachingConfig(CacheProperties cacheProperties) {
+        this.cacheProperties = cacheProperties;
+    }
 
-<ul>
-<li>3、接下来，应该能在主界面看到刚才新建的仓库了，对刚才新建的仓库点击右键，会出来两个拉取的菜单，第一个拉取是拉取仓库的分支信息，第二个拉取是拉取仓库的。目前，我们还没有拉取到仓库的分支信息，所以要先拉取仓库的分支信息。选第一个；
-<img src="media/14634059724558/14634075402427.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/>
-<div style="clear:left;"></div></li>
-<li>4、接下来，我们就可以往新建的仓库推送代码了。推送的时候选对仓库就OK了。
-<img src="media/14634059724558/14634079305730.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/>
-<div style="clear:left;"></div></li>
-</ul>
+    /**
+     * 添加缓存默认超时配置
+     *
+     * @param redisTemplate redis模板
+     * @return 缓存管理器
+     */
+    @Bean
+    public CacheManager cacheManager(RedisTemplate&lt;?, ?&gt; redisTemplate) {
+        // Spring boot 默认会根据依赖来自动选择缓存，我们可以在这里强制使用redis作为缓存
+        RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
+        
+        // 设置key都使用前缀，否则会导致不同name的缓存使用了相同的key
+        // 比如两个缓存都使用了用户ID作为缓存key，默认情况下，redis里面存储缓存的key完全相同，这里使用了前缀的话，就可以往缓存的key上面添加前缀，以区分不同name的缓存（DefaultRedisCachePrefix 默认使用cacheName作为前缀）
+        rcm.setUsePrefix(true);
+        rcm.setCachePrefix(new DefaultRedisCachePrefix(&quot;_&quot; + cacheProperties.getVersion() + &quot;:&quot;));
+        
+        // 设置缓存过期时间，单位为秒，超时之后，redis自动删除该缓存
+        rcm.setDefaultExpiration(cacheProperties.getExpiration());
+        return rcm;
+    }
 
-<h2 id="toc_4">小tips</h2>
-
-<p>我们可以设置一个默认的仓库，这样可以在点击上方工具栏的时候默认推送和拉取默认仓库中的代码。<br/>
-如下图，我就设置了OSChina上面的newsMaster为本地newsMaster的默认跟踪分支。<br/>
-<img src="media/14634059724558/14634080917985.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p>
+}
+</code></pre>
 
 
-		</div>
-	
+</div>
 
- 
-	
+<br /><br />
+<hr />
 
- 
-	
+<div class="row clearfix">
+  <div class="large-6 columns">
+	<div class="text-left" style="padding:15px 0px;">
+		
+	</div>
+  </div>
+  <div class="large-6 columns">
+	<div class="text-right" style="padding:15px 0px;">
+		
+	        <a href="15377761043880.html" 
+	        title="Next Post: JAVA动态代理">JAVA动态代理 &raquo;</a>
+	    
+	</div>
+  </div>
+</div>
 
- 
-	
+<div class="row">
+<div style="padding:0px 0.93em;" class="share-comments">
+<!--打赏-->
+<!--<div id="cyReward" role="cylabs" data-use="reward" sid="" style="text-align: center;"></div>-->
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" sid=""></div> 
+<script type="text/javascript"> 
+var urlStr = window.location.href;  
+str = urlStr.match(/fengqiangboy.com\/(\S*).html/); 
+if (str == null || str == "") {
+	str = urlStr.match(/Category\/(\S*).html/); 
+}
+str=str[1];
+console.log($("#SOHUCS"));
+$("#SOHUCS").attr("sid", str);
+$("#cyReward").attr("sid", str);
+(function(){ 
+var appid = 'cysX3aRYR'; 
+var conf = 'prod_741ad40a699e4352611c239a99eeb670'; 
+var width = window.innerWidth || document.documentElement.clientWidth; 
+if (width < 960) { 
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+<!--打赏-->
+<!--<script type="text/javascript" charset="utf-8" src="https://changyan.itc.cn/js/lib/jquery.js"></script>-->
+<!--<script type="text/javascript" charset="utf-8" src="https://changyan.sohu.com/js/changyan.labs.https.js?appid=cysX3aRYR"></script>-->
+<script>
+function loadCssCode(code) {
+	var style = document.createElement('style');
+	style.type = 'text/css';
+	style.rel = 'stylesheet';
+	//for Chrome Firefox Opera Safari
+	style.appendChild(document.createTextNode(code));
+	//for IE
+	//style.styleSheet.cssText = code;
+	var head = document.getElementsByTagName('head')[0];
+	head.appendChild(style);
+}
+var dsq = null;
+//去除畅言广告
+dsq = setInterval('if(document.getElementById("feedAv")){document.getElementById("feedAv").id="feedAvi";window.clearInterval(dsq);}', 1000);
+loadCssCode('#feedAvi{position: absolute !important;z-index: -9999;top: -1000px;}');
+</script>
 
- 
-	
-
-  
-  
+</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		var currentURL = '15557268417313.html';
+		$('#side-nav a').each(function(){
+			if($(this).attr('href') == currentURL){
+				$(this).parent().addClass('active');
+			}
+		});
+	});
+</script>  
 </div></div>
 
 

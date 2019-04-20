@@ -4,7 +4,7 @@
   <title><![CDATA[奉强的个人博客]]></title>
   <link href="http://fengqiangboy.com/atom.xml" rel="self"/>
   <link href="http://fengqiangboy.com/"/>
-  <updated>2018-10-29T13:53:47+08:00</updated>
+  <updated>2019-04-20T10:59:52+08:00</updated>
   <id>http://fengqiangboy.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,81 @@
   </author>
   <generator uri="http://www.mweb.im">MWeb</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[spring-boot 整合 Redis 缓存]]></title>
+    <link href="http://fengqiangboy.com/15557268417313.html"/>
+    <updated>2019-04-20T10:20:41+08:00</updated>
+    <id>http://fengqiangboy.com/15557268417313.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">引入依赖</h2>
+
+<pre><code class="language-grave">compile &quot;org.springframework.boot:spring-boot-starter-cache&quot;
+compile &quot;org.springframework.boot:spring-boot-starter-data-redis&quot;
+</code></pre>
+
+<h2 id="toc_1">添加CacheProperties</h2>
+
+<pre><code class="language-java">@Data
+@ConfigurationProperties(prefix = &quot;fengqiangboy.cache&quot;)
+public class CacheProperties {
+
+    /**
+     * 缓存版本号, 会出现在缓存key前面，方便更新的时候让旧缓存失效
+     */
+    private String version = &quot;0&quot;;
+
+    /**
+     * 缓存过期时间
+     * 单位：秒
+     */
+    private int expiration = 2 * 60 * 10;
+
+}
+</code></pre>
+
+<h2 id="toc_2">配置cacheManager</h2>
+
+<pre><code class="language-java">@Configuration
+@EnableCaching
+public class RedisCachingConfig extends CachingConfigurerSupport {
+
+    /**
+    * 配置缓存版本号，方便在缓存需要失效的时候，直接更新缓存版本号
+    */
+    
+    private final CacheProperties cacheProperties;
+
+    public RedisCachingConfig(CacheProperties cacheProperties) {
+        this.cacheProperties = cacheProperties;
+    }
+
+    /**
+     * 添加缓存默认超时配置
+     *
+     * @param redisTemplate redis模板
+     * @return 缓存管理器
+     */
+    @Bean
+    public CacheManager cacheManager(RedisTemplate&lt;?, ?&gt; redisTemplate) {
+        // Spring boot 默认会根据依赖来自动选择缓存，我们可以在这里强制使用redis作为缓存
+        RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
+        
+        // 设置key都使用前缀，否则会导致不同name的缓存使用了相同的key
+        // 比如两个缓存都使用了用户ID作为缓存key，默认情况下，redis里面存储缓存的key完全相同，这里使用了前缀的话，就可以往缓存的key上面添加前缀，以区分不同name的缓存（DefaultRedisCachePrefix 默认使用cacheName作为前缀）
+        rcm.setUsePrefix(true);
+        rcm.setCachePrefix(new DefaultRedisCachePrefix(&quot;_&quot; + cacheProperties.getVersion() + &quot;:&quot;));
+        
+        // 设置缓存过期时间，单位为秒，超时之后，redis自动删除该缓存
+        rcm.setDefaultExpiration(cacheProperties.getExpiration());
+        return rcm;
+    }
+
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[JAVA动态代理]]></title>
@@ -3081,6 +3156,10 @@ print b
 <ul>
 <li><p>音频控制台封面图片不能设置为空，否则会crash。</p></li>
 <li><p>不要往frameworks文件夹里面添加第三方framework，否则引入某些其他第三方frameworks的时候会报找不到的错误。</p></li>
+<li><p>No code signature found.修复   </p>
+<blockquote>
+<p>到Xcode.app中（ /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk ）修改SDKSettings.plist 文件中的一项CODE_SIGNING_REQUIRED的值，从NO改为YES，再重启XCode即可</p>
+</blockquote></li>
 </ul>
 
 ]]></content>
@@ -3381,189 +3460,6 @@ demo说明：demo默认打开多说主页，打开之后在第一个viewControll
 <p>        其实在百度和Google上面找apple demo，能找到很多，但是大多只能在模拟器上面实现一个界面而已，我开始也在那些demo中郁闷了很久，写这个文章也是希望能帮到一些人，让大家在使用的时候少走弯路。<br/>
         在实际应用中，这些步骤是远远不足的，我们在实际中肯定还要和后台做很多磨合，庆幸的是有第三方服务商为我们解决这些问题。所以，如果你们项目中要使用apple pay，我建议还是直接联系第三方提供商吧。据我的了解，一般收取的手续费都是千分之八。<br/>
         附上demo：<a href="https://github.com/fengqiangboy/UnionApplePayDemo">https://github.com/fengqiangboy/UnionApplePayDemo</a></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iOS开发-navigationBar的透明度处理]]></title>
-    <link href="http://fengqiangboy.com/14610809561335.html"/>
-    <updated>2016-04-19T23:49:16+08:00</updated>
-    <id>http://fengqiangboy.com/14610809561335.html</id>
-    <content type="html"><![CDATA[
-<h3 id="toc_0">文档更新说明：</h3>
-
-<pre><code class="language-text">•   2016年02月25日 v1.0  初稿
-</code></pre>
-
-<h2 id="toc_1">1、背景</h2>
-
-<p><img src="media/14610809561335/1.png" alt="1" class="mw_img_left" style="width:315px;display: block; float: left; margin: 0px 8px 8px 0px;"/><img src="media/14610809561335/2.png" alt="2" class="mw_img_left" style="width:315px;display: block; float: left; margin: 0px 8px 8px 0px;"/><br/>
-<div style="clear:left;"></div><br/>
-我们在使用app的时候，经常看到一些app的导航栏的透明度是可以变化的。比如说淘宝，在商品界面，你越往上滑，导航栏的透明度就会降低，那么这种效果是怎么实现的呢？效果图如上.</p>
-
-<h2 id="toc_2">实现方案</h2>
-
-<p>很多人看到这个效果，都觉得很简单，确实，这个效果看起来是蛮简单的。这里我想到的方案主要是下面的四个：</p>
-
-<ul>
-<li>方案1：可能你会认为设置导航栏的透明度就可以解决了。不过设置导航栏透明度是会把导航栏上面那几个按钮一并隐藏的，再看看淘宝，那几个按钮可是一直都在啊。还有就是目前iOS中，设置导航栏透明度是有问题的，这个不上今天的主题，下次有机会再来讨论。</li>
-<li>方案2：这个方案要看具体项目了，项目中如果使用的是纯色来作为导航栏背景的话，我们可以调整导航栏背景颜色的透明度达到这个效果。但是非常不幸的是，设置这个属性是没有用的。这个属性只能设置两个状态，一个是有颜色的，一个是没有颜色的（clearColor）。</li>
-<li>方案3：看完上面两个方案，也许你会在心中默念“尼玛，这不坑爹吗？两个方案一个不能实现，一个只能用在纯色的导航栏上面，我们公司的美工坑爹的要我们用图片作为导航栏背景！！！”。先别急，待我慢慢说来。从上面方案二可以想到一种思路，就是先把背景图片的透明度设置好，再把这个图片设置成导航栏的背景图片。不过，图片是没有alpha这个属性的，我们可以通过画布的方式来实现这个透明度的改变，具体代码在下面给出。</li>
-<li>方案4：这个方案是一个做假象的做法，先给导航栏设置一个透明的背景，然后在创建一个和导航栏一样大小的view，把这个view  insert到导航栏的0号位置中，这样可以保证我们创建的view在导航栏的最底层，不影响上层的按钮显示。</li>
-</ul>
-
-<h2 id="toc_3">相关代码</h2>
-
-<p>光说不练假把式，方案说完了，不去实现一下就没意思了。<br/>
-<strong>方案1</strong>：这个方案没什么技术含量，直接在scrollView的代理中写一句话就可以了。不过要注意这个方案的缺陷。</p>
-
-<pre><code class="language-text">- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    //改变透明度
-    self.navigationController.navigationBar.alpha = scrollView.contentOffset.y / 200.0f;
-}
-</code></pre>
-
-<p><strong>方案2</strong>：暂时未实现，实现了再来贴代码。 <br/>
-<strong>方案3</strong>：这个方案主要就是生成透明度变化的图片。</p>
-
-<ul>
-<li> 1、首先，设置导航栏默认背景图片。</li>
-</ul>
-
-<pre><code class="language-text">- (void)setNavigation {
-    //设置导航栏背景颜色
-    UIImage *navigationBarBackgroundImage = [UIImage imageFromColor:[UIColor redColor] imageSize:CGSizeMake(WIDTH, 64)];
-    navigationBarBackgroundImage = [UIImage imageByApplyingAlpha:0 image:navigationBarBackgroundImage];
-    [self.navigationController.navigationBar setBackgroundImage:navigationBarBackgroundImage forBarMetrics:UIBarMetricsDefault];
-    
-    self.automaticallyAdjustsScrollViewInsets = NO;
-}
-</code></pre>
-
-<ul>
-<li>2、实现代理，在代理中改变图片透明度。</li>
-</ul>
-
-<pre><code class="language-text">#pragma mark scrollViewDelegate
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    //设置导航栏背景透明度
-    CGFloat alpha = (scrollView.contentOffset.y / 200.0f);
-    alpha = alpha &lt; 0 ? 0 : alpha &gt; 1 ? 1 : alpha;
-    
-    UIImage *navigationBarBackgroundImage = [UIImage imageFromColor:[UIColor redColor] imageSize:CGSizeMake(WIDTH, 64)];
-    navigationBarBackgroundImage = [UIImage imageByApplyingAlpha:alpha image:navigationBarBackgroundImage];
-    [self.navigationController.navigationBar setBackgroundImage:navigationBarBackgroundImage forBarMetrics:UIBarMetricsDefault];
-}
-</code></pre>
-
-<p>功能就可以实现了。还有两段关键代码。生成纯色图片和改变图片透明度的。</p>
-
-<ul>
-<li>生成纯色图片</li>
-</ul>
-
-<pre><code class="language-text">/**
- *  通过颜色生成纯色图片
- *
- *  @param color 颜色
- *  @param size  图片大小
- *
- *  @return 生成的图片
- */
-+ (UIImage *)imageFromColor:(UIColor *)color imageSize:(CGSize)size {
-    CGRect rect = CGRectMake(0, 0, size.width, size.height);
-    UIGraphicsBeginImageContext(size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext(); return img;
-}
-</code></pre>
-
-<ul>
-<li>改变图片透明度</li>
-</ul>
-
-<pre><code class="language-text">/**
- *  改变图片透明度
- *
- *  @param alpha 透明度
- *  @param image 图片
- *
- *  @return 改变之后的图片
- */
- + (UIImage *)imageByApplyingAlpha:(CGFloat)alpha image:(UIImage*)image {
-    
-    UIGraphicsBeginImageContextWithOptions(image.size, NO, 0.0f);
-    
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGRect area = CGRectMake(0, 0, image.size.width, image.size.height);
-    
-    CGContextScaleCTM(ctx, 1, -1);
-    CGContextTranslateCTM(ctx, 0, -area.size.height);
-    
-    CGContextSetBlendMode(ctx, kCGBlendModeMultiply);
-    
-    CGContextSetAlpha(ctx, alpha);
-    
-    CGContextDrawImage(ctx, area, image.CGImage);
-    
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    
-    return newImage;
-}
-</code></pre>
-
-<p><strong>方案4</strong>：这个方案关键点是找到navigaitonbar的底层图片，然后把我们的view插入进去。</p>
-
-<ul>
-<li>1、首先，把我们的view直接插入到navigaitonbar的0号位置。</li>
-</ul>
-
-<pre><code class="language-text">#pragma mark 设置导航栏
-- (void)setNavigation {
-    //设置导航栏背景颜色
-    UIImage *navigationBarBackgroundImage = [UIImage imageFromColor:[UIColor redColor] imageSize:CGSizeMake(WIDTH, 64)];
-    navigationBarBackgroundImage = [UIImage imageByApplyingAlpha:0 image:navigationBarBackgroundImage];
-    [self.navigationController.navigationBar setBackgroundImage:navigationBarBackgroundImage forBarMetrics:UIBarMetricsDefault];
-    
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    
-    
-    //创建一个假象背景view
-    UIView *navigationBarBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, -20, WIDTH, 64)];
-    navigationBarBackgroundView.alpha = 0;
-    navigationBarBackgroundView.backgroundColor = [UIColor orangeColor];
-    //插入
-    [self.navigationController.navigationBar insertSubview:navigationBarBackgroundView atIndex:0];
-}﻿
-</code></pre>
-
-<ul>
-<li>2、然后就和上面的方案一样了，在代理中改变这个view的透明度.</li>
-</ul>
-
-<pre><code class="language-text">#pragma mark scrollViewDelegate
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    //设置导航栏背景透明度
-    CGFloat alpha = (scrollView.contentOffset.y / 300.0f);
-    alpha = alpha &lt; 0 ? 0 : alpha &gt; 1 ? 1 : alpha;
-    
-    UIView *navigationBarBackgroundView = self.navigationController.navigationBar.subviews[0];
-    navigationBarBackgroundView.alpha = alpha;
-}
-</code></pre>
-
-<p> <em>说明</em>：这个方案我觉得最好是自己写一个navigationController的继承类，在继承类中实现这个功能。</p>
-
-<h2 id="toc_4">项目代码</h2>
-
-<p>项目完整代码已经上传到github，有兴趣的可以下载下来看看效果，也欢迎大家指出其中的错误，如果你有更好的方案也希望能告诉我~<br/>
-项目地址：<a href="https://github.com/fengqiangboy/iOS-NavigationBarBackgroundAlpha">https://github.com/fengqiangboy/iOS-NavigationBarBackgroundAlpha</a></p>
 
 ]]></content>
   </entry>

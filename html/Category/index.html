@@ -117,6 +117,8 @@
         <li><label>Java</label></li>
 
           
+            <li><a title="spring-boot 整合 Redis 缓存" href="15557268417313.html">spring-boot 整合 Redis 缓存</a></li>
+          
             <li><a title="JAVA动态代理" href="15377761043880.html">JAVA动态代理</a></li>
           
 
@@ -200,6 +202,8 @@
                     
                       <li class="side-title"><span>Java</span></li>
                         
+                          <li><a title="spring-boot 整合 Redis 缓存" href="15557268417313.html">spring-boot 整合 Redis 缓存</a></li>
+                        
                           <li><a title="JAVA动态代理" href="15377761043880.html">JAVA动态代理</a></li>
                         
 
@@ -216,382 +220,73 @@
 
 	
 		<div class="markdown-body">
-		<h1>JAVA动态代理</h1>
+		<h1>spring-boot 整合 Redis 缓存</h1>
 
-		<h4 id="toc_0">文档更新说明</h4>
+		<h2 id="toc_0">引入依赖</h2>
 
-<ul>
-<li><p>2018年09月24日 v1.0 初稿</p>
-<blockquote>
-<p>代理在生活中很常见，比如说婚介网站，其实就是找对象的代理；还有社保代理、人事代理；还有找黄牛抢票，其实也是一种代理；而这些代理，在JAVA中也是有对应实现的。</p>
-</blockquote></li>
-</ul>
+<pre><code class="language-grave">compile &quot;org.springframework.boot:spring-boot-starter-cache&quot;
+compile &quot;org.springframework.boot:spring-boot-starter-data-redis&quot;
+</code></pre>
 
-<h3 id="toc_1">1、为什么要动态代理</h3>
+<h2 id="toc_1">添加CacheProperties</h2>
 
-<p>动态代理的作用其实就是在不修改原代码的前提下，对已有的方法进行增强。<br/>
-关键点：</p>
-
-<ul>
-<li>不修改原来已有的代码（满足设计模式的要求）</li>
-<li>对已有方法进行增强</li>
-</ul>
-
-<h3 id="toc_2">2、举个栗子</h3>
-
-<p>我们用一个很简单的例子来说明：<code>Hello</code>类，有一个<code>introduction</code>方法。</p>
-
-<p>现在我们的需求就是不修改<code>Hello</code>类的<code>introduction</code>方法，在<code>introduction</code>之前先<code>sayHello</code>，在<code>introduction</code>之后再<code>sayGoodBye</code></p>
-
-<h3 id="toc_3">3、实现方式</h3>
-
-<p>JAVA中，实现动态代理有两种方式，一种是JDK提供的，一种是第三方库<code>CgLib</code>提供的。特点如下：</p>
-
-<ul>
-<li>JDK动态代理：被代理的目标类需要实现接口</li>
-<li><code>CgLib</code>方式：可以对任意类实现动态代理</li>
-</ul>
-
-<h4 id="toc_4">3.1、JDK动态代理</h4>
-
-<p>JDK动态代理需要实现接口，然后通过对接口方法的增强来实现动态代理</p>
-
-<p>所以要使用JDK动态代理的话，我们首先要创建一个接口，并且被代理的方法要在这个接口里面</p>
-
-<h5 id="toc_5">3.1.1、创建一个接口</h5>
-
-<p>我们创建一个接口如下：</p>
-
-<p><code>Personal.java</code></p>
-
-<pre><code class="language-java">public interface Personal {
+<pre><code class="language-java">@Data
+@ConfigurationProperties(prefix = &quot;fengqiangboy.cache&quot;)
+public class CacheProperties {
 
     /**
-     * 被代理的方法
+     * 缓存版本号, 会出现在缓存key前面，方便更新的时候让旧缓存失效
      */
-    void introduction();
-
-}
-</code></pre>
-
-<h5 id="toc_6">3.1.2、实现接口</h5>
-
-<p>创建接口实现类，并且完成<code>introduction</code>方法</p>
-
-<p><code>PersonalImpl.java</code></p>
-
-<pre><code class="language-java">public class PersonalImpl implements Personal {
-    @Override
-    public void introduction() {
-        System.out.println(&quot;我是程序员！&quot;);
-    }
-}
-
-</code></pre>
-
-<h5 id="toc_7">3.1.3、创建代理类</h5>
-
-<p>JDK代理的关键就是这个代理类了，需要实现<code>InvocationHandler</code></p>
-
-<p>在代理类中，所有方法的调用都好分发到<code>invoke</code>方法中。我们在<code>invoke</code>方法完成对方法的增强即可</p>
-
-<p><code>JDKProxyFactory.java</code></p>
-
-<pre><code class="language-java">import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-
-public class JDKProxyFactory&lt;T&gt; implements InvocationHandler {
+    private String version = &quot;0&quot;;
 
     /**
-     * 目标对象
+     * 缓存过期时间
+     * 单位：秒
      */
-    private T target;
+    private int expiration = 2 * 60 * 10;
+
+}
+</code></pre>
+
+<h2 id="toc_2">配置cacheManager</h2>
+
+<pre><code class="language-java">@Configuration
+@EnableCaching
+public class RedisCachingConfig extends CachingConfigurerSupport {
 
     /**
-     * 构造函数传入目标对象
-     *
-     * @param target 目标对象
-     */
-    public JDKProxyFactory(T target) {
-        this.target = target;
-    }
-
-    /**
-     * 获取代理对象
-     *
-     * @return 获取代理
-     */
-    public T getProxy() {
-        return (T) Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), this);
-    }
-
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        // 对方法增强
-        System.out.println(&quot;大家好！&quot;);
-        // 调用原方法
-        Object result = method.invoke(target, args);
-        // 方法增强
-        System.out.println(&quot;再见！&quot;);
-        return result;
-    }
-}
-
-</code></pre>
-
-<p>就这样，JDK动态代理的代码就完成了，接下来写一份测试代码</p>
-
-<h5 id="toc_8">3.1.4、编写测试代码</h5>
-
-<p>为了方便测试，我们编写一个<code>test</code>方法</p>
-
-<p>同时为了查看class文件，还添加了一个<code>generatorClass</code>方法，这个方法可以将动态代理生成的<code>.class</code>输出到文件</p>
-
-<p><code>ProxyTest.java</code></p>
-
-<pre><code class="language-java">import org.junit.Test;
-import sun.misc.ProxyGenerator;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-public class ProxyTest {
-
-    @Test
-    public void testJdkProxy() {
-        // 生成目标对象
-        Personal personal = new PersonalImpl();
-        // 获取代理对象
-        JDKProxyFactory&lt;Personal&gt; proxyFactory = new JDKProxyFactory&lt;&gt;(personal);
-        Personal proxy = proxyFactory.getProxy();
-
-        // 将proxy的class字节码输出到文件
-        generatorClass(proxy);
-
-        // 调用代理对象
-        proxy.introduction();
-    }
-
-    /**
-     * 将对象的class字节码输出到文件
-     *
-     * @param proxy 代理类
-     */
-    private void generatorClass(Object proxy) {
-        FileOutputStream out = null;
-        try {
-            byte[] generateProxyClass = ProxyGenerator.generateProxyClass(proxy.getClass().getSimpleName(), new Class[]{proxy.getClass()});
-            out = new FileOutputStream(proxy.getClass().getSimpleName() + &quot;.class&quot;);
-            out.write(generateProxyClass);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                }
-            }
-        }
-
-    }
-
-}
-</code></pre>
-
-<h5 id="toc_9">3.1.5、查看运行结果</h5>
-
-<p>可以看到，运行<code>test</code>方法之后，控制台打印出如下：</p>
-
-<pre><code class="language-bash">大家好！
-我是程序员！
-再见！
-</code></pre>
-
-<p>我们在<code>introduction</code>方法前和后都成功增加了功能，让这个程序员的自我介绍瞬间变得更加有礼貌了。</p>
-
-<h5 id="toc_10">3.1.6、探探动态代理的秘密</h5>
-
-<p>动态代理的代码并不多，那么JDK底层是怎么帮我们实现的呢？</p>
-
-<p>在测试的时候我们将动态生成的代理类的<code>class</code>字节码输出到了文件，我们可以反编译看看。</p>
-
-<p>结果有点长，就不全部贴出来了，不过我们可以看到，里面有一个<code>introduction</code>方法如下：</p>
-
-<pre><code class="language-java">
-/**
-* the invocation handler for this proxy instance.
-* @serial
-*/
-protected InvocationHandler h;
-
-protected Proxy(InvocationHandler h) {
-    Objects.requireNonNull(h);
-    this.h = h;
-}
-
-public final void introduction() throws  {
-        try {
-            super.h.invoke(this, m3, (Object[])null);
-        } catch (RuntimeException | Error var2) {
-            throw var2;
-        } catch (Throwable var3) {
-            throw new UndeclaredThrowableException(var3);
-        }
-    }
-</code></pre>
-
-<p>原来，生成的代理对象里面，引用了我们的<code>InvocationHandler</code>，然后在将<code>introduction</code>方法里面调用了<code>InvocationHandler</code>的<code>introduction</code>，而<code>InvocationHandler</code>是由我们编写的代理类，在这里我们增加了<code>sayHello</code>和<code>sayGoodBye</code>操作，然后还调用了原对象的<code>introduction</code>方法，就这样完成了动态代理。</p>
-
-<h4 id="toc_11">3.2、CgLib动态代理</h4>
-
-<p><code>CgLib</code>动态</p>
-
-<h5 id="toc_12">3.2.1、创建被代理对象</h5>
-
-<p>由于<code>CgLib</code>不需要实现接口，所以我们不需要创建接口文件了（当然，你要有接口也没有问题）</p>
-
-<p>直接创建目标类，实现<code>introduction</code>方法</p>
-
-<p><code>PersonalImpl.java</code></p>
-
-<pre><code class="language-java">public class PersonalImpl {
-    public void introduction() {
-        System.out.println(&quot;我是程序员！&quot;);
-    }
-}
-</code></pre>
-
-<h5 id="toc_13">3.2.2、创建代理类</h5>
-
-<p>同样，我们也需要创建代理类，并且在这里实现增强的逻辑，这次我们不是实现<code>InvocationHandler</code>接口了，而是实现<code>CgLib</code>提供的接口<code>MethodInterceptor</code>，都是类似的，<code>MethodInterceptor</code>中，全部方法调用都会交给<code>intercept</code>处理，我们在<code>intercept</code>添加处理逻辑即可。</p>
-
-<p><code>CgLibProxyFactory.java</code></p>
-
-<pre><code class="language-java">import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-
-import java.lang.reflect.Method;
-
-public class CgLibProxyFactory&lt;T&gt; implements MethodInterceptor {
-
-    /**
-     * 获取代理对象
-     *
-     * @param tClass 被代理的目标对象
-     * @return 代理对象
-     */
-    public T getProxyByCgLib(Class&lt;T&gt; tClass) {
-        // 创建增强器
-        Enhancer enhancer = new Enhancer();
-
-        // 设置需要增强的类的类对象
-        enhancer.setSuperclass(tClass);
-
-        // 设置回调函数
-        enhancer.setCallback(this);
-
-        // 获取增强之后的代理对象
-        return (T) enhancer.create();
-    }
-
-     /**
-     *  代理类方法调用回调
-     *  
-     * @param obj 这是代理对象，也就是[目标对象]的子类
-     * @param method [目标对象]的方法
-     * @param args 参数
-     * @param proxy 代理对象的方法
-     * @return 返回结果，返回给调用者
-     * @throws Throwable
-     */
-    @Override
-    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-
-        System.out.println(&quot;大家好！&quot;);
-
-        Object result = proxy.invokeSuper(obj, args);
-
-        System.out.println(&quot;再见！&quot;);
-
-        return result;
-    }
-}
-</code></pre>
-
-<h5 id="toc_14">3.2.3、编写测试代码</h5>
-
-<p>在刚才的测试方法中，我们添加一个<code>cglib</code>的测试方法：</p>
-
-<pre><code class="language-java">@Test
-public void testCgLibProxy() {
-    // 生成被代理的目标对象
-    PersonalImpl personal = new PersonalImpl();
+    * 配置缓存版本号，方便在缓存需要失效的时候，直接更新缓存版本号
+    */
     
-    // 获取代理类
-    CgLibProxyFactory&lt;PersonalImpl&gt; proxyFactory = new CgLibProxyFactory&lt;&gt;();
-    PersonalImpl proxy = proxyFactory.getProxyByCgLib((Class&lt;PersonalImpl&gt;) personal.getClass());
+    private final CacheProperties cacheProperties;
 
-    // 将proxy的class字节码输出到文件
-    generatorClass(proxy);
-
-    // 调用代理对象
-    proxy.introduction();
-}
-</code></pre>
-
-<h5 id="toc_15">3.2.4、查看运行结果</h5>
-
-<p>运行测试用例，可以看到跟JDK的实现一样的效果</p>
-
-<pre><code class="language-bash">大家好！
-我是程序员！
-再见！
-</code></pre>
-
-<h5 id="toc_16">3.2.5、探探动态代理的秘密</h5>
-
-<p>跟JDK的测试一样，我们也来看看生成的<code>class</code>文件</p>
-
-<pre><code class="language-java">public final void introduction() throws  {
-    try {
-        super.h.invoke(this, m7, (Object[])null);
-    } catch (RuntimeException | Error var2) {
-        throw var2;
-    } catch (Throwable var3) {
-        throw new UndeclaredThrowableException(var3);
+    public RedisCachingConfig(CacheProperties cacheProperties) {
+        this.cacheProperties = cacheProperties;
     }
+
+    /**
+     * 添加缓存默认超时配置
+     *
+     * @param redisTemplate redis模板
+     * @return 缓存管理器
+     */
+    @Bean
+    public CacheManager cacheManager(RedisTemplate&lt;?, ?&gt; redisTemplate) {
+        // Spring boot 默认会根据依赖来自动选择缓存，我们可以在这里强制使用redis作为缓存
+        RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
+        
+        // 设置key都使用前缀，否则会导致不同name的缓存使用了相同的key
+        // 比如两个缓存都使用了用户ID作为缓存key，默认情况下，redis里面存储缓存的key完全相同，这里使用了前缀的话，就可以往缓存的key上面添加前缀，以区分不同name的缓存（DefaultRedisCachePrefix 默认使用cacheName作为前缀）
+        rcm.setUsePrefix(true);
+        rcm.setCachePrefix(new DefaultRedisCachePrefix(&quot;_&quot; + cacheProperties.getVersion() + &quot;:&quot;));
+        
+        // 设置缓存过期时间，单位为秒，超时之后，redis自动删除该缓存
+        rcm.setDefaultExpiration(cacheProperties.getExpiration());
+        return rcm;
+    }
+
 }
 </code></pre>
-
-<p>可以发现，与JDK的动态代理并没有区别。</p>
-
-<h3 id="toc_17">4、如何选择</h3>
-
-<p>既然有两种实现方式，那么到底应该怎么选择呢？</p>
-
-<p>就两个原则：</p>
-
-<ul>
-<li>目标类有接口实现的，<code>JDK</code>和<code>CgLib</code>都可以选择，你开心就好</li>
-<li>目标类没有实现任何接口，那只能用<code>CgLib</code>了</li>
-</ul>
-
-<h3 id="toc_18">5、后记</h3>
-
-<p>其实在第一次看到动态代理的时候，我就想不明白，我们都把目标类<code>new</code>出来了，为什么还要将目标类丢给代理类呢？为什么不直接调用目标类对应的方法呢？</p>
-
-<p>后来才发现，原来我没搞清楚动态代理的使用场景，场景很清晰，就是：</p>
-
-<ul>
-<li>不修改原来已有的代码（满足设计模式的要求）</li>
-<li>对已有方法进行<strong>增强</strong></li>
-</ul>
-
-<p>关键是<strong>增强</strong>，代理类里面我们是可以添加很多处理逻辑的，从而实现增强效果。就像黄牛抢票比我们厉害些一样。</p>
 
 
 		</div>

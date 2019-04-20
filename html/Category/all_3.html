@@ -117,6 +117,8 @@
         <li><label>Java</label></li>
 
           
+            <li><a title="spring-boot 整合 Redis 缓存" href="15557268417313.html">spring-boot 整合 Redis 缓存</a></li>
+          
             <li><a title="JAVA动态代理" href="15377761043880.html">JAVA动态代理</a></li>
           
 
@@ -200,6 +202,8 @@
                     
                       <li class="side-title"><span>Java</span></li>
                         
+                          <li><a title="spring-boot 整合 Redis 缓存" href="15557268417313.html">spring-boot 整合 Redis 缓存</a></li>
+                        
                           <li><a title="JAVA动态代理" href="15377761043880.html">JAVA动态代理</a></li>
                         
 
@@ -216,48 +220,56 @@
 
 	
 		<div class="markdown-body">
-		<h1>iOS开发-坑爹的iOS特性</h1>
+		<h1>git中，如何使用sourcetree管理同一个项目中的多个远程仓库</h1>
 
-		<ul>
-<li><p>xcode7中，新建两个window会崩溃掉，解决方法就是不要同时存在两个window，用view实现。</p></li>
-<li><p>设置navigationController.navigationBar.alpha属性，可以将导航栏变成透明，但是，但是，切换到后台，再到前台，会被重置成不透明。</p></li>
-<li><p>自定义导航栏左侧按钮之后，滑动返回手势失效。有两种解决方法：</p>
-<ol>
-<li>设置backButton，不过这个属性感觉有点反人类。</li>
-<li>修复返回手势。</li>
-</ol></li>
-</ul>
+		<h3 id="toc_0">文档更新说明：</h3>
 
-<pre><code class="language-text">[self.navigationController.interactivePopGestureRecognizer setValue:self.navigationController forKey:@&quot;delegate&quot;];
+<pre><code class="language-text">•   2016年05月16日 v1.0  初稿
 </code></pre>
 
-<ul>
-<li>WKWebView中，不支持打开一些链接，比如电话邮件之类的。</li>
-</ul>
+<h2 id="toc_1">背景</h2>
 
-<pre><code class="language-text">///判断当前加载的url是否是WKWebView不能打开的协议类型
-- (BOOL)isLoadingWKWebViewDisableScheme:(NSURL *)url
-{
-    BOOL retValue = NO;
-    
-    //判断是否正在加载WKWebview不能识别的协议类型：phone numbers, email address, maps, etc.
-    if([url.scheme isEqualToString:@&quot;tel&quot;]) {
-        UIApplication *app = [UIApplication sharedApplication];
-        if ([app canOpenURL:url]) {
-            [app openURL:url];
-            retValue = YES;
-        }
-    }
-    
-    return retValue;
-}
+<p>        看标题，可能会有点晕，这说的啥玩意啊？实际上，我是想通过那一句话，表达这个意思：<br/>
+        在开发中，我们可能会需要把本地的git仓库同步到两个甚至多个远程git仓库中。<br/>
+        比如说我们可以在bitbucket和oschina上面各建立一个仓库，然后都对应到本地的git仓库来。<br/>
+        这样一来，我们可以保证远程仓库的可靠性，降低远程仓库出问题的风险，相当于做一个备份似的。当然，好处肯定不止这一点。<br/>
+        </p>
 
-</code></pre>
+<h2 id="toc_2">sourcetree</h2>
+
+<p>        SourceTree 是 Windows 和Mac OS X 下<strong>免费</strong>的 Git 和 Hg 客户端，同时也是Mercurial和Subversion版本控制系统工具。支持创建、克隆、提交、push、pull 和合并等操作。<br/>
+        官网：<a href="https://www.sourcetreeapp.com/">https://www.sourcetreeapp.com/</a><br/>
+        国内下载需要自备梯子。<br/>
+<img src="media/14634059724558/1.png" alt="c"/></p>
+
+<h2 id="toc_3">步骤</h2>
 
 <ul>
-<li><p>音频控制台封面图片不能设置为空，否则会crash。</p></li>
-<li><p>不要往frameworks文件夹里面添加第三方framework，否则引入某些其他第三方frameworks的时候会报找不到的错误。</p></li>
+<li>1、在远端那里右击；</li>
 </ul>
+
+<p><img src="media/14634059724558/14634070386615.jpg" alt="c"/></p>
+
+<ul>
+<li>2、点击新建远程，在弹出来的窗口中填写好如下的信息，填好之后点击确定；</li>
+</ul>
+
+<p><img src="media/14634059724558/14634073626103.jpg" alt="c"/></p>
+
+<ul>
+<li>3、接下来，应该能在主界面看到刚才新建的仓库了，对刚才新建的仓库点击右键，会出来两个拉取的菜单，第一个拉取是拉取仓库的分支信息，第二个拉取是拉取仓库的。目前，我们还没有拉取到仓库的分支信息，所以要先拉取仓库的分支信息。选第一个；
+<img src="media/14634059724558/14634075402427.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/>
+<div style="clear:left;"></div></li>
+<li>4、接下来，我们就可以往新建的仓库推送代码了。推送的时候选对仓库就OK了。
+<img src="media/14634059724558/14634079305730.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/>
+<div style="clear:left;"></div></li>
+</ul>
+
+<h2 id="toc_4">小tips</h2>
+
+<p>我们可以设置一个默认的仓库，这样可以在点击上方工具栏的时候默认推送和拉取默认仓库中的代码。<br/>
+如下图，我就设置了OSChina上面的newsMaster为本地newsMaster的默认跟踪分支。<br/>
+<img src="media/14634059724558/14634080917985.jpg" alt="1" class="mw_img_center" style="width:400px;display: block; clear:both; margin: 0 auto;"/></p>
 
 
 		</div>

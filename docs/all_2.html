@@ -117,6 +117,8 @@
         <li><label>Java</label></li>
 
           
+            <li><a title="spring-boot 整合 Redis 缓存" href="15557268417313.html">spring-boot 整合 Redis 缓存</a></li>
+          
             <li><a title="JAVA动态代理" href="15377761043880.html">JAVA动态代理</a></li>
           
 
@@ -200,6 +202,8 @@
                     
                       <li class="side-title"><span>Java</span></li>
                         
+                          <li><a title="spring-boot 整合 Redis 缓存" href="15557268417313.html">spring-boot 整合 Redis 缓存</a></li>
+                        
                           <li><a title="JAVA动态代理" href="15377761043880.html">JAVA动态代理</a></li>
                         
 
@@ -216,405 +220,445 @@
 
 	
 		<div class="markdown-body">
-		<h1>Swift3入门教程之一基础部分</h1>
+		<h1>Swift3入门教程之二----函数和闭包</h1>
 
 		<h3 id="toc_0">文档更新说明：</h3>
 
-<pre><code class="language-text">•   2016年10月07日 v1.0 初稿
+<pre><code class="language-text">•   2016年10月12日 v1.0 初稿
+•   2016年10月13日 v2.0 增加闭包部分
 </code></pre>
 
-<h2 id="toc_1">0、前言</h2>
+<h2 id="toc_1">1、函数</h2>
 
-<p>随着iOS10的发布，相信大部分公司都会把app的适配最低版本直接拉倒iOS8，毕竟维护和开发成本都会省掉不少。<br/>
-在iOS8上面，有一个重要的特性，就是可以使用swift了，而swift也已经发布了3.0版本，已经相当稳定了，所以，这个时候开始使用swift是一个明智的选择。<br/>
-这篇文章适合于有一定iOS开发经验的看，如果是完全没有iOS开发经验的，可能本文并不适合你。</p>
-
-<h2 id="toc_2">1、常量</h2>
+<h3 id="toc_2">1.1、函数的定义和调用</h3>
 
 <ul>
-<li>常量是不需要被改变的，用let关键字声明</li>
-<li>后面跟着常量的名称，冒号后面表示产量的类型，等号后面表示常量的值。</li>
-<li>在实际应用当中，一般省略冒号后面的类型声明，swift会自动根据我们的赋值来推断该常量的类型。</li>
+<li>使用<code>func</code>关键字来定义一个函数</li>
+<li>在swift中，大概我们也可以自豪的说&quot;一切皆对象&quot;了，函数也可以当做一个特殊的对象来看待。</li>
 </ul>
 
-<pre><code class="language-swift">let language: String = &quot;Swift&quot;
-let introduced: Int = 2014
-let isAwesome: Bool = true
-</code></pre>
-
-<h2 id="toc_3">2、变量</h2>
-
-<ul>
-<li>可以被修改的值，我们称为变量</li>
-<li>在swift中，变量使用var声明，格式和常量的声明一致。</li>
-</ul>
-
-<pre><code class="language-swift">let language = &quot;Swift&quot;
-let introduced = 2014
-let isAwesome = true
-var version = 1
-version = 3
-isAwesome = false  //这行报错
-</code></pre>
-
-<p>运行上面的代码，可以发现，编译器在最后一行报了错误，因为我们试图修改了一个常量的值。</p>
-
-<h2 id="toc_4">3、字符串拼接</h2>
-
-<ul>
-<li>swift中直接使用“+”来拼接字符串即可</li>
-</ul>
-
-<pre><code class="language-swift">let conference = &quot;WWDC&quot;
-let message = &quot;Hello, &quot; + conference + &quot;!&quot;
-// &quot;Hello, WWDC!&quot;
-</code></pre>
-
-<h2 id="toc_5">4、字符串插值</h2>
-
-<ul>
-<li>字符串的拼接不仅仅局限于字符串之间，swift也可以直接把值插入字符串中。</li>
-<li>把值连接到字符串中，只需要把值放入<code>\()</code>中，</li>
-<li>括号内还可以是一个表达式。例如：<code>\(year + 1)</code></li>
-</ul>
-
-<pre><code class="language-swift">let conference = &quot;WWDC&quot;
-let message = &quot;Hello, \(conference)!&quot;
-// &quot;Hello, WWDC!&quot;
-</code></pre>
-
-<pre><code class="language-swift">let conference = &quot;WWDC&quot;
-let year = 2016
-let message = &quot;Hello, \(conference) \(year)!&quot;
-// &quot;Hello, WWDC 2016!&quot;
-</code></pre>
-
-<pre><code class="language-swift">let conference = &quot;WWDC&quot;
-let year = 2016
-let message = &quot;Hello, \(conference) \(year + 1)!&quot;
-// &quot;Hello, WWDC 2017!&quot;
-</code></pre>
-
-<h2 id="toc_6">5、集合：数组和字典</h2>
-
-<ul>
-<li>swift中，数组和字典的声明方式很相似，</li>
-<li>为了安全，我们可以在名字后面声明类型。</li>
-</ul>
-
-<pre><code class="language-swift">let names: [String] = [&quot;Lily&quot;, &quot;Santiago&quot;, &quot;Justyn&quot;, &quot;Aadya&quot;]
-let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
-</code></pre>
-
-<ul>
-<li>当然，swift也可以自动推测数组和字典的类型，因此，在实际应用中，可以省略类型</li>
-</ul>
-
-<pre><code class="language-swift">let names = [&quot;Lily&quot;, &quot;Santiago&quot;, &quot;Justyn&quot;, &quot;Aadya&quot;]
-// an array of String values
-let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
-// a dictionary with String keys and Int values
-</code></pre>
-
-<h2 id="toc_7">6、循环</h2>
-
-<h3 id="toc_8">6.1 While 和 Repeat-While 循环</h3>
-
-<ul>
-<li>while循环，先检查条件是否成立，再执行循环体</li>
-<li>repeat循环，先执行循环体，再判断条件是否成立</li>
-</ul>
-
-<pre><code class="language-swift">while !endOfFile {
-   readLine()
+<pre><code class="language-swift">// 定义一个不带参数的函数
+func sendMessage() {
+   let message = &quot;Hey there!&quot;
+   print(message)
 }
 
+// 调用不带参数的函数
+sendMessage()
 
-repeat {
-   performTask()
-} while tasksRemaining &gt; 0
-</code></pre>
-
-<h3 id="toc_9">6.2 For-In循环</h3>
-
-<h4 id="toc_10">6.2.1 遍历字符串</h4>
-
-<pre><code class="language-swift">let dogString = &quot;Dog?!🐶&quot;
-for character in dogString.characters {
-   print(character)
-}
-
-
-/*
+/**
 输出结果：
-D
-o
-g
-?
-!
-🐶
+Hey there!
 */
 </code></pre>
 
-<h4 id="toc_11">6.2.2 遍历一个闭合区间</h4>
+<h3 id="toc_3">1.2、带参数的函数</h3>
 
-<p>使用<code>1...5</code>表示[1,5]的闭合区间</p>
+<ul>
+<li>定义带参数的函数，只需要在定义的时候，括号内填入相应的参数，默认情况下，是用<code>let</code>声明的常量</li>
+<li>在下面的定义中，<code>func</code>代表定义一个函数，是个关键字，<code>sendMessage</code>是这个函数的名字，<code>shouting</code>是参数的名字，可在函数内部使用，在调用的时候需要声明写出来<code>Bool</code>代表参数类型，这里是一个布尔类型</li>
+</ul>
 
-<pre><code class="language-swift">for number in 1...5 {
-   print(&quot;\(number) times 4 is \(number * 4)&quot;)
+<pre><code class="language-swift">// 定义一个带参数的函数
+func sendMessage(shouting: Bool) {
+   var message = &quot;Hey there!&quot;
+   if shouting {
+      message = message.uppercased()
+   }
+   print(message)
 }
 
-/*
+// 调用一个带参数的函数
+sendMessage(shouting: true)
+
+
+/**
 输出结果：
-1 times 4 is 4
-2 times 4 is 8
-3 times 4 is 12
-4 times 4 is 16
-5 times 4 is 20
+HEY THERE!
 */
 </code></pre>
 
-<h4 id="toc_12">6.2.3 遍历半开半闭合区间</h4>
+<h3 id="toc_4">1.3、函数的参数标签</h3>
 
 <ul>
-<li>使用<code>1..&lt;5</code>表示[1,5)的半开半闭区间</li>
-<li>没有这样的写法<code>1&lt;..5</code></li>
+<li>swift中，为了使函数在调用和定义的时候都能见名知意，提供了两个命名（参数标签和参数名），中间以空格分开</li>
+<li>参数名是给调用的时候函数内部使用的，参数标签是调用函数的时候，当做函数名来用的</li>
+<li>实际使用中，合理运用这两个参数，可以大大提高代码的可读性</li>
+<li>一个函数中，多个参数名不能重名，但是参数标签可以重名（建议不要那么无聊去写重名的）</li>
+<li>下面函数中“<code>to</code>”就是函数标签，<code>recipient</code>和<code>shouting</code>是参数名</li>
+<li>不想在调用的时候写出参数标签，可以在定义函数的时候使用“<code>_</code>”来代替参数标签，（1.4）</li>
 </ul>
 
-<pre><code class="language-swift">let results = [7, 52, 9, 33, 6, 12, 86, 4, 22, 18, 3]
-let maxResultCount = 5
-for index in 0..&lt;maxResultCount {
-   print(&quot;Result \(index) is \(results[index])&quot;)
+<pre><code class="language-swift">func sendMessage(to recipient: String, shouting: Bool) {
+   var message = &quot;Hey there, \(recipient)!&quot;
+   if shouting {
+      message = message.uppercased()
+   }
+   print(message)
 }
 
-/*
+sendMessage(to: &quot;Morgan&quot;, shouting: false)
+
+
+/**
 输出结果：
-Result 0 is 7
-Result 1 is 52
-Result 2 is 9
-Result 3 is 33
-Result 4 is 6
+Hey there, Morgan!
 */
 </code></pre>
 
-<h4 id="toc_13">6.2.4 遍历数组</h4>
+<h3 id="toc_5">1.4、省略参数标签</h3>
 
 <ul>
-<li>遍历的临时变量不需要用let声明，默认以let声明，如果需要，可以直接换成var声明，如：<code>for var name in [...]</code></li>
-<li>如果遍历的临时变量不需要被使用到，可以用“<code>_</code>”来代替</li>
+<li>有些参数名可能会跟函数名重名，比如下面这个函数，两个message，在调用的时候就会显得特别奇怪，这时，可以用&quot;<code>_</code>&quot;来代替参数名字，调用的时候看起来就更加舒服了</li>
 </ul>
 
-<pre><code class="language-swift">for name in [&quot;Lily&quot;, &quot;Santiago&quot;, &quot;Justyn&quot;, &quot;Aadya&quot;] {
-   print(&quot;Hello, \(name)!&quot;)
+<pre><code class="language-swift">// 名字优化之前
+func sendMessage(message: String, to recipient: String, shouting: Bool)
+</code></pre>
+
+<pre><code class="language-swift">// 省略参数名字之后
+func sendMessage(_ message: String, to recipient: String, shouting: Bool) {
+   var message = &quot;\(message), \(recipient)!&quot;
+   if shouting {
+      message = message.uppercased()
+   }
+   print(message)
 }
 
-/*
+// 调用的时候可以省略参数名字
+sendMessage(&quot;See you at the Bash&quot;, to: &quot;Morgan&quot;, shouting: false)
+
+/**
 输出结果：
-Hello, Lily!
-Hello, Santiago!
-Hello, Justyn!
-Hello, Aadya!
+See you at the Bash, Morgan!
 */
 </code></pre>
 
-<h4 id="toc_14">6.2.5 遍历字典</h4>
+<h3 id="toc_6">1.5、参数的默认值</h3>
 
 <ul>
-<li>使用元组<code>(key, value)</code>来表示字典的键和值</li>
-<li>元组是可以绑定多个值的一个类型，用括号表示，值之间用逗号分割开来</li>
+<li>在上面的函数中，其实最后那个参数我们一般都是传false，这时，调用的时候再每次都写这个参数就显得多余了</li>
+<li>swift中提供了一个默认参数，即可以给函数的参数一个默认值，调用的时候不传就使用默认值</li>
+<li>建议把带默认值的参数写在后面，否则，你会回来点赞的（调用的时候参数顺序看得清晰些）</li>
+<li>默认参数在定义函数的时候写在类型后面，如下：</li>
 </ul>
 
-<pre><code class="language-swift">let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
-for (name, age) in ages {
-   print(&quot;\(name) is \(age) years old&quot;)
+<pre><code class="language-swift">// 参数带有默认值的函数
+func sendMessage(_ message: String, to recipient: String, shouting: Bool = false) {
+   var message = &quot;\(message), \(recipient)!&quot;
+   if shouting {
+      message = message.uppercased()
+   }
+   print(message)
 }
 
-/*
+// 调用带有默认值的函数
+sendMessage(&quot;See you at the Bash&quot;, to: &quot;Morgan&quot;)
+
+/**
 输出结果：
-Mohsen is 17 years old
-Amy is 40 years old
-Graham is 5 years old
+See you at the Bash, Morgan!
 */
 </code></pre>
 
-<h2 id="toc_15">7、可变集合</h2>
-
-<h3 id="toc_16">7.1、可变数组</h3>
-
-<p>使用var声明的数组就是可变数组，可以通过几种方式修改可变数组中的值。</p>
+<h3 id="toc_7">1.6、可变参数</h3>
 
 <ul>
-<li>使用<code>.append</code>方法，给数组添加一个元素</li>
-<li>使用下标<code>packingList[2]</code>的方式，修改数组指定位置的元素(小心越界)</li>
-<li>使用<code>.append(contentsOf:[])</code>给数组增加一系列的值</li>
-<li>使用下标<code>packingList[3...5]</code>修改数组指定位置范围的值，使用这个方法的时候，如果等号右边的元素数量大于左边的范围，会扩充原数组的长度，反之会减少</li>
+<li>可变参数指的是：这个参数可以传入0个，也可以传入10000个，就像OC里面的<code>NSLog()</code>函数一样，后面参数个数的不定的</li>
+<li>可变参数的定义：在定义参数类型的后面加上省略号<code>...</code>，比如<code>func someFunction(argumentLabel parameterName: Int...)</code>，<code>parameterName</code>参数就是个可变参数了</li>
+<li>可变参数的获取：在函数内部，可变参数以数组的形式体现的，上面定义的那个可变参数的获取方式<code>parameterName[0]</code>，这样，就拿到了可变参数的第一个值</li>
 </ul>
 
-<pre><code class="language-swift">var packingList = [&quot;Socks&quot;, &quot;Shoes&quot;]
-print(packingList[0])
-packingList.append(&quot;Trousers&quot;)
-packingList[2] = &quot;Jeans&quot;
-packingList.append(contentsOf: [&quot;Shorts&quot;, &quot;Sandals&quot;, &quot;Sunblock&quot;])
-packingList[3...5] = [&quot;Hoodie&quot;, &quot;Scarf&quot;]
-
-
-/*
-输出结果：
-
-[&quot;Socks&quot;, &quot;Shoes&quot;, &quot;Jeans&quot;, &quot;Hoodie&quot;, &quot;Scarf&quot;]
-
-*/
-</code></pre>
-
-<h3 id="toc_17">7.2、可变字典</h3>
-
-<ul>
-<li>可变字典的修改和增加方式都可以用下标来直接操作</li>
-</ul>
-
-<pre><code class="language-swift">var ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
-ages[&quot;Justyn&quot;] = 67     // Adds a new value for &quot;Justyn&quot;
-ages[&quot;Justyn&quot;] = 68     // Changes the value for &quot;Justyn&quot;
-
-/*
-输出结果：
-
-[&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5, &quot;Justyn&quot;: 68]
-
-*/
-</code></pre>
-
-<h2 id="toc_18">8、Optional</h2>
-
-<h3 id="toc_19">8.1、从字典中检索值</h3>
-
-<ul>
-<li>从字典中检索值需要考虑一个问题，就是字典中可能并没有存储我们需要检索的值，比如，在下面的字典中，我们如果去获取Devon、Daryl、Daniel的值，这时候会获得一个空值<code>nil</code></li>
-<li>在获取之后，我们需要判断一下值是否为<code>nil</code></li>
-</ul>
-
-<pre><code class="language-swift">let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
-// Devon?
-// Daryl?
-// Daniel?
-</code></pre>
-
-<h3 id="toc_20">8.2、加上nil判断</h3>
-
-<ul>
-<li>对于可能返回<code>nil</code>的值，我们可以使用swift的Optional特性，在类型后面加一个<code>?</code>，比如:<code>Int?</code>，这就表示这个值可能为<code>nil</code></li>
-<li>从字典获取指定的值，加上判断之后就变成了下面的代码</li>
-</ul>
-
-<pre><code class="language-swift">let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
-let possibleAge: Int? = ages[&quot;Daryl&quot;]
-if possibleAge == nil {
-   print(&quot;Age not found.&quot;)
+<pre><code class="language-swift">// 可变参数
+func optParameter(optionPara: Int...) {
+    for num in optionPara {
+        print(num)
+    }
 }
 
+// 调用可变参数函数
+optParameter(optionPara: 1, 2, 3, 4, 5)
 
-/*
+
+/**
 输出结果：
-
-Age not found.
-
-*/
-
-</code></pre>
-
-<h3 id="toc_21">8.3、nil值判断优化  If-Let</h3>
-
-<ul>
-<li>上面的判断看起来没问题，但是在实际应用中，我们可能只关心值不为<code>nil</code>的情况，所以，上面的写法会有些臃肿</li>
-<li>swift中提供了<code>If-Let</code>语句，只有在值不为<code>nil</code>的时候才执行条件体</li>
-</ul>
-
-<pre><code class="language-swift">let ages = [&quot;Mohsen&quot;: 17, &quot;Amy&quot;: 40, &quot;Graham&quot;: 5]
-if let age = ages[&quot;Amy&quot;] {
-   print(&quot;An age of \(age) was found.&quot;)
-}
-
-
-/*
-输出结果：
-
-An age of 40 was found.
-
+1
+2
+3
+4
+5
 */
 </code></pre>
 
-<h2 id="toc_22">9、 判断结构</h2>
-
-<h3 id="toc_23">9.1、if判断结构</h3>
+<h3 id="toc_8">1.7、输入输出参数（C语言中的指针参数）</h3>
 
 <ul>
-<li>和其它语言相似，只是swift中，条件语句不需要小括号括号括起来。</li>
-<li>每个条件的执行语句需要用大括号括起来</li>
+<li>在C语言中，我们可以给函数传入一个指针值，以达到在函数内部修改外部参数值的目的，swift中，这种参数叫做<code>输入输出</code>参数</li>
+<li>定义一个输入输出参数，只需要在参数类型前面加一个<code>inout</code></li>
+<li>调用的时候，需要在输入输出参数前面加&quot;<code>&amp;</code>&quot;</li>
+<li>调用的时候，输入输出参数必须传入变量，不能是常量</li>
+<li>输入输出参数不能有默认值</li>
 </ul>
 
-<pre><code class="language-swift">let age = 32
-if age == 1 {
-   print(&quot;Happy first birthday!&quot;)
-} else if age == 40 {
-   print(&quot;Happy 40th birthday!&quot;)
-} else {
-   print(&quot;Happy plain old boring birthday.&quot;)
+<pre><code class="language-swift">// 定义一个交换两数的方法
+func swap(a:inout Int, b:inout Int) {
+    let c = a
+    a = b
+    b = c
 }
+
+var a = 1
+var b = 2
+
+print(&quot;before: a=\(a), b=\(b)&quot;)
+
+// 调用交换方法
+swap(&amp;a, &amp;b)
+
+print(&quot;after: a=\(a), b=\(b)&quot;)
+
+/**
+输出结果：
+before: a=1, b=2
+after: a=2, b=1
+*/
 </code></pre>
 
-<h3 id="toc_24">9.2、Switch 判断结构</h3>
+<h3 id="toc_9">1.8、函数类型</h3>
 
 <ul>
-<li><code>case</code>可以直接匹配一个精确的值，包括字符串变量也可以直接匹配</li>
-<li><code>case</code>也可以匹配一个范围。如：<code>case 13...19:</code></li>
-<li><code>case</code>中还可以加入更精确的条件匹配语句。如：<code>case let decade where decade % 10 == 0:</code></li>
-<li>每个<code>case</code>语句不需要break来结束循环，会自动结束，如果需要执行下一个<code>case</code>的语句，需要加上<code>fallthrough</code>关键字</li>
-<li><code>switch</code>中需要匹配完整所有的情况，否则会报错</li>
+<li>回到开头，我说过，在swift中，我们也可以称为“一切皆对象”，那么，函数既然可以称之为对象，肯定有类型</li>
+<li>函数的类型：有个技巧，不管是什么类型，把参数名变量名全部删掉，剩下的就是类型了。上面的那个函数，类型就应该是<code>(inout Int, inout Int) -&gt; Void</code>，解读为：这个函数类型接受两个输入输出的Int类型参数，并返回<code>Void</code></li>
+<li>函数类型的使用：同其他类型一样的，上面那个函数类型就可以这样使用<code>var function: (inout Int, inout Int) -&gt; Void = swap</code></li>
+<li>同样，函数类型也可以作为函数的参数和返回值</li>
 </ul>
 
-<pre><code class="language-swift">let age = 32
-switch age {
-case 1:
-   print(&quot;Happy first birthday!&quot;)
-case 13...19:
-   print(&quot;Happy birthday, teenager!&quot;)
-case let decade where decade % 10 == 0:
-   print(&quot;Happy significant \(decade)th birthday!&quot;)
-default:
-   print(&quot;Happy plain old boring birthday.&quot;)
+<p>函数作为参数的例子</p>
+
+<pre><code class="language-swift">// 这个函数用来作为参数
+func sum(num1: Int, num2: Int) -&gt; Int {
+    return num1+num2
+}
+
+// 这个函数接受一个(Int, Int)-&gt;Int类型的函数作为参数
+func printResault(num1: Int, num2: Int, ruler:(Int, Int)-&gt;Int) {
+     // 调用传进来的函数
+    print(ruler(num1, num2))
+}
+
+// 调用函数，并把参数传进去
+printResault(num1: 4, num2: 5, ruler: sum)
+
+/**
+输出结果：
+9
+*/
+</code></pre>
+
+<p>函数作为返回值</p>
+
+<pre><code class="language-swift">// 减1
+func stepForward(_ input: Int) -&gt; Int {
+    return input + 1
+}
+// 加1
+func stepBackward(_ input: Int) -&gt; Int {
+    return input - 1
+}
+
+// 根据传入的backward值，返回加1函数或者减1函数
+func chooseStepFunction(backward: Bool) -&gt; (Int) -&gt; Int {
+    return backward ? stepBackward : stepForward
+}
+
+var currentValue = 3
+let moveNearerToZero = chooseStepFunction(backward: currentValue &gt; 0)
+// moveNearerToZero 现在指向 stepBackward() 函数。
+
+//调用返回的函数
+print(moveNearerToZero(currentValue))
+
+/**
+输出结果：
+2
+*/
+</code></pre>
+
+<h3 id="toc_10">1.9、嵌套函数</h3>
+
+<ul>
+<li><code>嵌套函数</code>就是在函数里面在定义一个函数，相对的，前面说的那些都是<code>全局函数</code></li>
+<li><code>嵌套函数</code>只能在内部使用</li>
+</ul>
+
+<h2 id="toc_11">2、闭包</h2>
+
+<h3 id="toc_12">2.1、什么是闭包</h3>
+
+<ul>
+<li>闭包 就是“闭合包裹常量和变量的代码块”的简称，写过OC的人对OC中的 Block 应该不会陌生，其实闭包就是swift里面的“Block”</li>
+<li>闭包是引用类型</li>
+<li>闭包的定义和函数很像，把函数的各种名称部分去掉，在用花括号括起来，其实就是一个闭包了，闭包的一般定义形式如下：</li>
+</ul>
+
+<pre><code class="language-swift">{(params) -&gt; returnType in 
+    statemems
 }
 </code></pre>
 
 <ul>
-<li>switch可以直接匹配元组，以达到匹配同时判断多个值的目的，如下：</li>
-<li>“<code>_</code>” 表示该位置匹配任何值</li>
+<li><code>in</code>关键字表示闭包的参数和返回值类型定义完成，闭包函数体开始</li>
+<li>闭包参数可以是<code>inout</code>类型，但是，不能有默认参数</li>
+<li>闭包完整格式实例</li>
 </ul>
 
-<pre><code class="language-swift">let userName = &quot;admin&quot;
-let passwordIsValid = true
-switch (userName, passwordIsValid) {
-case (&quot;admin&quot;, true):
-   print(&quot;Welcome back, administrator!&quot;)
-case (&quot;guest&quot;, _):
-   print(&quot;Guests are not allowed in this restricted area.&quot;)
-case (_, let isValid):
-   print(isValid ? &quot;Welcome to the restricted area!&quot; : &quot;ACCESS DENIED.&quot;)
-}
+<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
 
+print(&quot;before \(grade)&quot;)
 
-/*
+let grade_sort = grade.sorted (by: { (num1: Int, num2: Int) -&gt; Bool in
+    return num1 &gt; num2
+})
+
+print(&quot;after \(grade_sort)&quot;)
+
+/**
 输出结果：
-
-Welcome back, administrator!
-
+before [90, 100, 80, 76, 88, 65, 65, 63]
+after [100, 90, 88, 80, 76, 65, 65, 63]
 */
+
 </code></pre>
 
-<h2 id="toc_25">相关文章</h2>
+<h3 id="toc_13">2.2闭包格式大简化</h3>
 
-<p>1、<a href="https://fengqiangboy.com/14758321095435.html">Swift3入门教程之二---函数</a></p>
+<ul>
+<li>函数参数为闭包的时候，编译器可以自动推断出闭包的类型的，比如说在下面的代码中，闭包的类型就可以省略，直接在括号内写参数名</li>
+<li>闭包作为函数最后一个参数的时候，可以省略函数调用的小括号，直接把闭包跟在函数名后面，同时，参数标签也可以省略掉，这个闭包又称做<code>尾随闭包</code>，经过这两项优化之后，上面的代码变成了下面这样</li>
+</ul>
 
-<h2 id="toc_26">参考资料：</h2>
+<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
+
+print(&quot;before \(grade)&quot;)
+
+let grade_sort = grade.sorted { (num1, num2) in
+    return num1 &gt; num2
+}
+
+print(&quot;after \(grade_sort)&quot;)
+
+/**
+输出结果：
+before [90, 100, 80, 76, 88, 65, 65, 63]
+after [100, 90, 88, 80, 76, 65, 65, 63]
+*/
+
+</code></pre>
+
+<ul>
+<li>如果闭包中，只有一句代码，那么闭包会自动把这句代码的结果当做返回值处理，也就是说，上面的闭包我们可以省略<code>return</code>关键字，省略之后，代码如下</li>
+</ul>
+
+<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
+
+print(&quot;before \(grade)&quot;)
+
+let grade_sort = grade.sorted { (num1, num2) in
+   num1 &gt; num2
+}
+
+print(&quot;after \(grade_sort)&quot;)
+
+/**
+输出结果：
+before [90, 100, 80, 76, 88, 65, 65, 63]
+after [100, 90, 88, 80, 76, 65, 65, 63]
+*/
+
+</code></pre>
+
+<ul>
+<li>在闭包中，参数可以使用缩写，用<code>$</code>表示，比如说<code>$0</code>就是第一个参数，这时，前面的参数定义部分已经没有意义了，<code>in</code>关键字也可以省略，代码如下</li>
+</ul>
+
+<pre><code class="language-swift">let grade = [90, 100, 80, 76, 88, 65, 65, 63]
+
+print(&quot;before \(grade)&quot;)
+
+let grade_sort = grade.sorted { $0 &gt; $1 }
+
+print(&quot;after \(grade_sort)&quot;)
+
+
+/**
+输出结果：
+before [90, 100, 80, 76, 88, 65, 65, 63]
+after [100, 90, 88, 80, 76, 65, 65, 63]
+*/
+
+</code></pre>
+
+<h3 id="toc_14">2.3、逃逸闭包</h3>
+
+<ul>
+<li><code>逃逸闭包</code>指的是我们在函数内部接收了闭包之后，把闭包保存了起来，留着函数结束之后再调用这个闭包，这个闭包就叫做逃逸闭包</li>
+<li>逃逸闭包需要在定义的类型前加<code>@escaping</code>，否则会编译报错</li>
+</ul>
+
+<pre><code class="language-swift">// 定义一个变量，用来存储一个闭包，给后面使用
+var completeHandle:() -&gt; Void = {}
+
+// 定义一个函数，这个函数接受一个闭包，并且设置给外部变量，这里必须标记为 @escaping
+func doSomeThing(completion: @escaping () -&gt; Void) {
+    completeHandle = completion
+}
+
+print(&quot;设置之前&quot;)
+
+// 调用函数，并设置一个闭包
+doSomeThing {
+    print(&quot;完成了&quot;)
+}
+
+print(&quot;设置之后&quot;)
+
+// 调用刚才设置好的闭包
+completeHandle()
+
+print(&quot;调用之后&quot;)
+
+
+/**
+输出结果：
+设置之前
+设置之后
+完成了
+调用之后
+*/
+
+</code></pre>
+
+<h3 id="toc_15">2.4、闭包中的self处理</h3>
+
+<ul>
+<li>有过OC经验的童鞋应该都非常明白<code>Block</code>中不能强引用<code>self</code>，否则会由于循环引用而导致内存泄露</li>
+<li>Swift中提供了更加简单的方法，在闭包中弱引用一个变量，只需要在闭包参数定义之前加入<code>[weak self]</code>，Swift就会自动将<code>self</code>在闭包中弱引用</li>
+<li>此时需要注意的是，弱引用可能不存在了，所以在这种情况下，<code>self</code>变成了一个可选值</li>
+</ul>
+
+<pre><code class="language-swift">{[weak self](params) -&gt; returnType in 
+    // self变成了可选值，需要用?来使用
+    self?.somePropety = ...
+    
+    statemems
+}
+</code></pre>
+
+<h2 id="toc_16">相关文章</h2>
+
+<p>1、<a href="https://fengqiangboy.com/14758046879967.html">Swift3入门教程之一基础部分</a></p>
+
+<h2 id="toc_17">参考资料：</h2>
 
 <ol>
 <li><a href="https://developer.apple.com/sample-code/swift/downloads/Standard-Library.zip">Swift Standard Library Playground</a></li>
